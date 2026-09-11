@@ -384,6 +384,11 @@ shared/transitions.test.ts      7 tests  what the status machine allows
 e2e/journey.spec.ts             4 specs  the whole loop in a browser
 ```
 
+The Playwright suite drives a real `wrangler pages dev` server, so it runs the same
+Worker that ships. It is wired into CI as a **manually triggered job** rather than one
+that fires on every push: installing a browser and booting wrangler is too much to pay
+for on every commit. Run it from the Actions tab, or `npm run test:e2e` locally.
+
 A sample of what is actually asserted:
 
 - one applicant gets a **404, not a 403**, for another applicant's application, because

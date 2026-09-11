@@ -62,13 +62,18 @@ function Hero() {
 
   return (
     <section className="relative overflow-hidden">
-      <DuneHorizon className="top-0 bottom-0" />
+      {/*
+       * The horizon is a band at the foot of the section, not a wash behind it.
+       * Text never sits on top of a sun, or beside one: the copy stops above
+       * this band and the band is where the light comes from.
+       */}
+      <DuneHorizon className="top-auto bottom-0 h-[9rem] sm:h-[11rem]" />
 
-      <div className="relative mx-auto flex max-w-5xl flex-col items-center px-5 pt-2 pb-20 text-center sm:px-8 lg:pb-28">
+      <div className="relative mx-auto flex max-w-5xl flex-col items-center px-5 pt-2 pb-[11rem] text-center sm:px-8 sm:pb-[13rem]">
         {/* The badge floats: there is not much gravity out here. */}
         <Lanyard name="Your Name" role="Hacker" code="A3F9" className="w-[260px] sm:w-[300px]" />
 
-        <motion.p className="telemetry mb-5" {...rise(0.02)}>
+        <motion.p className="telemetry mt-16 mb-5" {...rise(0.02)}>
           Applications open &middot; Window closes in 12 days
         </motion.p>
 
@@ -331,8 +336,8 @@ function ForOrganizers() {
 function ClosingCta() {
   return (
     <section className="border-line relative z-10 overflow-hidden border-t">
-      <DuneHorizon className="top-0 bottom-0 opacity-60" />
-      <div className="relative mx-auto max-w-3xl px-5 py-24 text-center sm:px-8 lg:py-32">
+      <DuneHorizon className="top-auto bottom-0 h-[9rem] opacity-75" />
+      <div className="relative mx-auto max-w-3xl px-5 pt-24 pb-[11rem] text-center sm:px-8 lg:pt-32">
         <h2 className="display-lg">The form takes five minutes</h2>
         <p className="measure text-fg-muted mx-auto mt-5 text-[15px] leading-relaxed text-pretty">
           Longer if you write something good in the last box, which you should.

@@ -100,6 +100,10 @@ jobs:
 
   e2e:
     name: End to end
+    # Deliberately manual. It installs a browser and boots a real wrangler
+    # server, which is too heavy to pay for on every push. Run it from the
+    # Actions tab when the applicant or organizer flow changes.
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
