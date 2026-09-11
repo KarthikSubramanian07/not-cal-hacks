@@ -58,7 +58,9 @@ export function transitionStatus(d1: D1Database, t: StatusTransition): D1Prepare
   const values = [
     t.to,
     t.at,
-    ...extras.map(([, value]) => (value !== null && typeof value === 'object' ? JSON.stringify(value) : value)),
+    ...extras.map(([, value]) =>
+      value !== null && typeof value === 'object' ? JSON.stringify(value) : value,
+    ),
   ]
 
   return [
