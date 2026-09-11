@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react'
-import { Route, Routes } from 'react-router'
+import { Navigate, Route, Routes } from 'react-router'
 import { Toaster } from 'sonner'
+import { APPLICATION_TYPES } from '@shared/constants'
 import { AuthProvider } from '@/lib/auth'
 import { Starfield } from '@/components/space/starfield'
 import { Grain } from '@/components/space/dune-horizon'
@@ -50,7 +51,16 @@ export function App() {
 
           <Route element={<RequireAuth />}>
             <Route path="/apply" element={<ApplyPage />} />
-            <Route path="/apply/:type" element={<ApplyFormPage />} />
+            {/*
+              One route per account type, so the form never renders for a type
+              that does not exist. Adding a third account type to
+              APPLICATION_TYPES adds its URL here for free; anything else under
+              /apply goes back to the picker.
+            */}
+            {APPLICATION_TYPES.map((type) => (
+              <Route key={type} path={`/apply/${type}`} element={<ApplyFormPage />} />
+            ))}
+            <Route path="/apply/*" element={<Navigate to="/apply" replace />} />
             <Route path="/status" element={<StatusPage />} />
           </Route>
 
