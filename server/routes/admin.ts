@@ -1,4 +1,4 @@
-import { and, eq, sql } from 'drizzle-orm'
+import { eq, sql } from 'drizzle-orm'
 import { Hono } from 'hono'
 import type {
   AdminApplicationDetail,
@@ -14,7 +14,7 @@ import {
 } from '../../shared/constants'
 import { applicationFiltersSchema, decisionSchema, reviewInputSchema } from '../../shared/schemas'
 import { canTransition } from '../../shared/transitions'
-import { getDb, newId, schema, type Db } from '../db'
+import { getDb, newId, schema, transitionStatus, type Db } from '../db'
 import { aliasFor, displayName, redactAnswers } from '../lib/blind'
 import { ApiError } from '../lib/errors'
 import { parseBody, parseQuery } from '../lib/validate'
@@ -181,12 +181,17 @@ async function queryRows(db: Db, filters: ReturnType<typeof applicationFiltersSc
   if (filters.status) conditions.push(sql`a.status = ${filters.status}`)
   if (filters.q) {
     const needle = `%${filters.q.toLowerCase()}%`
+    // Account fields are always searchable. Anything inside `answers` is only
+    // searchable once the application has been submitted, because otherwise a
+    // well-chosen query would report on the contents of an unsent draft.
     conditions.push(sql`(
       lower(u.full_name) like ${needle}
       or lower(u.email) like ${needle}
-      or lower(coalesce(json_extract(a.answers, '$.school'), '')) like ${needle}
-      or lower(coalesce(json_extract(a.answers, '$.firstName'), '')) like ${needle}
-      or lower(coalesce(json_extract(a.answers, '$.lastName'), '')) like ${needle}
+      or (a.status <> 'draft' and (
+        lower(coalesce(json_extract(a.answers, '$.school'), '')) like ${needle}
+        or lower(coalesce(json_extract(a.answers, '$.firstName'), '')) like ${needle}
+        or lower(coalesce(json_extract(a.answers, '$.lastName'), '')) like ${needle}
+      ))
     )`)
   }
 
@@ -308,21 +313,19 @@ admin.patch('/applications/:id/status', async (c) => {
   }
 
   const now = Date.now()
-  await db.batch([
-    db
-      .update(schema.applications)
-      .set({ status, updatedAt: now })
-      // Guarding on the status we read makes this a compare-and-set: two
-      // organizers deciding at once cannot interleave into a lost update.
-      .where(and(eq(schema.applications.id, row.id), eq(schema.applications.status, row.status))),
-    db.insert(schema.statusEvents).values({
+
+  // Two organizers deciding at once serialize here: the second one finds the
+  // status it read already gone and writes neither a duplicate audit row nor a
+  // lost update.
+  await c.env.DB.batch(
+    transitionStatus(c.env.DB, {
       applicationId: row.id,
-      fromStatus: row.status,
-      toStatus: status,
+      from: row.status,
+      to: status,
       actorId: user.id,
-      createdAt: now,
+      at: now,
     }),
-  ])
+  )
 
   return c.json({ status })
 })
@@ -416,25 +419,18 @@ admin.post('/reviews', async (c) => {
 
   // The first review on a submitted application moves it to under_review, so
   // the applicant's timeline reflects reality without anyone pressing a button.
+  // Two reviewers landing the first review together is the same race as any
+  // other transition, and gets the same guarantee.
   if (application.status === 'submitted') {
-    await db.batch([
-      db
-        .update(schema.applications)
-        .set({ status: 'under_review', updatedAt: now })
-        .where(
-          and(
-            eq(schema.applications.id, application.id),
-            eq(schema.applications.status, 'submitted'),
-          ),
-        ),
-      db.insert(schema.statusEvents).values({
+    await c.env.DB.batch(
+      transitionStatus(c.env.DB, {
         applicationId: application.id,
-        fromStatus: 'submitted',
-        toStatus: 'under_review',
+        from: 'submitted',
+        to: 'under_review',
         actorId: user.id,
-        createdAt: now,
+        at: now,
       }),
-    ])
+    )
   }
 
   return c.json({ ok: true, calibration: await loadCalibration(db, user.id) })

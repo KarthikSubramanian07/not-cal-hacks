@@ -81,6 +81,29 @@
   </head>
   <body>
     <div id="root"></div>
+
+    <!--
+      The landing page is prerendered into #root, and Pages serves this same
+      document for every route. On any path other than "/", that markup is the
+      wrong page: without this it paints before the module loads and a visitor
+      opening /login sees the landing page flash first.
+
+      The tidier fix is two documents, index.html with the landing page and an
+      empty shell for everything else. Pages will not do it: a _redirects rule
+      of `/* /shell 200` is applied ahead of static assets, so /favicon.svg and
+      /og.png come back as HTML. Only `/index.html` is special-cased as a
+      fallback rather than an unconditional rewrite, which is measured, not
+      assumed. So the document is shared and this removes the markup instead.
+
+      Runs during parse, so the stale markup never reaches the screen. Classic
+      script rather than a module so it is not deferred.
+    -->
+    <script>
+      if (window.location.pathname !== '/') {
+        document.getElementById('root').textContent = ''
+      }
+    </script>
+
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -4,7 +4,6 @@ import { toast } from 'sonner'
 import { ArrowLeft, ArrowRight, Check, Loader2 } from 'lucide-react'
 import type { ApplicationSummary } from '@shared/api'
 import {
-  APPLICATION_TYPES,
   APPLICATION_TYPE_META,
   AVAILABILITY,
   EXPERIENCE_LEVELS,
@@ -93,10 +92,6 @@ export function ApplyFormPage() {
   const readOnly = application !== null && application.status !== 'draft'
 
   useEffect(() => {
-    if (!APPLICATION_TYPES.includes(type)) {
-      void navigate('/apply', { replace: true })
-      return
-    }
     let cancelled = false
     void api
       .post<{ application: ApplicationSummary }>('/applications', { type })

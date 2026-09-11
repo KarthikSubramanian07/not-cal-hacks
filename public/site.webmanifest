@@ -4,7 +4,7 @@
   "description": "Apply in five minutes. Reviewed in thirty seconds.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#111319",
-  "theme_color": "#111319",
+  "background_color": "#121319",
+  "theme_color": "#121319",
   "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
 }

@@ -1,10 +1,13 @@
 User-agent: *
-Allow: /
+Allow: /$
 
-# Applicant and organizer surfaces sit behind a session and hold personal data.
-# They would only ever return the sign-in shell to a crawler; this is explicit.
+# Every other route is the application itself: it sits behind a session, holds
+# personal data, and returns the same shell to a crawler regardless.
 Disallow: /admin
 Disallow: /status
 Disallow: /apply
+Disallow: /login
+Disallow: /signup
+Disallow: /api
 
 Sitemap: https://not-cal-hacks.pages.dev/sitemap.xml

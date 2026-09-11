@@ -57,3 +57,47 @@ export const validHackerAnswers = {
   proudestProject:
     'A tiny command line tool that renames my screenshots so I can actually find them later. Four hundred lines, used daily.',
 }
+
+/** A user who has been promoted to organizer and can reach /api/admin. */
+export async function organizer(email: string) {
+  const user = await signUp(email)
+  await promote(user.id)
+  return user
+}
+
+/** A hacker application that exists but has not been sent. */
+export async function draftApplication(email: string) {
+  const applicant = await signUp(email)
+  const created = await call('/api/applications', {
+    method: 'POST',
+    cookie: applicant.cookie,
+    body: JSON.stringify({ type: 'hacker' }),
+  })
+  const { application } = (await created.json()) as { application: { id: string } }
+  return { id: application.id, applicant }
+}
+
+/** The same application, filled in and submitted. */
+export async function submittedApplication(email: string) {
+  const draft = await draftApplication(email)
+  await call(`/api/applications/${draft.id}`, {
+    method: 'PATCH',
+    cookie: draft.applicant.cookie,
+    body: JSON.stringify({ answers: validHackerAnswers }),
+  })
+  await call(`/api/applications/${draft.id}/submit`, {
+    method: 'POST',
+    cookie: draft.applicant.cookie,
+  })
+  return draft
+}
+
+/** How many audit rows record a given transition. Concurrency tests live here. */
+export async function countEvents(applicationId: string, toStatus: string) {
+  const row = await env.DB.prepare(
+    'select count(*) as n from status_events where application_id = ? and to_status = ?',
+  )
+    .bind(applicationId, toStatus)
+    .first<{ n: number }>()
+  return row?.n ?? 0
+}
