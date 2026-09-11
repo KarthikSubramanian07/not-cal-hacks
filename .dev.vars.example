@@ -1,0 +1,5 @@
+# Copy to `.dev.vars` for local development (`wrangler pages dev` reads it).
+# In production this is set with: wrangler pages secret put SESSION_SECRET
+#
+# Used to HMAC session tokens before they are stored. Rotating it logs everyone out.
+SESSION_SECRET="dev-only-secret-change-me"

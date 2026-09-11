@@ -1,0 +1,9 @@
+dist/
+coverage/
+drizzle/
+.wrangler/
+node_modules/
+package-lock.json
+seed.generated.sql
+playwright-report/
+test-results/
