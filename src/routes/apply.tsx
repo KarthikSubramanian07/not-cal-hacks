@@ -36,13 +36,13 @@ export function ApplyPage() {
   const byType = new Map((applications ?? []).map((a) => [a.type, a]))
 
   return (
-    <div className="flex min-h-dvh flex-col">
+    <div className="relative z-10 flex min-h-dvh flex-col">
       <SiteNav />
 
       <main className="mx-auto w-full max-w-4xl flex-1 px-5 py-16 sm:px-8">
-        <p className="eyebrow">Step one</p>
+        <p className="telemetry">Step one</p>
         <h1 className="display-lg mt-4">What are you applying as?</h1>
-        <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-fg-muted">
+        <p className="text-fg-muted mt-4 max-w-xl text-[15px] leading-relaxed">
           You can hold one application of each type. Doing both is allowed and slightly showy.
         </p>
 
@@ -75,14 +75,14 @@ function TypeCard({
   const href = isSubmitted ? '/status' : `/apply/${type}`
 
   return (
-    <div className="tile flex h-full flex-col p-7">
+    <div className="panel flex h-full flex-col p-7">
       <div className="flex items-start justify-between gap-3">
         <h2 className="text-2xl tracking-[-0.03em]">{meta.label}</h2>
         {application ? <StatusBadge status={application.status} size="sm" /> : null}
       </div>
 
-      <p className="mt-1 text-[13px] text-fg-dim">{meta.tagline}</p>
-      <p className="mt-4 flex-1 text-[14px] leading-relaxed text-fg-muted text-pretty">
+      <p className="text-fg-dim mt-1 text-[13px]">{meta.tagline}</p>
+      <p className="text-fg-muted mt-4 flex-1 text-[14px] leading-relaxed text-pretty">
         {meta.blurb}
       </p>
 

@@ -10,10 +10,7 @@ import { ApiError } from './errors'
  * fast feedback, but the client is not trusted: this is the copy that decides
  * what reaches the database.
  */
-export async function parseBody<S extends z.ZodType>(
-  c: Context,
-  schema: S,
-): Promise<z.infer<S>> {
+export async function parseBody<S extends z.ZodType>(c: Context, schema: S): Promise<z.infer<S>> {
   let raw: unknown
   try {
     raw = await c.req.json()

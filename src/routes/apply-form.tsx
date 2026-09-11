@@ -26,7 +26,10 @@ import { useDebouncedCallback } from '@/lib/hooks'
 import { cn } from '@/lib/utils'
 
 /** Which fields live in which section, used for both layout and error jumping. */
-const SECTIONS: Record<ApplicationType, { id: string; title: string; blurb: string; fields: string[] }[]> = {
+const SECTIONS: Record<
+  ApplicationType,
+  { id: string; title: string; blurb: string; fields: string[] }[]
+> = {
   hacker: [
     {
       id: 'basics',
@@ -110,18 +113,15 @@ export function ApplyFormPage() {
     }
   }, [type, navigate])
 
-  const persist = useCallback(
-    async (next: DraftAnswers, id: string) => {
-      setSaveState('saving')
-      try {
-        await api.patch(`/applications/${id}`, { answers: next })
-        setSaveState('saved')
-      } catch {
-        setSaveState('error')
-      }
-    },
-    [],
-  )
+  const persist = useCallback(async (next: DraftAnswers, id: string) => {
+    setSaveState('saving')
+    try {
+      await api.patch(`/applications/${id}`, { answers: next })
+      setSaveState('saved')
+    } catch {
+      setSaveState('error')
+    }
+  }, [])
 
   // 800ms is long enough that a fast typist produces one request per pause and
   // short enough that "Saved" appears before anyone reaches for the tab close.
@@ -184,11 +184,11 @@ export function ApplyFormPage() {
 
   if (loadFailed) {
     return (
-      <div className="min-h-dvh">
+      <div className="relative z-10 min-h-dvh">
         <SiteNav />
         <main className="mx-auto max-w-xl px-5 py-24 text-center">
           <h1 className="text-2xl">Could not open that application</h1>
-          <p className="mt-3 text-sm text-fg-muted">
+          <p className="text-fg-muted mt-3 text-sm">
             The server did not respond. Refreshing usually sorts it.
           </p>
           <Button asChild className="mt-6">
@@ -200,13 +200,13 @@ export function ApplyFormPage() {
   }
 
   return (
-    <div className="min-h-dvh">
+    <div className="relative z-10 min-h-dvh">
       <SiteNav />
 
       <main className="mx-auto w-full max-w-2xl px-5 py-12 sm:px-8">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <p className="eyebrow">{meta.label} application</p>
+            <p className="telemetry">{meta.label} application</p>
             <h1 className="mt-2 text-3xl tracking-[-0.04em]">
               {readOnly ? 'Your submitted application' : meta.tagline}
             </h1>
@@ -216,9 +216,9 @@ export function ApplyFormPage() {
 
         {/* Progress rail doubles as section navigation once a section is reached. */}
         <div className="mt-8">
-          <div className="h-px w-full bg-line">
+          <div className="bg-line h-px w-full">
             <div
-              className="h-px bg-fg transition-[width] duration-500 ease-[var(--ease-out-quint)]"
+              className="bg-fg h-px transition-[width] duration-500 ease-[var(--ease-out-quint)]"
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -261,7 +261,7 @@ export function ApplyFormPage() {
             <fieldset disabled={readOnly} className="space-y-1">
               <legend className="sr-only">{sections[sectionIndex]?.title}</legend>
               <h2 className="text-xl tracking-[-0.03em]">{sections[sectionIndex]?.title}</h2>
-              <p className="pb-4 text-sm text-fg-dim">{sections[sectionIndex]?.blurb}</p>
+              <p className="text-fg-dim pb-4 text-sm">{sections[sectionIndex]?.blurb}</p>
               <FormFields
                 type={type}
                 fields={sections[sectionIndex]?.fields ?? []}
@@ -274,7 +274,7 @@ export function ApplyFormPage() {
         </div>
 
         {application !== null ? (
-          <div className="mt-10 flex items-center justify-between gap-3 border-t border-line pt-6">
+          <div className="border-line mt-10 flex items-center justify-between gap-3 border-t pt-6">
             <Button
               variant="ghost"
               onClick={() => setSectionIndex((i) => Math.max(0, i - 1))}
@@ -285,7 +285,7 @@ export function ApplyFormPage() {
             </Button>
 
             {isReview ? (
-              <span className="text-[13px] text-fg-dim">
+              <span className="text-fg-dim text-[13px]">
                 {readOnly ? 'Submitted. This is now read-only.' : 'Everything above, then submit.'}
               </span>
             ) : (
@@ -304,7 +304,7 @@ export function ApplyFormPage() {
 function SaveIndicator({ state, readOnly }: { state: SaveState; readOnly: boolean }) {
   if (readOnly) return null
   return (
-    <span className="ml-auto inline-flex items-center gap-1.5 font-mono text-[11px] text-fg-dim">
+    <span className="text-fg-dim ml-auto inline-flex items-center gap-1.5 font-mono text-[11px]">
       {state === 'saving' ? (
         <>
           <Loader2 className="size-3 animate-spin" />
@@ -312,7 +312,7 @@ function SaveIndicator({ state, readOnly }: { state: SaveState; readOnly: boolea
         </>
       ) : state === 'saved' ? (
         <>
-          <Check className="size-3 text-status-accepted" />
+          <Check className="text-status-accepted size-3" />
           Saved
         </>
       ) : state === 'error' ? (
@@ -350,12 +350,20 @@ function FormFields({
         <div className="grid gap-x-5 sm:grid-cols-2">
           <Field label="First name" error={errors.firstName} required>
             {(p) => (
-              <Input {...p} value={str('firstName')} onChange={(e) => setField('firstName', e.target.value)} />
+              <Input
+                {...p}
+                value={str('firstName')}
+                onChange={(e) => setField('firstName', e.target.value)}
+              />
             )}
           </Field>
           <Field label="Last name" error={errors.lastName} required>
             {(p) => (
-              <Input {...p} value={str('lastName')} onChange={(e) => setField('lastName', e.target.value)} />
+              <Input
+                {...p}
+                value={str('lastName')}
+                onChange={(e) => setField('lastName', e.target.value)}
+              />
             )}
           </Field>
         </div>
@@ -504,11 +512,21 @@ function FormFields({
         <div className="grid gap-x-5 sm:grid-cols-2">
           <Field label="Company" error={errors.company} required>
             {(p) => (
-              <Input {...p} value={str('company')} onChange={(e) => setField('company', e.target.value)} />
+              <Input
+                {...p}
+                value={str('company')}
+                onChange={(e) => setField('company', e.target.value)}
+              />
             )}
           </Field>
           <Field label="Role" error={errors.role} required>
-            {(p) => <Input {...p} value={str('role')} onChange={(e) => setField('role', e.target.value)} />}
+            {(p) => (
+              <Input
+                {...p}
+                value={str('role')}
+                onChange={(e) => setField('role', e.target.value)}
+              />
+            )}
           </Field>
         </div>
       ) : null}
@@ -545,7 +563,12 @@ function FormFields({
       ) : null}
 
       {has('availability') ? (
-        <Field label="Availability" hint="Overnight shifts are the ones we struggle to fill." error={errors.availability} required>
+        <Field
+          label="Availability"
+          hint="Overnight shifts are the ones we struggle to fill."
+          error={errors.availability}
+          required
+        >
           {(p) => (
             <ChipGroup
               id={p.id}
@@ -666,7 +689,7 @@ function ReviewSection({
   return (
     <div>
       <h2 className="text-xl tracking-[-0.03em]">Review and submit</h2>
-      <p className="pb-6 text-sm text-fg-dim">
+      <p className="text-fg-dim pb-6 text-sm">
         {readOnly
           ? 'This is what was submitted. It can no longer be edited.'
           : 'Last look. After this it locks.'}
@@ -674,14 +697,14 @@ function ReviewSection({
 
       <div className="space-y-6">
         {sections.map((section, index) => (
-          <div key={section.id} className="tile p-6">
+          <div key={section.id} className="panel p-6">
             <div className="flex items-center justify-between">
               <h3 className="text-[15px] font-medium">{section.title}</h3>
               {readOnly ? null : (
                 <button
                   type="button"
                   onClick={() => onEdit(index)}
-                  className="text-[13px] text-fg-muted underline decoration-line-strong underline-offset-4 hover:text-fg"
+                  className="text-fg-muted decoration-line-strong hover:text-fg text-[13px] underline underline-offset-4"
                 >
                   Edit
                 </button>
@@ -693,7 +716,7 @@ function ReviewSection({
                 const error = errors[field]
                 return (
                   <div key={field} className="grid gap-1 sm:grid-cols-[11rem_1fr] sm:gap-4">
-                    <dt className="text-[13px] text-fg-dim">{LABELS[field] ?? field}</dt>
+                    <dt className="text-fg-dim text-[13px]">{LABELS[field] ?? field}</dt>
                     <dd
                       className={cn(
                         'text-[14px] leading-relaxed text-pretty',
@@ -715,7 +738,7 @@ function ReviewSection({
           <Button size="lg" className="w-full" loading={submitting} onClick={onSubmit}>
             Submit application
           </Button>
-          <p className="mt-3 text-center text-[12px] text-fg-dim">
+          <p className="text-fg-dim mt-3 text-center text-[12px]">
             {errorCount > 0
               ? `${errorCount} answer${errorCount === 1 ? '' : 's'} still need attention.`
               : 'By submitting you affirm this is true to the best of your 3am recollection.'}

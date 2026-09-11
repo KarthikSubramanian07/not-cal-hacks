@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Applicant and organizer surfaces sit behind a session and hold personal data.
+# They would only ever return the sign-in shell to a crawler; this is explicit.
+Disallow: /admin
+Disallow: /status
+Disallow: /apply
+
+Sitemap: https://not-cal-hacks.pages.dev/sitemap.xml

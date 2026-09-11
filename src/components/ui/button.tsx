@@ -4,18 +4,18 @@ import { forwardRef } from 'react'
 import { cn } from '@/lib/utils'
 
 const button = cva(
-  'relative inline-flex items-center justify-center gap-2 rounded-full font-medium whitespace-nowrap transition-[transform,background-color,border-color,color,opacity] duration-200 ease-[var(--ease-out-quint)] disabled:pointer-events-none disabled:opacity-45 active:scale-[0.98]',
+  'relative inline-flex items-center justify-center gap-2 rounded-full font-medium whitespace-nowrap transition-[transform,background-color,border-color,color,opacity,box-shadow] duration-200 ease-[var(--ease-out-quint)] will-change-transform hover:-translate-y-px active:translate-y-0 active:scale-[0.97] disabled:pointer-events-none disabled:opacity-45 disabled:hover:translate-y-0',
   {
     variants: {
       variant: {
-        // White is the only fill in the product, so there is never a question
-        // about which control on a screen is the primary one.
-        primary: 'bg-fg text-ink hover:bg-white',
+        // Sodium amber is the only fill in the product, so the lit control is
+        // always the one to press. The glow is the instrument, not decoration.
+        primary:
+          'bg-sodium text-ink glow-sodium hover:bg-sodium-bright hover:shadow-[0_10px_34px_-10px_var(--color-sodium)]',
         outline:
-          'border border-line-strong bg-white/[0.02] text-fg hover:border-white/25 hover:bg-white/[0.06]',
+          'border border-line-strong bg-white/[0.03] text-fg backdrop-blur-sm hover:border-white/30 hover:bg-white/[0.07]',
         ghost: 'text-fg-muted hover:bg-white/[0.06] hover:text-fg',
-        danger:
-          'border border-status-rejected/40 text-status-rejected hover:bg-status-rejected/10',
+        danger: 'border border-status-rejected/40 text-status-rejected hover:bg-status-rejected/10',
       },
       size: {
         sm: 'h-8 px-3.5 text-[13px]',
@@ -29,8 +29,7 @@ const button = cva(
 )
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof button> {
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof button> {
   asChild?: boolean
   loading?: boolean
 }

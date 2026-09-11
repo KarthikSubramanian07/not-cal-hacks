@@ -107,15 +107,29 @@ applications.post('/', async (c) => {
   const id = newId()
   const now = Date.now()
   await db.batch([
-    db
-      .insert(schema.applications)
-      .values({ id, userId: user.id, type, status: 'draft', answers: {}, createdAt: now, updatedAt: now }),
-    db
-      .insert(schema.statusEvents)
-      .values({ applicationId: id, fromStatus: null, toStatus: 'draft', actorId: user.id, createdAt: now }),
+    db.insert(schema.applications).values({
+      id,
+      userId: user.id,
+      type,
+      status: 'draft',
+      answers: {},
+      createdAt: now,
+      updatedAt: now,
+    }),
+    db.insert(schema.statusEvents).values({
+      applicationId: id,
+      fromStatus: null,
+      toStatus: 'draft',
+      actorId: user.id,
+      createdAt: now,
+    }),
   ])
 
-  const created = await db.select().from(schema.applications).where(eq(schema.applications.id, id)).get()
+  const created = await db
+    .select()
+    .from(schema.applications)
+    .where(eq(schema.applications.id, id))
+    .get()
   if (!created) throw ApiError.notFound('No such application.')
   return c.json({ application: toSummary(created) }, 201)
 })
@@ -135,10 +149,7 @@ applications.patch('/:id', async (c) => {
     throw ApiError.conflict('This application has been submitted and can no longer be edited.')
   }
 
-  const { answers } = await parseBody(
-    c,
-    z.object({ answers: draftAnswersSchemaFor(row.type) }),
-  )
+  const { answers } = await parseBody(c, z.object({ answers: draftAnswersSchemaFor(row.type) }))
 
   const now = Date.now()
   await getDb(c.env.DB)

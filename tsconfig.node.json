@@ -1,9 +1,17 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "lib": ["ES2023"],
+    "lib": ["ES2023", "DOM"],
     "types": ["node"]
   },
-  "include": ["scripts", "e2e", "vite.config.ts", "vitest.config.ts", "drizzle.config.ts", "playwright.config.ts", "eslint.config.js"],
+  "include": [
+    "scripts",
+    "e2e",
+    "vite.config.ts",
+    "vitest.config.ts",
+    "drizzle.config.ts",
+    "playwright.config.ts",
+    "eslint.config.js"
+  ],
   "exclude": ["scripts/prerender.tsx"]
 }

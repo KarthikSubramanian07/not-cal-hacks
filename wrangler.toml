@@ -4,7 +4,7 @@
 # (`functions/api/[[route]].ts`) that mounts a Hono app. Both ship in a single
 # deployment, which is why the public URL has no `/api` split-brain.
 name = "not-cal-hacks"
-compatibility_date = "2026-09-01"
+compatibility_date = "2026-08-22"
 compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = "dist"
 

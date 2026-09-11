@@ -13,7 +13,11 @@ const STATUS_STYLES: Record<ApplicationStatus, { dot: string; text: string; ring
     text: 'text-status-submitted',
     ring: 'border-status-submitted/30',
   },
-  under_review: { dot: 'bg-status-review', text: 'text-status-review', ring: 'border-status-review/30' },
+  under_review: {
+    dot: 'bg-status-review',
+    text: 'text-status-review',
+    ring: 'border-status-review/30',
+  },
   accepted: {
     dot: 'bg-status-accepted',
     text: 'text-status-accepted',
@@ -54,7 +58,10 @@ export function StatusBadge({
       <span className={cn('size-1.5 rounded-full', style.dot)} aria-hidden />
       {/* Only live statuses pulse. A decided application should sit still. */}
       {status === 'under_review' ? (
-        <span className={cn('absolute size-1.5 animate-ping rounded-full opacity-60', style.dot)} aria-hidden />
+        <span
+          className={cn('absolute size-1.5 animate-ping rounded-full opacity-60', style.dot)}
+          aria-hidden
+        />
       ) : null}
       {STATUS_META[status].label}
     </span>
@@ -65,7 +72,7 @@ export function TypeBadge({ type, className }: { type: ApplicationType; classNam
   return (
     <span
       className={cn(
-        'inline-flex items-center rounded-full border border-line px-2.5 py-1 font-mono text-[10px] tracking-[0.14em] text-fg-muted uppercase',
+        'border-line text-fg-muted inline-flex items-center rounded-full border px-2.5 py-1 font-mono text-[10px] tracking-[0.14em] uppercase',
         className,
       )}
     >

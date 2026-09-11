@@ -1,16 +1,9 @@
 import { cn } from '@/lib/utils'
 
-export function Card({
-  className,
-  children,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
+export function Card({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn(
-        'rounded-[var(--radius-card)] border border-line bg-surface',
-        className,
-      )}
+      className={cn('border-line bg-surface rounded-[var(--radius-card)] border', className)}
       {...props}
     >
       {children}
@@ -26,16 +19,11 @@ export function Eyebrow({
   children: React.ReactNode
   className?: string
 }) {
-  return <p className={cn('eyebrow', className)}>{children}</p>
+  return <p className={cn('telemetry', className)}>{children}</p>
 }
 
 export function Skeleton({ className }: { className?: string }) {
-  return (
-    <div
-      className={cn('animate-pulse rounded-lg bg-line/70', className)}
-      aria-hidden
-    />
-  )
+  return <div className={cn('bg-line/70 animate-pulse rounded-lg', className)} aria-hidden />
 }
 
 /**
@@ -56,12 +44,12 @@ export function EmptyState({
   return (
     <div
       className={cn(
-        'flex flex-col items-center gap-3 rounded-[var(--radius-card)] border border-dashed border-line px-8 py-16 text-center',
+        'border-line flex flex-col items-center gap-3 rounded-[var(--radius-card)] border border-dashed px-8 py-16 text-center',
         className,
       )}
     >
-      <h3 className="text-xl text-fg">{title}</h3>
-      <p className="max-w-sm text-sm leading-relaxed text-fg-muted">{body}</p>
+      <h3 className="text-fg text-xl">{title}</h3>
+      <p className="text-fg-muted max-w-sm text-sm leading-relaxed">{body}</p>
       {action ? <div className="pt-2">{action}</div> : null}
     </div>
   )

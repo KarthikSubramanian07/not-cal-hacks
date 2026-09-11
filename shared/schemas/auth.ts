@@ -6,7 +6,9 @@ export const emailSchema = z
   .toLowerCase()
   .min(3)
   .max(254)
-  .refine((v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), { message: 'That does not look like an email' })
+  .refine((v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), {
+    message: 'That does not look like an email',
+  })
 
 /**
  * Eight characters is the floor, not the goal. Length is the only property that

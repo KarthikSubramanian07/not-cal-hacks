@@ -30,9 +30,7 @@ app.route('/admin', adminRoutes)
 
 app.get('/health', (c) => c.json({ ok: true, service: c.env.APP_NAME ?? 'not-cal-hacks' }))
 
-app.notFound((c) =>
-  c.json(ApiError.notFound('No route at that path.').toBody(), 404),
-)
+app.notFound((c) => c.json(ApiError.notFound('No route at that path.').toBody(), 404))
 
 app.onError((err, c) => {
   if (err instanceof ApiError) {
@@ -40,10 +38,7 @@ app.onError((err, c) => {
   }
   // Anything unplanned is logged for the operator and generic for the caller.
   console.error('unhandled', err)
-  return c.json(
-    new ApiError(500, 'server_error', 'Something broke on our side.').toBody(),
-    500,
-  )
+  return c.json(new ApiError(500, 'server_error', 'Something broke on our side.').toBody(), 500)
 })
 
 export default app

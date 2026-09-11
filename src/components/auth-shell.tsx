@@ -1,5 +1,6 @@
 import { Link } from 'react-router'
 import { BadgeCard } from '@/components/badge/badge-card'
+import { DuneHorizon } from '@/components/space/dune-horizon'
 import { Wordmark } from '@/components/wordmark'
 
 /**
@@ -21,36 +22,32 @@ export function AuthShell({
   footer: React.ReactNode
 }) {
   return (
-    <div className="grid min-h-dvh lg:grid-cols-[1fr_0.85fr]">
+    <div className="relative z-10 grid min-h-dvh lg:grid-cols-[1fr_0.85fr]">
       <div className="flex flex-col px-5 py-8 sm:px-10">
         <Wordmark />
 
         <div className="flex flex-1 items-center py-12">
           <div className="mx-auto w-full max-w-sm">
             <h1 className="text-[34px] tracking-[-0.04em]">{title}</h1>
-            <p className="mt-3 text-[15px] leading-relaxed text-fg-muted">{subtitle}</p>
+            <p className="text-fg-muted mt-3 text-[15px] leading-relaxed">{subtitle}</p>
             <div className="mt-9">{children}</div>
-            <div className="mt-7 text-sm text-fg-muted">{footer}</div>
+            <div className="text-fg-muted mt-7 text-sm">{footer}</div>
           </div>
         </div>
 
-        <p className="font-mono text-[11px] text-fg-dim">
-          <Link to="/" className="transition-colors hover:text-fg-muted">
+        <p className="text-fg-dim font-mono text-[11px]">
+          <Link to="/" className="hover:text-fg-muted transition-colors">
             &larr; Back to the front page
           </Link>
         </p>
       </div>
 
-      <aside className="relative hidden items-center justify-center overflow-hidden border-l border-line bg-surface-2 lg:flex">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-[0.13] blur-[120px]"
-          style={{ background: 'radial-gradient(circle at 50% 40%, rgba(255,255,255,0.5) 0%, transparent 62%)' }}
-        />
+      <aside className="border-line relative hidden items-center justify-center overflow-hidden border-l lg:flex">
+        <DuneHorizon className="top-0 bottom-0" />
         <div className="relative -rotate-[5deg]">
           <BadgeCard name="Your Name" role="Applicant" code="0000" />
         </div>
-        <p className="absolute bottom-10 left-1/2 max-w-xs -translate-x-1/2 text-center font-mono text-[11px] leading-relaxed text-fg-dim">
+        <p className="text-fg-dim absolute bottom-10 left-1/2 max-w-xs -translate-x-1/2 text-center font-mono text-[11px] leading-relaxed">
           One account. Up to one application per type. No second form, ever.
         </p>
       </aside>

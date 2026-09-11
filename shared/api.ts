@@ -1,9 +1,4 @@
-import type {
-  ApplicationStatus,
-  ApplicationType,
-  RubricCriterion,
-  UserRole,
-} from './constants'
+import type { ApplicationStatus, ApplicationType, RubricCriterion, UserRole } from './constants'
 import type { DraftAnswers } from './schemas'
 
 /** Every non-2xx response from the API has exactly this body. */

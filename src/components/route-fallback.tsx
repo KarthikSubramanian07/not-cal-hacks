@@ -8,7 +8,7 @@ export function RouteFallback() {
   return (
     <div className="flex min-h-dvh items-center justify-center">
       <div className="animate-[fadeIn_200ms_ease-out_180ms_both] text-center">
-        <div className="mx-auto size-5 animate-spin rounded-full border-2 border-line-strong border-t-fg" />
+        <div className="border-line-strong border-t-fg mx-auto size-5 animate-spin rounded-full border-2" />
         <style>{`@keyframes fadeIn{from{opacity:0}to{opacity:1}}`}</style>
       </div>
     </div>

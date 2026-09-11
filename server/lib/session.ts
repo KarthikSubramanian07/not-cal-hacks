@@ -10,7 +10,10 @@ export const SESSION_COOKIE = 'nch_session'
 export const SESSION_TTL_MS = 30 * 24 * 60 * 60 * 1000
 
 const toB64Url = (bytes: Uint8Array) =>
-  btoa(String.fromCharCode(...bytes)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
+  btoa(String.fromCharCode(...bytes))
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/, '')
 
 export function newSessionToken(): string {
   return toB64Url(crypto.getRandomValues(new Uint8Array(32)))

@@ -1,0 +1,21 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      # One pull request per ecosystem beats fifteen individual bumps.
+      react:
+        patterns: ['react', 'react-dom', 'react-router', '@types/react*']
+      cloudflare:
+        patterns: ['wrangler', '@cloudflare/*']
+      tooling:
+        patterns:
+          ['vite', 'vitest', '@vitejs/*', 'typescript', 'eslint*', 'typescript-eslint', 'prettier*']
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly

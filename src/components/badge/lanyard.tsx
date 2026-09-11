@@ -2,7 +2,13 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useReducedMotion } from '@/lib/hooks'
 import { cn } from '@/lib/utils'
 import { BadgeCard, type BadgeCardProps } from './badge-card'
-import { createLanyard, ropePath, stepLanyard, type LanyardConfig, type LanyardState } from './physics'
+import {
+  createLanyard,
+  ropePath,
+  stepLanyard,
+  type LanyardConfig,
+  type LanyardState,
+} from './physics'
 
 /**
  * The simulation runs in its own fixed coordinate space and the whole rig is
@@ -170,8 +176,20 @@ export function Lanyard({ className, ...badge }: BadgeCardProps & { className?: 
             </>
           ) : (
             <>
-              <path ref={pathARef} stroke="url(#lanyard-cord)" strokeWidth="5" fill="none" strokeLinecap="round" />
-              <path ref={pathBRef} stroke="url(#lanyard-cord)" strokeWidth="5" fill="none" strokeLinecap="round" />
+              <path
+                ref={pathARef}
+                stroke="url(#lanyard-cord)"
+                strokeWidth="5"
+                fill="none"
+                strokeLinecap="round"
+              />
+              <path
+                ref={pathBRef}
+                stroke="url(#lanyard-cord)"
+                strokeWidth="5"
+                fill="none"
+                strokeLinecap="round"
+              />
             </>
           )}
         </svg>

@@ -1,12 +1,33 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router'
 import { toast } from 'sonner'
 import { loginSchema } from '@shared/schemas'
 import { AuthShell } from '@/components/auth-shell'
 import { Button } from '@/components/ui/button'
 import { Field, Input } from '@/components/ui/field'
-import { ApiClientError } from '@/lib/api'
+import { api, ApiClientError } from '@/lib/api'
 import { useAuth } from '@/lib/auth'
+
+/** Google's mark, drawn rather than fetched so there is no third-party request. */
+function GoogleMark({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden>
+      <path
+        fill="#4285F4"
+        d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5a5.6 5.6 0 0 1-2.4 3.7v3h3.9c2.3-2.1 3.5-5.2 3.5-8.9Z"
+      />
+      <path
+        fill="#34A853"
+        d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.9-3a7.2 7.2 0 0 1-10.7-3.8H1.3v3.1A12 12 0 0 0 12 24Z"
+      />
+      <path fill="#FBBC05" d="M5.3 14.3a7.1 7.1 0 0 1 0-4.6V6.6H1.3a12 12 0 0 0 0 10.8l4-3.1Z" />
+      <path
+        fill="#EA4335"
+        d="M12 4.8c1.8 0 3.4.6 4.6 1.8l3.4-3.4A12 12 0 0 0 1.3 6.6l4 3.1A7.2 7.2 0 0 1 12 4.8Z"
+      />
+    </svg>
+  )
+}
 
 export function LoginPage() {
   const { login } = useAuth()
@@ -16,6 +37,15 @@ export function LoginPage() {
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [submitting, setSubmitting] = useState(false)
+  // The button only exists if the deployment actually has Google credentials.
+  const [googleEnabled, setGoogleEnabled] = useState(false)
+
+  useEffect(() => {
+    void api
+      .get<{ google: boolean }>('/auth/providers')
+      .then((res) => setGoogleEnabled(res.google))
+      .catch(() => setGoogleEnabled(false))
+  }, [])
 
   const onSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
@@ -56,7 +86,10 @@ export function LoginPage() {
       footer={
         <>
           No account yet?{' '}
-          <Link to="/signup" className="text-fg underline underline-offset-4 decoration-line-strong hover:decoration-fg">
+          <Link
+            to="/signup"
+            className="text-fg decoration-line-strong hover:decoration-fg underline underline-offset-4"
+          >
             Create one
           </Link>
         </>
@@ -94,12 +127,30 @@ export function LoginPage() {
         </Button>
       </form>
 
-      <div className="mt-8 rounded-xl border border-line bg-surface p-4">
-        <p className="eyebrow">Demo accounts</p>
-        <div className="mt-3 space-y-2 font-mono text-[11px] text-fg-muted">
+      {googleEnabled ? (
+        <>
+          <div className="my-6 flex items-center gap-4">
+            <span className="border-line h-px flex-1 border-t" />
+            <span className="text-fg-dim font-mono text-[11px] tracking-[0.12em] uppercase">
+              or
+            </span>
+            <span className="border-line h-px flex-1 border-t" />
+          </div>
+          <Button asChild variant="outline" size="lg" className="w-full">
+            <a href="/api/auth/google">
+              <GoogleMark className="size-4" />
+              Continue with Google
+            </a>
+          </Button>
+        </>
+      ) : null}
+
+      <div className="panel mt-8 p-4">
+        <p className="telemetry">Demo accounts</p>
+        <div className="text-fg-muted mt-3 space-y-2 font-mono text-[11px]">
           <button
             type="button"
-            className="block w-full text-left transition-colors hover:text-fg"
+            className="hover:text-fg block w-full text-left transition-colors"
             onClick={() => {
               setEmail('organizer@notcalhacks.dev')
               setPassword('demo1234')
@@ -109,7 +160,7 @@ export function LoginPage() {
           </button>
           <button
             type="button"
-            className="block w-full text-left transition-colors hover:text-fg"
+            className="hover:text-fg block w-full text-left transition-colors"
             onClick={() => {
               setEmail('hacker@notcalhacks.dev')
               setPassword('demo1234')
@@ -118,7 +169,7 @@ export function LoginPage() {
             hacker@notcalhacks.dev &middot; demo1234
           </button>
         </div>
-        <p className="mt-3 text-[11px] leading-relaxed text-fg-dim">
+        <p className="text-fg-dim mt-3 text-[11px] leading-relaxed">
           Click either line to fill the form. Seeded data, safe to poke at.
         </p>
       </div>

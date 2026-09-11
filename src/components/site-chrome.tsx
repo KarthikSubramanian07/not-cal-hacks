@@ -19,7 +19,7 @@ export function SiteNav() {
   }
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-ink/70 backdrop-blur-xl">
+    <header className="border-line bg-ink/60 sticky top-0 z-[30] border-b backdrop-blur-xl">
       <nav className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-5 sm:px-8">
         <Wordmark />
 
@@ -56,27 +56,33 @@ export function SiteNav() {
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-line">
+    <footer className="border-line bg-ink/60 relative z-10 border-t backdrop-blur-sm">
       <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-[13px] text-fg-dim">
-            Not affiliated with, endorsed by, or legally distinguishable from any similarly named
-            hackathon.
-          </p>
+          <div className="space-y-1.5">
+            <p className="text-fg-dim text-[13px]">
+              Not affiliated with, endorsed by, or legally distinguishable from any similarly named
+              hackathon.
+            </p>
+            <p className="text-fg-dim/70 font-mono text-[11px]">
+              Press <kbd className="border-line text-fg-muted rounded border px-1">J</kbd> to jump
+              to lightspeed. It does nothing. Do it anyway.
+            </p>
+          </div>
 
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[13px]">
-            <Link to="/apply" className="text-fg-muted transition-colors hover:text-fg">
+            <Link to="/apply" className="text-fg-muted hover:text-fg transition-colors">
               Apply
             </Link>
-            <Link to="/status" className="text-fg-muted transition-colors hover:text-fg">
+            <Link to="/status" className="text-fg-muted hover:text-fg transition-colors">
               Status
             </Link>
-            <Link to="/login" className="text-fg-muted transition-colors hover:text-fg">
+            <Link to="/login" className="text-fg-muted hover:text-fg transition-colors">
               Sign in
             </Link>
             <a
               href="https://github.com/KarthikSubramanian07/not-cal-hacks"
-              className="text-fg-muted transition-colors hover:text-fg"
+              className="text-fg-muted hover:text-fg transition-colors"
               target="_blank"
               rel="noreferrer"
             >

@@ -2,6 +2,9 @@ import { lazy, Suspense } from 'react'
 import { Route, Routes } from 'react-router'
 import { Toaster } from 'sonner'
 import { AuthProvider } from '@/lib/auth'
+import { Starfield } from '@/components/space/starfield'
+import { Grain } from '@/components/space/dune-horizon'
+import { JumpKey } from '@/components/space/jump-key'
 import { RequireAuth, RequireOrganizer } from '@/components/route-guards'
 import { LandingPage } from '@/routes/landing'
 import { RouteFallback } from '@/components/route-fallback'
@@ -16,19 +19,29 @@ const ApplyFormPage = lazy(() =>
 const StatusPage = lazy(() => import('@/routes/status').then((m) => ({ default: m.StatusPage })))
 
 // The organizer console is a separate chunk. Most visitors never load it.
-const AdminLayout = lazy(() => import('@/routes/admin/layout').then((m) => ({ default: m.AdminLayout })))
+const AdminLayout = lazy(() =>
+  import('@/routes/admin/layout').then((m) => ({ default: m.AdminLayout })),
+)
 const AdminDashboard = lazy(() =>
   import('@/routes/admin/dashboard').then((m) => ({ default: m.AdminDashboard })),
 )
-const AdminReview = lazy(() => import('@/routes/admin/review').then((m) => ({ default: m.AdminReview })))
+const AdminReview = lazy(() =>
+  import('@/routes/admin/review').then((m) => ({ default: m.AdminReview })),
+)
 const AdminApplication = lazy(() =>
   import('@/routes/admin/application').then((m) => ({ default: m.AdminApplication })),
 )
-const NotFoundPage = lazy(() => import('@/routes/not-found').then((m) => ({ default: m.NotFoundPage })))
+const NotFoundPage = lazy(() =>
+  import('@/routes/not-found').then((m) => ({ default: m.NotFoundPage })),
+)
 
 export function App() {
   return (
     <AuthProvider>
+      {/* One sky for the whole product, fixed behind every route. */}
+      <Starfield />
+      <Grain />
+      <JumpKey />
       <Suspense fallback={<RouteFallback />}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
