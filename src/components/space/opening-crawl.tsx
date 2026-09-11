@@ -10,15 +10,24 @@ import { triggerHyperspaceJump } from './starfield'
  * and gold text climbing away on a tilted plane. Every word is original and no
  * protected name, mark or ship appears anywhere in it.
  *
- * It plays once per tab. Skip with the button, Escape, or a click on the crawl.
- * Wheel and stray keys used to cancel it on the first frame, which made the
- * intro look like it had been removed. Playwright sets `nch:crawl-skip` so the
- * suite does not sit through thirteen seconds. Anyone who asked their OS to stop
- * moving things never sees it.
+ * It plays on every load of `/`. Skip with the button, Escape, or a click on
+ * the crawl. Wheel and stray keys used to cancel it on the first frame, which
+ * made the intro look like it had been removed. Playwright sets `nch:crawl-skip`
+ * so the suite does not sit through thirteen seconds. Anyone who asked their OS
+ * to stop moving things never sees it.
  */
 
 const SKIP_KEY = 'nch:crawl-skip'
-const SEEN_KEY = 'nch:crawl-seen-v2'
+
+function crawlShouldPlay(): boolean {
+  if (typeof window === 'undefined') return false
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false
+  try {
+    return window.sessionStorage.getItem(SKIP_KEY) !== '1'
+  } catch {
+    return true
+  }
+}
 
 const STANZAS = [
   'It is application season. Across the sector, thousands of builders have thirty-six hours, one folding table, and whatever hardware they can carry on the bus.',
@@ -31,29 +40,21 @@ type Phase = 'intro' | 'title' | 'crawl' | 'done'
 export function OpeningCrawl({ onFinished }: { onFinished?: () => void }) {
   const reducedMotion = useReducedMotion()
   const [phase, setPhase] = useState<Phase>('intro')
-  const [visible, setVisible] = useState(false)
+  const [visible, setVisible] = useState(crawlShouldPlay)
   const finishedRef = useRef(false)
   const canSkipRef = useRef(false)
 
   useEffect(() => {
-    if (reducedMotion) return
-    try {
-      if (window.sessionStorage.getItem(SKIP_KEY) === '1') return
-      if (window.sessionStorage.getItem(SEEN_KEY) === '1') return
-    } catch {
-      // Storage blocked. Play it.
+    if (reducedMotion) {
+      setVisible(false)
+      return
     }
-    setVisible(true)
+    if (crawlShouldPlay()) setVisible(true)
   }, [reducedMotion])
 
   const finish = useCallback(() => {
     if (finishedRef.current) return
     finishedRef.current = true
-    try {
-      window.sessionStorage.setItem(SEEN_KEY, '1')
-    } catch {
-      // Private browsing. The intro simply plays again next time.
-    }
     setPhase('done')
     setVisible(false)
     // Arrive out of hyperspace rather than simply cutting to the page.
