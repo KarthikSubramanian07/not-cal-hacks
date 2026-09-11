@@ -34,7 +34,8 @@
     "db:seed:local": "run-s db:seed && wrangler d1 execute not-cal-hacks --local --file=./seed.generated.sql",
     "db:seed:remote": "run-s db:seed && wrangler d1 execute not-cal-hacks --remote --file=./seed.generated.sql --yes",
     "db:reset": "rm -rf .wrangler/state && run-s db:migrate:local db:seed:local",
-    "deploy": "run-s build && wrangler pages deploy"
+    "deploy": "run-s build && wrangler pages deploy",
+    "assets": "tsx scripts/assets.ts"
   },
   "dependencies": {
     "@fontsource-variable/dm-sans": "^5.3.0",
@@ -79,6 +80,7 @@
     "npm-run-all2": "^7.0.2",
     "prettier": "^3.4.2",
     "prettier-plugin-tailwindcss": "^0.6.9",
+    "sharp": "^0.35.4",
     "tailwindcss": "^4.3.3",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2",
