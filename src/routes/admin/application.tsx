@@ -111,7 +111,7 @@ export function AdminApplication() {
     <div className="px-5 py-10 sm:px-8">
       <Link
         to="/admin"
-        className="inline-flex items-center gap-2 text-[13px] text-fg-muted transition-colors hover:text-fg"
+        className="text-fg-muted hover:text-fg inline-flex items-center gap-2 text-[13px] transition-colors"
       >
         <ArrowLeft className="size-4" />
         All applications
@@ -149,7 +149,7 @@ export function AdminApplication() {
           </div>
 
           {application.applicantEmail ? (
-            <p className="mt-1 font-mono text-[12px] text-fg-dim">{application.applicantEmail}</p>
+            <p className="text-fg-dim mt-1 font-mono text-[12px]">{application.applicantEmail}</p>
           ) : null}
 
           <div className="mt-8 grid items-start gap-6 lg:grid-cols-[1.4fr_1fr]">
@@ -177,7 +177,11 @@ export function AdminApplication() {
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
                   />
-                  <Button className="mt-4 w-full" loading={saving} onClick={() => void saveReview()}>
+                  <Button
+                    className="mt-4 w-full"
+                    loading={saving}
+                    onClick={() => void saveReview()}
+                  >
                     {application.myReview ? 'Update review' : 'Save review'}
                   </Button>
                 </div>
@@ -186,7 +190,7 @@ export function AdminApplication() {
               {application.status !== 'draft' ? (
                 <div className="panel p-6">
                   <h2 className="text-[15px] font-medium">Decision</h2>
-                  <p className="mt-1 text-[12px] text-fg-dim">
+                  <p className="text-fg-dim mt-1 text-[12px]">
                     Reversible. A waitlist that cannot be promoted is not a waitlist.
                   </p>
                   <div className="mt-4 grid gap-2">
@@ -199,7 +203,7 @@ export function AdminApplication() {
                         className={cn(
                           'rounded-xl border px-4 py-2.5 text-left text-[14px] transition-colors',
                           application.status === decision
-                            ? 'border-line-strong bg-white/[0.07] text-fg'
+                            ? 'border-line-strong text-fg bg-white/[0.07]'
                             : 'border-line text-fg-muted hover:border-line-strong hover:text-fg',
                         )}
                       >
@@ -218,20 +222,23 @@ export function AdminApplication() {
                   </p>
                   <ul className="space-y-4">
                     {application.reviews.map((review) => (
-                      <li key={review.id} className="border-b border-line/60 pb-4 last:border-0 last:pb-0">
+                      <li
+                        key={review.id}
+                        className="border-line/60 border-b pb-4 last:border-0 last:pb-0"
+                      >
                         <div className="flex items-center justify-between gap-3">
-                          <span className="text-[14px] text-fg">{review.reviewerName}</span>
-                          <span className="font-mono text-[14px] tabular-nums text-fg">
+                          <span className="text-fg text-[14px]">{review.reviewerName}</span>
+                          <span className="text-fg font-mono text-[14px] tabular-nums">
                             {review.total}/{MAX_TOTAL_SCORE}
                           </span>
                         </div>
-                        <p className="mt-1 font-mono text-[11px] text-fg-dim">
+                        <p className="text-fg-dim mt-1 font-mono text-[11px]">
                           T {review.technical} &middot; P {review.passion} &middot; F {review.fit}
                           {' · '}
                           {formatDateTime(review.createdAt)}
                         </p>
                         {review.comment ? (
-                          <p className="mt-2 text-[13px] leading-relaxed text-fg-muted text-pretty">
+                          <p className="text-fg-muted mt-2 text-[13px] leading-relaxed text-pretty">
                             {review.comment}
                           </p>
                         ) : null}

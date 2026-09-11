@@ -93,7 +93,7 @@ export function OpeningCrawl({ onFinished }: { onFinished?: () => void }) {
       role="presentation"
     >
       {phase === 'intro' ? (
-        <p className="absolute top-1/2 left-1/2 w-full max-w-2xl -translate-x-1/2 -translate-y-1/2 px-6 text-center text-[clamp(1rem,2.6vw,1.6rem)] leading-relaxed text-[#5ec8ff] opacity-0 [animation:crawl-fade_2.2s_ease-out_forwards]">
+        <p className="absolute top-1/2 left-1/2 w-full max-w-2xl -translate-x-1/2 -translate-y-1/2 [animation:crawl-fade_2.2s_ease-out_forwards] px-6 text-center text-[clamp(1rem,2.6vw,1.6rem)] leading-relaxed text-[#5ec8ff] opacity-0">
           Not long ago, in a lecture hall not remotely far away&hellip;.
         </p>
       ) : null}
@@ -101,7 +101,7 @@ export function OpeningCrawl({ onFinished }: { onFinished?: () => void }) {
       {phase === 'title' ? (
         <div className="absolute inset-0 flex items-center justify-center">
           <p
-            className="text-[clamp(2rem,9vw,7rem)] leading-none font-bold tracking-[-0.03em] text-[#ffd24a] [animation:crawl-title_2.4s_cubic-bezier(0.16,1,0.3,1)_forwards]"
+            className="[animation:crawl-title_2.4s_cubic-bezier(0.16,1,0.3,1)_forwards] text-[clamp(2rem,9vw,7rem)] leading-none font-bold tracking-[-0.03em] text-[#ffd24a]"
             style={{ fontStretch: '118%' }}
           >
             NOT CAL HACKS
@@ -112,14 +112,14 @@ export function OpeningCrawl({ onFinished }: { onFinished?: () => void }) {
       {phase === 'crawl' ? (
         <div
           className="absolute inset-0"
-          style={{ perspective: '460px', perspectiveOrigin: '50% 100%' }}
+          style={{ perspective: '680px', perspectiveOrigin: '50% 92%' }}
         >
           <div
-            className="absolute left-1/2 w-[min(92vw,840px)] -translate-x-1/2 text-justify text-[#ffd24a] [animation:crawl-scroll_13s_linear_forwards]"
+            className="absolute left-1/2 w-[min(92vw,840px)] -translate-x-1/2 [animation:crawl-scroll_13s_linear_forwards] text-justify text-[#ffd24a]"
             style={{
               transformOrigin: '50% 100%',
-              maskImage: 'linear-gradient(to bottom, transparent 0%, black 28%)',
-              WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 28%)',
+              maskImage: 'linear-gradient(to bottom, transparent 0%, black 34%)',
+              WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 34%)',
             }}
           >
             <p
@@ -166,8 +166,8 @@ export function OpeningCrawl({ onFinished }: { onFinished?: () => void }) {
           100% { transform: scale(0.32); opacity: 0 }
         }
         @keyframes crawl-scroll {
-          0% { transform: rotateX(52deg) translateY(105%) }
-          100% { transform: rotateX(52deg) translateY(-215%) }
+          0% { transform: rotateX(34deg) translateY(100%) }
+          100% { transform: rotateX(34deg) translateY(-190%) }
         }
       `}</style>
     </div>

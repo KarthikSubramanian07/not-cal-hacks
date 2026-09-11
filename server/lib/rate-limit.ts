@@ -36,5 +36,9 @@ export async function consumeRateLimit(
 
 /** Best-effort client identifier, used only for rate limiting. */
 export function clientKey(headers: Headers): string {
-  return headers.get('CF-Connecting-IP') ?? headers.get('X-Forwarded-For')?.split(',')[0]?.trim() ?? 'unknown'
+  return (
+    headers.get('CF-Connecting-IP') ??
+    headers.get('X-Forwarded-For')?.split(',')[0]?.trim() ??
+    'unknown'
+  )
 }

@@ -103,7 +103,10 @@ describe('mentor answers', () => {
 
 describe('draft schemas', () => {
   it('accepts a half-typed application', () => {
-    const result = draftAnswersSchemaFor('hacker').safeParse({ firstName: 'A', whyNotCalHacks: 'x' })
+    const result = draftAnswersSchemaFor('hacker').safeParse({
+      firstName: 'A',
+      whyNotCalHacks: 'x',
+    })
     expect(result.success).toBe(true)
   })
 

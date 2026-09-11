@@ -77,9 +77,7 @@ export function AdminDashboard() {
   const onDecide = async (row: AdminApplicationRow, next: ApplicationStatus) => {
     const previous = rows
     // Optimistic: the table should feel instant when deciding in bulk.
-    setRows((current) =>
-      (current ?? []).map((r) => (r.id === row.id ? { ...r, status: next } : r)),
-    )
+    setRows((current) => (current ?? []).map((r) => (r.id === row.id ? { ...r, status: next } : r)))
     try {
       await api.patch(`/admin/applications/${row.id}/status`, { status: next })
       toast.success(`${row.applicantName} marked ${STATUS_META[next].label.toLowerCase()}.`)
@@ -111,21 +109,27 @@ export function AdminDashboard() {
           : (
               [
                 { label: 'Submitted', value: stats.totalSubmitted, tone: 'text-fg' },
-                { label: 'Awaiting review', value: stats.awaitingReview, tone: 'text-status-review' },
+                {
+                  label: 'Awaiting review',
+                  value: stats.awaitingReview,
+                  tone: 'text-status-review',
+                },
                 { label: 'Reviewed', value: stats.reviewed, tone: 'text-ion' },
                 { label: 'Decided', value: stats.decided, tone: 'text-status-accepted' },
               ] as const
             ).map((tile) => (
               <div key={tile.label} className="panel p-5">
                 <p className="telemetry">{tile.label}</p>
-                <p className={cn('mt-2 font-mono text-3xl tabular-nums', tile.tone)}>{tile.value}</p>
+                <p className={cn('mt-2 font-mono text-3xl tabular-nums', tile.tone)}>
+                  {tile.value}
+                </p>
               </div>
             ))}
       </div>
 
       <div className="mt-8 flex flex-wrap items-center gap-3">
         <div className="relative min-w-56 flex-1">
-          <Search className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-fg-dim" />
+          <Search className="text-fg-dim absolute top-1/2 left-3.5 size-4 -translate-y-1/2" />
           <Input
             className="h-10 pl-10"
             placeholder="Search name, email or school"
@@ -138,7 +142,10 @@ export function AdminDashboard() {
         </div>
         <div className="w-40">
           <Select
-            options={[{ value: 'all', label: 'All types' }, ...APPLICATION_TYPES.map((t) => ({ value: t, label: STATUS_LABEL(t) }))]}
+            options={[
+              { value: 'all', label: 'All types' },
+              ...APPLICATION_TYPES.map((t) => ({ value: t, label: STATUS_LABEL(t) })),
+            ]}
             value={type}
             onChange={(v) => setType(v as ApplicationType | 'all')}
           />
@@ -162,21 +169,37 @@ export function AdminDashboard() {
         <div className="overflow-x-auto">
           <table className="w-full min-w-[62rem] text-left text-[14px]">
             <thead>
-              <tr className="border-b border-line text-fg-dim">
-                <th className="px-5 py-3 font-mono text-[11px] font-medium tracking-[0.1em] uppercase">Applicant</th>
-                <th className="px-3 py-3 font-mono text-[11px] font-medium tracking-[0.1em] uppercase">Type</th>
-                <th className="px-3 py-3 font-mono text-[11px] font-medium tracking-[0.1em] uppercase">School</th>
-                <th className="px-3 py-3 font-mono text-[11px] font-medium tracking-[0.1em] uppercase">Status</th>
-                <th className="px-3 py-3 text-right font-mono text-[11px] font-medium tracking-[0.1em] uppercase">Reviews</th>
-                <th className="px-3 py-3 text-right font-mono text-[11px] font-medium tracking-[0.1em] uppercase">Avg</th>
-                <th className="px-3 py-3 font-mono text-[11px] font-medium tracking-[0.1em] uppercase">Submitted</th>
-                <th className="px-5 py-3 font-mono text-[11px] font-medium tracking-[0.1em] uppercase">Decision</th>
+              <tr className="border-line text-fg-dim border-b">
+                <th className="px-5 py-3 font-mono text-[11px] font-medium tracking-[0.1em] uppercase">
+                  Applicant
+                </th>
+                <th className="px-3 py-3 font-mono text-[11px] font-medium tracking-[0.1em] uppercase">
+                  Type
+                </th>
+                <th className="px-3 py-3 font-mono text-[11px] font-medium tracking-[0.1em] uppercase">
+                  School
+                </th>
+                <th className="px-3 py-3 font-mono text-[11px] font-medium tracking-[0.1em] uppercase">
+                  Status
+                </th>
+                <th className="px-3 py-3 text-right font-mono text-[11px] font-medium tracking-[0.1em] uppercase">
+                  Reviews
+                </th>
+                <th className="px-3 py-3 text-right font-mono text-[11px] font-medium tracking-[0.1em] uppercase">
+                  Avg
+                </th>
+                <th className="px-3 py-3 font-mono text-[11px] font-medium tracking-[0.1em] uppercase">
+                  Submitted
+                </th>
+                <th className="px-5 py-3 font-mono text-[11px] font-medium tracking-[0.1em] uppercase">
+                  Decision
+                </th>
               </tr>
             </thead>
             <tbody>
               {rows === null ? (
                 Array.from({ length: 6 }, (_, i) => (
-                  <tr key={i} className="border-b border-line/60">
+                  <tr key={i} className="border-line/60 border-b">
                     <td colSpan={8} className="px-5 py-4">
                       <Skeleton className="h-5" />
                     </td>
@@ -194,32 +217,39 @@ export function AdminDashboard() {
                 </tr>
               ) : (
                 rows.map((row) => (
-                  <tr key={row.id} className="group border-b border-line/60 last:border-0 hover:bg-white/[0.03]">
+                  <tr
+                    key={row.id}
+                    className="group border-line/60 border-b last:border-0 hover:bg-white/[0.03]"
+                  >
                     <td className="px-5 py-3">
                       <Link to={`/admin/applications/${row.id}`} className="block">
                         <span className="text-fg group-hover:underline">{row.applicantName}</span>
-                        <span className="block font-mono text-[11px] text-fg-dim">{row.applicantEmail}</span>
+                        <span className="text-fg-dim block font-mono text-[11px]">
+                          {row.applicantEmail}
+                        </span>
                       </Link>
                     </td>
                     <td className="px-3 py-3">
                       <TypeBadge type={row.type} />
                     </td>
-                    <td className="max-w-44 truncate px-3 py-3 text-fg-muted">{row.school || '--'}</td>
+                    <td className="text-fg-muted max-w-44 truncate px-3 py-3">
+                      {row.school || '--'}
+                    </td>
                     <td className="px-3 py-3">
                       <StatusBadge status={row.status} size="sm" />
                     </td>
-                    <td className="px-3 py-3 text-right font-mono tabular-nums text-fg-muted">
+                    <td className="text-fg-muted px-3 py-3 text-right font-mono tabular-nums">
                       {row.reviewCount}
                     </td>
-                    <td className="px-3 py-3 text-right font-mono tabular-nums text-fg">
+                    <td className="text-fg px-3 py-3 text-right font-mono tabular-nums">
                       {formatScore(row.avgScore)}
                     </td>
-                    <td className="px-3 py-3 font-mono text-[12px] text-fg-dim">
+                    <td className="text-fg-dim px-3 py-3 font-mono text-[12px]">
                       {row.submittedAt ? relativeTime(row.submittedAt) : '--'}
                     </td>
                     <td className="px-5 py-3">
                       {row.status === 'draft' ? (
-                        <span className="font-mono text-[11px] text-fg-dim">Not submitted</span>
+                        <span className="text-fg-dim font-mono text-[11px]">Not submitted</span>
                       ) : (
                         <div className="flex gap-1">
                           {DECISION_STATUSES.map((decision) => (
@@ -231,11 +261,15 @@ export function AdminDashboard() {
                               className={cn(
                                 'rounded-full border px-2.5 py-1 font-mono text-[10px] tracking-[0.08em] uppercase transition-colors',
                                 row.status === decision
-                                  ? 'border-line-strong bg-white/[0.08] text-fg'
+                                  ? 'border-line-strong text-fg bg-white/[0.08]'
                                   : 'border-line text-fg-dim hover:border-line-strong hover:text-fg',
                               )}
                             >
-                              {decision === 'accepted' ? 'Accept' : decision === 'waitlisted' ? 'Wait' : 'Reject'}
+                              {decision === 'accepted'
+                                ? 'Accept'
+                                : decision === 'waitlisted'
+                                  ? 'Wait'
+                                  : 'Reject'}
                             </button>
                           ))}
                         </div>

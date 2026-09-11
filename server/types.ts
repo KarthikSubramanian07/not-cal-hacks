@@ -5,6 +5,12 @@ export interface Env {
   /** HMAC key for session tokens. Set with `wrangler pages secret put`. */
   SESSION_SECRET: string
   APP_NAME?: string
+  /**
+   * Optional. Set both to enable Sign in with Google; leave unset and the
+   * provider simply never appears.
+   */
+  GOOGLE_CLIENT_ID?: string
+  GOOGLE_CLIENT_SECRET?: string
 }
 
 export interface AuthedUser {

@@ -55,7 +55,7 @@ export function StatusPage() {
       <main className="mx-auto w-full max-w-3xl flex-1 px-5 py-14 sm:px-8">
         <p className="telemetry">Tracking</p>
         <h1 className="display-lg mt-3">Where things stand</h1>
-        <p className="measure mt-4 text-[15px] leading-relaxed text-fg-muted">
+        <p className="measure text-fg-muted mt-4 text-[15px] leading-relaxed">
           Everything you have filed, and exactly where it sits. This page is built from the audit
           trail, so it cannot tell you something different from what the organizers see.
         </p>
@@ -109,11 +109,11 @@ function ApplicationCard({
 
   return (
     <section className="panel overflow-hidden">
-      <div className="flex flex-wrap items-start justify-between gap-4 border-b border-line p-6">
+      <div className="border-line flex flex-wrap items-start justify-between gap-4 border-b p-6">
         <div>
           <p className="telemetry">{meta.label} application</p>
           <h2 className="mt-2 text-2xl">{STATUS_META[application.status].label}</h2>
-          <p className="measure mt-2 text-[14px] leading-relaxed text-fg-muted">
+          <p className="measure text-fg-muted mt-2 text-[14px] leading-relaxed">
             {STATUS_META[application.status].applicantCopy}
           </p>
         </div>
@@ -125,7 +125,7 @@ function ApplicationCard({
           {decision ? (
             <div className="mb-7">
               <h3 className="text-lg">{decision.title}</h3>
-              <p className="measure mt-2 text-[14px] leading-relaxed text-fg-muted text-pretty">
+              <p className="measure text-fg-muted mt-2 text-[14px] leading-relaxed text-pretty">
                 {decision.body}
               </p>
             </div>
@@ -191,13 +191,13 @@ function Timeline({ events }: { events: StatusEvent[] }) {
   const reduced = useReducedMotion()
 
   if (events.length === 0) {
-    return <p className="text-[14px] text-fg-dim">No history yet.</p>
+    return <p className="text-fg-dim text-[14px]">No history yet.</p>
   }
 
   return (
     <ol className="relative space-y-5 pl-6">
       {/* The path itself. */}
-      <span aria-hidden className="absolute top-1.5 bottom-1.5 left-[5px] w-px bg-line-strong" />
+      <span aria-hidden className="bg-line-strong absolute top-1.5 bottom-1.5 left-[5px] w-px" />
 
       {events.map((event, index) => {
         const isLast = index === events.length - 1
@@ -221,7 +221,7 @@ function Timeline({ events }: { events: StatusEvent[] }) {
             <p className={cn('text-[14px]', isLast ? 'text-fg' : 'text-fg-muted')}>
               {EVENT_LABEL[event.toStatus]}
             </p>
-            <p className="mt-0.5 font-mono text-[11px] text-fg-dim">
+            <p className="text-fg-dim mt-0.5 font-mono text-[11px]">
               {formatDateTime(event.createdAt)}
             </p>
           </motion.li>

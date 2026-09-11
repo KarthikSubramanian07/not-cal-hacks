@@ -32,7 +32,12 @@ export function useDebouncedCallback<A extends unknown[]>(
     latest.current = callback
   }, [callback])
 
-  useEffect(() => () => { if (timer.current) clearTimeout(timer.current) }, [])
+  useEffect(
+    () => () => {
+      if (timer.current) clearTimeout(timer.current)
+    },
+    [],
+  )
 
   return useCallback(
     (...args: A) => {
@@ -74,12 +79,15 @@ export function useInView<T extends HTMLElement>(options?: IntersectionObserverI
   useEffect(() => {
     const node = ref.current
     if (!node || inView) return
-    const observer = new IntersectionObserver((entries) => {
-      if (entries.some((e) => e.isIntersecting)) {
-        setInView(true)
-        observer.disconnect()
-      }
-    }, { rootMargin: '-10% 0px', ...options })
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setInView(true)
+          observer.disconnect()
+        }
+      },
+      { rootMargin: '-10% 0px', ...options },
+    )
     observer.observe(node)
     return () => observer.disconnect()
   }, [inView, options])

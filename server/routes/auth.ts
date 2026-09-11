@@ -16,6 +16,7 @@ import {
 } from '../lib/session'
 import { parseBody } from '../lib/validate'
 import { currentUser, requireUser } from '../middleware/auth'
+import oauthRoutes from './oauth'
 import type { AppEnv } from '../types'
 
 const auth = new Hono<AppEnv>()
@@ -84,11 +85,7 @@ auth.post('/login', async (c) => {
   const input = await parseBody(c, loginSchema)
   await consumeRateLimit(db, `login:${input.email}`, 10, 15 * 60 * 1000)
 
-  const row = await db
-    .select()
-    .from(schema.users)
-    .where(eq(schema.users.email, input.email))
-    .get()
+  const row = await db.select().from(schema.users).where(eq(schema.users.email, input.email)).get()
 
   // Identical response for "no such user" and "wrong password", so the endpoint
   // cannot be used to enumerate which emails have accounts.
@@ -129,5 +126,8 @@ auth.post('/logout', async (c) => {
 auth.get('/me', (c) => c.json({ user: c.get('user') }))
 
 auth.get('/session', requireUser, (c) => c.json({ user: currentUser(c) }))
+
+// Optional third-party sign-in, mounted under the same prefix.
+auth.route('/', oauthRoutes)
 
 export default auth

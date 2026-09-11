@@ -31,7 +31,11 @@ interface FieldProps {
   required?: boolean
   /** Shows a live character count against the limit. */
   count?: { value: number; max: number }
-  children: (props: { id: string; 'aria-invalid': boolean; 'aria-describedby': string }) => React.ReactNode
+  children: (props: {
+    id: string
+    'aria-invalid': boolean
+    'aria-describedby': string
+  }) => React.ReactNode
   className?: string
 }
 
@@ -48,9 +52,9 @@ export function Field({ label, hint, error, required, count, children, className
   return (
     <div className={cn('space-y-2', className)}>
       <div className="flex items-baseline justify-between gap-4">
-        <label htmlFor={id} className="text-sm font-medium text-fg">
+        <label htmlFor={id} className="text-fg text-sm font-medium">
           {label}
-          {required ? <span className="ml-1 text-fg-dim">*</span> : null}
+          {required ? <span className="text-fg-dim ml-1">*</span> : null}
         </label>
         {count ? (
           <span

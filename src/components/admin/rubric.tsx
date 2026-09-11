@@ -1,4 +1,11 @@
-import { RUBRIC_CRITERIA, RUBRIC_LABELS, SCORE_ANCHORS, SCORE_MAX, SCORE_MIN, type RubricCriterion } from '@shared/constants'
+import {
+  RUBRIC_CRITERIA,
+  RUBRIC_LABELS,
+  SCORE_ANCHORS,
+  SCORE_MAX,
+  SCORE_MIN,
+  type RubricCriterion,
+} from '@shared/constants'
 import { cn } from '@/lib/utils'
 
 export type Scores = Record<RubricCriterion, number>
@@ -58,9 +65,11 @@ export function Rubric({
           >
             <div className="flex items-baseline justify-between gap-3">
               <p className="text-[14px] font-medium">{meta.label}</p>
-              <p className="font-mono text-[11px] text-fg-dim">{SCORE_ANCHORS[scores[criterion]]}</p>
+              <p className="text-fg-dim font-mono text-[11px]">
+                {SCORE_ANCHORS[scores[criterion]]}
+              </p>
             </div>
-            <p className="mt-1 text-[12px] text-fg-dim">{meta.help}</p>
+            <p className="text-fg-dim mt-1 text-[12px]">{meta.help}</p>
 
             <div className="mt-3 flex gap-1.5">
               {[1, 2, 3, 4, 5].map((value) => {
@@ -93,9 +102,9 @@ export function Rubric({
         )
       })}
 
-      <div className="flex items-center justify-between border-t border-line pt-4">
+      <div className="border-line flex items-center justify-between border-t pt-4">
         <span className="telemetry">Total</span>
-        <span className="font-mono text-2xl tabular-nums text-fg">{total}</span>
+        <span className="text-fg font-mono text-2xl tabular-nums">{total}</span>
       </div>
     </div>
   )

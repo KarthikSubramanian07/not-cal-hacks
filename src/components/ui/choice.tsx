@@ -38,13 +38,15 @@ export function ChipGroup<T extends string>({
             role="checkbox"
             aria-checked={selected}
             disabled={disabled}
-            onClick={() => onChange(selected ? value.filter((v) => v !== option) : [...value, option])}
+            onClick={() =>
+              onChange(selected ? value.filter((v) => v !== option) : [...value, option])
+            }
             className={cn(
               'rounded-full border px-4 py-2 text-sm transition-all duration-200 ease-[var(--ease-out-quint)] active:scale-[0.97]',
               selected
-                ? 'border-white/30 bg-white/[0.09] text-fg'
+                ? 'text-fg border-white/30 bg-white/[0.09]'
                 : 'border-line text-fg-muted hover:border-line-strong hover:text-fg',
-              disabled && 'cursor-not-allowed opacity-35 hover:border-line',
+              disabled && 'hover:border-line cursor-not-allowed opacity-35',
             )}
           >
             {labels?.[option] ?? option}
@@ -83,7 +85,7 @@ export function SegmentedControl<T extends string>({
             className={cn(
               'rounded-full border px-4 py-2 text-sm transition-all duration-200 ease-[var(--ease-out-quint)] active:scale-[0.97]',
               selected
-                ? 'border-white/30 bg-white/[0.09] text-fg'
+                ? 'text-fg border-white/30 bg-white/[0.09]'
                 : 'border-line text-fg-muted hover:border-line-strong hover:text-fg',
             )}
           >
@@ -118,11 +120,11 @@ export function Select({
         id={id}
         aria-invalid={ariaInvalid}
         aria-describedby={ariaDescribedBy}
-        className="flex h-12 w-full items-center justify-between rounded-xl border border-line bg-surface-2 px-4 text-left text-fg transition-colors hover:border-line-strong focus:border-white/35 focus:outline-none focus:ring-2 focus:ring-white/15 aria-[invalid=true]:border-status-rejected/70 data-[placeholder]:text-fg-dim/70"
+        className="border-line bg-surface-2 text-fg hover:border-line-strong aria-[invalid=true]:border-status-rejected/70 data-[placeholder]:text-fg-dim/70 flex h-12 w-full items-center justify-between rounded-xl border px-4 text-left transition-colors focus:border-white/35 focus:ring-2 focus:ring-white/15 focus:outline-none"
       >
         <RadixSelect.Value placeholder={placeholder} />
         <RadixSelect.Icon>
-          <ChevronDown className="size-4 text-fg-dim" />
+          <ChevronDown className="text-fg-dim size-4" />
         </RadixSelect.Icon>
       </RadixSelect.Trigger>
 
@@ -130,18 +132,18 @@ export function Select({
         <RadixSelect.Content
           position="popper"
           sideOffset={6}
-          className="z-50 max-h-72 min-w-[var(--radix-select-trigger-width)] overflow-hidden rounded-xl border border-line-strong bg-surface shadow-2xl shadow-black/60"
+          className="border-line-strong bg-surface z-50 max-h-72 min-w-[var(--radix-select-trigger-width)] overflow-hidden rounded-xl border shadow-2xl shadow-black/60"
         >
           <RadixSelect.Viewport className="p-1.5">
             {options.map((option) => (
               <RadixSelect.Item
                 key={option.value}
                 value={option.value}
-                className="flex cursor-pointer items-center justify-between rounded-lg px-3 py-2.5 text-sm text-fg-muted outline-none select-none data-[highlighted]:bg-white/[0.07] data-[highlighted]:text-fg data-[state=checked]:text-fg"
+                className="text-fg-muted data-[highlighted]:text-fg data-[state=checked]:text-fg flex cursor-pointer items-center justify-between rounded-lg px-3 py-2.5 text-sm outline-none select-none data-[highlighted]:bg-white/[0.07]"
               >
                 <RadixSelect.ItemText>{option.label}</RadixSelect.ItemText>
                 <RadixSelect.ItemIndicator>
-                  <Check className="size-4 text-fg" />
+                  <Check className="text-fg size-4" />
                 </RadixSelect.ItemIndicator>
               </RadixSelect.Item>
             ))}
@@ -181,11 +183,11 @@ export function Toggle({
         <span
           className={cn(
             'absolute top-1/2 size-4 -translate-y-1/2 rounded-full transition-all duration-300 ease-[var(--ease-spring)]',
-            checked ? 'left-[22px] bg-fg' : 'left-[3px] bg-fg-dim',
+            checked ? 'bg-fg left-[22px]' : 'bg-fg-dim left-[3px]',
           )}
         />
       </span>
-      <span className="text-sm text-fg-muted transition-colors group-hover:text-fg">{label}</span>
+      <span className="text-fg-muted group-hover:text-fg text-sm transition-colors">{label}</span>
     </button>
   )
 }

@@ -42,8 +42,8 @@ export function ApplicationView({ application }: { application: AdminApplication
   if (application.status === 'draft') {
     return (
       <div className="panel p-8 text-center">
-        <p className="text-[15px] text-fg">This application has not been submitted</p>
-        <p className="measure mx-auto mt-2 text-[14px] leading-relaxed text-fg-muted">
+        <p className="text-fg text-[15px]">This application has not been submitted</p>
+        <p className="measure text-fg-muted mx-auto mt-2 text-[14px] leading-relaxed">
           Its contents stay private until the applicant hands it in. You can see that it exists so
           the funnel is honest, and nothing more.
         </p>
@@ -67,14 +67,14 @@ export function ApplicationView({ application }: { application: AdminApplication
       <div className="panel p-6">
         <dl className="grid gap-x-8 gap-y-3 sm:grid-cols-2">
           {shortEntries.map(([key, label, value]) => (
-            <div key={key} className="flex justify-between gap-4 border-b border-line/60 pb-2.5">
-              <dt className="text-[13px] text-fg-dim">{label}</dt>
-              <dd className="text-right text-[14px] text-fg">{value}</dd>
+            <div key={key} className="border-line/60 flex justify-between gap-4 border-b pb-2.5">
+              <dt className="text-fg-dim text-[13px]">{label}</dt>
+              <dd className="text-fg text-right text-[14px]">{value}</dd>
             </div>
           ))}
         </dl>
         {application.blinded ? (
-          <p className="mt-4 font-mono text-[11px] text-fg-dim">
+          <p className="text-fg-dim mt-4 font-mono text-[11px]">
             Name and profile links withheld. Blind mode is on.
           </p>
         ) : null}
@@ -96,7 +96,7 @@ export function ApplicationView({ application }: { application: AdminApplication
                 {value.length}
               </span>
             </div>
-            <p className="measure mt-3 text-[15px] leading-[1.7] text-fg-muted text-pretty">
+            <p className="measure text-fg-muted mt-3 text-[15px] leading-[1.7] text-pretty">
               {value}
             </p>
           </div>

@@ -44,74 +44,157 @@ const nextId = (prefix: string) =>
 // ------------------------------------------------------------------- content
 
 const FIRST_NAMES = [
-  'Amara', 'Dev', 'Sofia', 'Kenji', 'Lucia', 'Omar', 'Freya', 'Tobi', 'Mira', 'Elias',
-  'Nina', 'Rohan', 'Priya', 'Marcus', 'June', 'Theo', 'Zainab', 'Caleb', 'Ines', 'Hana',
-  'Yusuf', 'Clara', 'Andre', 'Leila', 'Sam', 'Wes', 'Nadia', 'Kofi',
+  'Amara',
+  'Dev',
+  'Sofia',
+  'Kenji',
+  'Lucia',
+  'Omar',
+  'Freya',
+  'Tobi',
+  'Mira',
+  'Elias',
+  'Nina',
+  'Rohan',
+  'Priya',
+  'Marcus',
+  'June',
+  'Theo',
+  'Zainab',
+  'Caleb',
+  'Ines',
+  'Hana',
+  'Yusuf',
+  'Clara',
+  'Andre',
+  'Leila',
+  'Sam',
+  'Wes',
+  'Nadia',
+  'Kofi',
 ]
 
 const LAST_NAMES = [
-  'Okonkwo', 'Fernandes', 'Nakamura', 'Ruiz', 'Haddad', 'Lindqvist', 'Adeyemi', 'Chatterjee',
-  'Moreau', 'Vasquez', 'Iyer', 'Oyelaran', 'Whitaker', 'Papadopoulos', 'Rahman', 'Castellanos',
-  'Bright', 'Osei', 'Strand', 'Delgado', 'Kaur', 'Novak', 'Mbeki', 'Tran',
+  'Okonkwo',
+  'Fernandes',
+  'Nakamura',
+  'Ruiz',
+  'Haddad',
+  'Lindqvist',
+  'Adeyemi',
+  'Chatterjee',
+  'Moreau',
+  'Vasquez',
+  'Iyer',
+  'Oyelaran',
+  'Whitaker',
+  'Papadopoulos',
+  'Rahman',
+  'Castellanos',
+  'Bright',
+  'Osei',
+  'Strand',
+  'Delgado',
+  'Kaur',
+  'Novak',
+  'Mbeki',
+  'Tran',
 ]
 
 const SCHOOLS = [
-  'UC Berkeley', 'Stanford', 'San Jose State', 'UC Davis', 'Cal Poly SLO', 'De Anza College',
-  'UCLA', 'University of Waterloo', 'Georgia Tech', 'UIUC', 'University of Michigan',
-  'UT Austin', 'Olin College', 'Harvey Mudd', 'City College of San Francisco', 'UC Santa Cruz',
+  'UC Berkeley',
+  'Stanford',
+  'San Jose State',
+  'UC Davis',
+  'Cal Poly SLO',
+  'De Anza College',
+  'UCLA',
+  'University of Waterloo',
+  'Georgia Tech',
+  'UIUC',
+  'University of Michigan',
+  'UT Austin',
+  'Olin College',
+  'Harvey Mudd',
+  'City College of San Francisco',
+  'UC Santa Cruz',
 ]
 
 const MAJORS = [
-  'EECS', 'Computer Science', 'Cognitive Science', 'Data Science', 'Mechanical Engineering',
-  'Design Media Arts', 'Applied Math', 'Bioengineering', 'Physics', 'Undeclared',
+  'EECS',
+  'Computer Science',
+  'Cognitive Science',
+  'Data Science',
+  'Mechanical Engineering',
+  'Design Media Arts',
+  'Applied Math',
+  'Bioengineering',
+  'Physics',
+  'Undeclared',
 ]
 
 const COMPANIES = [
-  'Stripe', 'Figma', 'Vercel', 'Notion', 'Ramp', 'Databricks', 'Sentry', 'Linear',
-  'Retool', 'Cloudflare', 'Replit', 'Supabase',
+  'Stripe',
+  'Figma',
+  'Vercel',
+  'Notion',
+  'Ramp',
+  'Databricks',
+  'Sentry',
+  'Linear',
+  'Retool',
+  'Cloudflare',
+  'Replit',
+  'Supabase',
 ]
 
 const ROLES = [
-  'Staff Engineer', 'Engineering Manager', 'Senior Designer', 'Infrastructure Lead',
-  'ML Engineer', 'Developer Advocate', 'Founding Engineer', 'Principal Engineer',
+  'Staff Engineer',
+  'Engineering Manager',
+  'Senior Designer',
+  'Infrastructure Lead',
+  'ML Engineer',
+  'Developer Advocate',
+  'Founding Engineer',
+  'Principal Engineer',
 ]
 
 /** Essays of deliberately uneven quality, so the rubric has something to do. */
 const WHY_ANSWERS = [
-  "I have been to four hackathons and shipped nothing at three of them. I want the fourth pattern to break. I have a specific idea, a teammate who has already said yes, and a weekend with nothing else in it.",
-  "Honestly, my roommate is going and I do not want to sit in the dorm. But I have been teaching myself Rust for two months and I would like an excuse to write something in it that other people will actually look at.",
-  "I want to build things but every project I start alone dies in week two. A deadline I cannot move, in a room where everyone else is also building, is the only thing that has ever worked for me.",
-  "My little brother is diabetic and the software he uses to track his glucose is genuinely hostile. I have wanted to rebuild it for a year. I would like thirty-six hours and someone to tell me when my UI is bad.",
-  "To network and learn new technologies and grow as a developer.",
-  "I am a designer who is tired of handing off mockups and never seeing them again. I want to sit next to engineers for a weekend and learn enough to stop being a bottleneck.",
-  "Last year I helped run a hackathon and never got to build at one. I would like to be on the other side of the table for once, eating the bad pizza I used to order.",
-  "I maintain a small open source library that about two hundred people use. I have never met another maintainer in person. I want to find out how other people handle the part where strangers are angry at your free software.",
-  "I want to win.",
-  "I am switching into software from a biology program and I need proof, to myself more than to anyone else, that I can finish something under pressure alongside people who have been doing this longer.",
-  "There is a bus route in my town that is wrong on every maps app. I have the GTFS data. I have not had a reason to do anything with it. This would be the reason.",
-  "I have an idea about splitting rent fairly when rooms are different sizes and everyone lies about their budget. It is a small problem and I think about it constantly.",
+  'I have been to four hackathons and shipped nothing at three of them. I want the fourth pattern to break. I have a specific idea, a teammate who has already said yes, and a weekend with nothing else in it.',
+  'Honestly, my roommate is going and I do not want to sit in the dorm. But I have been teaching myself Rust for two months and I would like an excuse to write something in it that other people will actually look at.',
+  'I want to build things but every project I start alone dies in week two. A deadline I cannot move, in a room where everyone else is also building, is the only thing that has ever worked for me.',
+  'My little brother is diabetic and the software he uses to track his glucose is genuinely hostile. I have wanted to rebuild it for a year. I would like thirty-six hours and someone to tell me when my UI is bad.',
+  'To network and learn new technologies and grow as a developer.',
+  'I am a designer who is tired of handing off mockups and never seeing them again. I want to sit next to engineers for a weekend and learn enough to stop being a bottleneck.',
+  'Last year I helped run a hackathon and never got to build at one. I would like to be on the other side of the table for once, eating the bad pizza I used to order.',
+  'I maintain a small open source library that about two hundred people use. I have never met another maintainer in person. I want to find out how other people handle the part where strangers are angry at your free software.',
+  'I want to win.',
+  'I am switching into software from a biology program and I need proof, to myself more than to anyone else, that I can finish something under pressure alongside people who have been doing this longer.',
+  'There is a bus route in my town that is wrong on every maps app. I have the GTFS data. I have not had a reason to do anything with it. This would be the reason.',
+  'I have an idea about splitting rent fairly when rooms are different sizes and everyone lies about their budget. It is a small problem and I think about it constantly.',
 ]
 
 const PROJECT_ANSWERS = [
-  "A terminal tool that watches my git branches and tells me which ones are safe to delete. It is four hundred lines and I use it every day, which still surprises me.",
+  'A terminal tool that watches my git branches and tells me which ones are safe to delete. It is four hundred lines and I use it every day, which still surprises me.',
   "I rewrote my high school's course registration page as a static site because the real one went down every semester. Roughly six hundred students used my version before the district asked me to take it down.",
-  "A physical dashboard on my wall made of an e-ink screen and a Raspberry Pi that shows the next two trains. The code is bad. The object is real and I love it.",
-  "A Chrome extension that strips autoplay video. Two thousand users. My first experience with people filing bug reports about something I made for myself.",
+  'A physical dashboard on my wall made of an e-ink screen and a Raspberry Pi that shows the next two trains. The code is bad. The object is real and I love it.',
+  'A Chrome extension that strips autoplay video. Two thousand users. My first experience with people filing bug reports about something I made for myself.',
   "I built a website for my dad's landscaping business. It is a single HTML file. It doubled the number of calls he gets, which taught me more about software than any class has.",
-  "A todo app, but I rewrote the sync layer three times until conflicts stopped losing data. Nobody uses it. The third sync layer is the best code I have written.",
+  'A todo app, but I rewrote the sync layer three times until conflicts stopped losing data. Nobody uses it. The third sync layer is the best code I have written.',
   "A model that predicts whether a pull request will be reverted, trained on my team's history. It was right about sixty percent of the time, which is worse than it sounds.",
-  "I made a game in Godot about being a night shift librarian. It has eleven minutes of content and one genuinely good joke.",
+  'I made a game in Godot about being a night shift librarian. It has eleven minutes of content and one genuinely good joke.',
   "A CLI for my university's dining hall menus so I could stop opening a PDF. Scraping a PDF every morning taught me patience.",
-  "I used React and Node to build a full stack application with authentication.",
-  "A Discord bot that runs our intramural soccer league standings. It has survived two years and four rule changes, which mostly means I got good at migrations.",
-  "I took apart a broken label printer and wrote a driver for it so it could print receipts of my commit history. It is useless and it works.",
+  'I used React and Node to build a full stack application with authentication.',
+  'A Discord bot that runs our intramural soccer league standings. It has survived two years and four rule changes, which mostly means I got good at migrations.',
+  'I took apart a broken label printer and wrote a driver for it so it could print receipts of my commit history. It is useless and it works.',
 ]
 
 const MENTOR_WHY = [
-  "I got unstuck at a hackathon in 2016 by a stranger who spent forty minutes on my segfault. I have wanted to be that stranger for a while now.",
-  "Most of my job is now meetings. I miss sitting next to someone at 2am while they figure out why their build is broken.",
-  "I review a lot of code written by people who learned from tutorials. I would rather catch the habits early, in person, when it is still fun to fix them.",
-  "I run infrastructure for a living and I think students should meet someone who will tell them the truth about what production is like.",
+  'I got unstuck at a hackathon in 2016 by a stranger who spent forty minutes on my segfault. I have wanted to be that stranger for a while now.',
+  'Most of my job is now meetings. I miss sitting next to someone at 2am while they figure out why their build is broken.',
+  'I review a lot of code written by people who learned from tutorials. I would rather catch the habits early, in person, when it is still fun to fix them.',
+  'I run infrastructure for a living and I think students should meet someone who will tell them the truth about what production is like.',
 ]
 
 // ------------------------------------------------------------------ SQL bits
@@ -161,7 +244,10 @@ function commonAnswers(first: string, last: string, index: number) {
     pronouns: pick(['she/her', 'he/him', 'they/them', '']) || undefined,
     school: pick(SCHOOLS),
     gradYear: pick([2026, 2027, 2028, 2029]),
-    linkedin: rand() > 0.45 ? `https://linkedin.com/in/${first.toLowerCase()}-${last.toLowerCase()}` : undefined,
+    linkedin:
+      rand() > 0.45
+        ? `https://linkedin.com/in/${first.toLowerCase()}-${last.toLowerCase()}`
+        : undefined,
     github: rand() > 0.3 ? `https://github.com/${first.toLowerCase()}${index}` : undefined,
   }
 }
@@ -172,9 +258,13 @@ function hackerAnswers(first: string, last: string, index: number) {
     whyNotCalHacks: pick(WHY_ANSWERS),
     major: pick(MAJORS),
     experienceLevel: pick(['first', '1-2', '3+'] as const),
-    tracks: pickMany(['AI', 'Health', 'Fintech', 'Climate', 'Hardware', 'Open'] as const, 1 + Math.floor(rand() * 3)),
+    tracks: pickMany(
+      ['AI', 'Health', 'Fintech', 'Climate', 'Hardware', 'Open'] as const,
+      1 + Math.floor(rand() * 3),
+    ),
     proudestProject: pick(PROJECT_ANSWERS),
-    dietary: rand() > 0.7 ? pick(['Vegetarian', 'Vegan', 'No pork', 'Celiac, strictly']) : undefined,
+    dietary:
+      rand() > 0.7 ? pick(['Vegetarian', 'Vegan', 'No pork', 'Celiac, strictly']) : undefined,
     tshirtSize: pick(['XS', 'S', 'M', 'L', 'XL', 'XXL'] as const),
   }
 }
@@ -185,9 +275,15 @@ function mentorAnswers(first: string, last: string, index: number) {
     whyNotCalHacks: pick(MENTOR_WHY),
     company: pick(COMPANIES),
     role: pick(ROLES),
-    expertise: pickMany(['Web', 'Mobile', 'ML', 'Hardware', 'Design', 'Cloud'] as const, 1 + Math.floor(rand() * 3)),
+    expertise: pickMany(
+      ['Web', 'Mobile', 'ML', 'Hardware', 'Design', 'Cloud'] as const,
+      1 + Math.floor(rand() * 3),
+    ),
     yearsExperience: 3 + Math.floor(rand() * 14),
-    availability: pickMany(['Fri PM', 'Sat AM', 'Sat PM', 'Sun AM'] as const, 1 + Math.floor(rand() * 3)),
+    availability: pickMany(
+      ['Fri PM', 'Sat AM', 'Sat PM', 'Sun AM'] as const,
+      1 + Math.floor(rand() * 3),
+    ),
     mentoredBefore: rand() > 0.4,
   }
 }
@@ -212,9 +308,27 @@ function build() {
 
   // --- organizers -----------------------------------------------------------
   const organizers: SeededUser[] = [
-    { id: nextId('org1'), email: 'organizer@notcalhacks.dev', fullName: 'Priya Raghavan', role: 'organizer', password: 'demo1234' },
-    { id: nextId('org2'), email: 'marcus@notcalhacks.dev', fullName: 'Marcus Oyelaran', role: 'organizer', password: 'demo1234' },
-    { id: nextId('org3'), email: 'june@notcalhacks.dev', fullName: 'June Whitaker', role: 'organizer', password: 'demo1234' },
+    {
+      id: nextId('org1'),
+      email: 'organizer@notcalhacks.dev',
+      fullName: 'Priya Raghavan',
+      role: 'organizer',
+      password: 'demo1234',
+    },
+    {
+      id: nextId('org2'),
+      email: 'marcus@notcalhacks.dev',
+      fullName: 'Marcus Oyelaran',
+      role: 'organizer',
+      password: 'demo1234',
+    },
+    {
+      id: nextId('org3'),
+      email: 'june@notcalhacks.dev',
+      fullName: 'June Whitaker',
+      role: 'organizer',
+      password: 'demo1234',
+    },
   ]
   users.push(...organizers)
 
@@ -300,7 +414,11 @@ function build() {
   // Every application past `submitted` must already carry a review, otherwise
   // the seeded state would describe something the app itself cannot produce.
   const needsReview = applications.filter(
-    (a) => a.status === 'under_review' || a.status === 'accepted' || a.status === 'waitlisted' || a.status === 'rejected',
+    (a) =>
+      a.status === 'under_review' ||
+      a.status === 'accepted' ||
+      a.status === 'waitlisted' ||
+      a.status === 'rejected',
   )
   const optional = applications.filter((a) => a.status === 'submitted')
 
@@ -406,7 +524,8 @@ async function main() {
       }
     }
     for (const [from, to, at] of events) {
-      const actor = from === null || to === 'submitted' ? sqlString(app.userId) : sqlString(organizers[0]!.id)
+      const actor =
+        from === null || to === 'submitted' ? sqlString(app.userId) : sqlString(organizers[0]!.id)
       lines.push(
         `INSERT INTO status_events (application_id, from_status, to_status, actor_id, created_at) VALUES (` +
           `${sqlString(app.id)}, ${sqlNullableString(from)}, ${sqlString(to)}, ${actor}, ${at});`,

@@ -1,5 +1,11 @@
 import { z } from 'zod'
-import { APPLICATION_STATUSES, APPLICATION_TYPES, DECISION_STATUSES, SCORE_MAX, SCORE_MIN } from '../constants'
+import {
+  APPLICATION_STATUSES,
+  APPLICATION_TYPES,
+  DECISION_STATUSES,
+  SCORE_MAX,
+  SCORE_MIN,
+} from '../constants'
 
 const score = z
   .number()
@@ -28,7 +34,9 @@ export const applicationFiltersSchema = z.object({
   type: z.enum(APPLICATION_TYPES).optional(),
   status: z.enum(APPLICATION_STATUSES).optional(),
   q: z.string().trim().max(120).optional(),
-  sort: z.enum(['submitted_desc', 'submitted_asc', 'score_desc', 'score_asc', 'reviews_asc']).default('submitted_desc'),
+  sort: z
+    .enum(['submitted_desc', 'submitted_asc', 'score_desc', 'score_asc', 'reviews_asc'])
+    .default('submitted_desc'),
   limit: z.coerce.number().int().min(1).max(200).default(100),
   offset: z.coerce.number().int().min(0).default(0),
 })

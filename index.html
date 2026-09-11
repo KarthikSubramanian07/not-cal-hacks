@@ -3,7 +3,28 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#0c0b0a" />
+    <meta name="theme-color" content="#121319" />
+
+    <!--
+      Critical inline styles.
+
+      The landing page is prerendered, so real markup exists before the
+      stylesheet arrives. Without this the browser paints that markup on white
+      for one frame, which on a dark product reads as a broken flash of light
+      mode. These three rules are the minimum needed to make the first paint
+      correct; everything else can wait for the stylesheet.
+    -->
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+      html,
+      body {
+        margin: 0;
+        background-color: #121319;
+        color: #fafafa;
+      }
+    </style>
 
     <title>not-cal-hacks — apply in five minutes, reviewed in thirty seconds</title>
     <meta
@@ -16,7 +37,10 @@
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="not-cal-hacks" />
     <meta property="og:url" content="https://not-cal-hacks.pages.dev/" />
-    <meta property="og:title" content="not-cal-hacks — a hackathon portal that respects both sides of the table" />
+    <meta
+      property="og:title"
+      content="not-cal-hacks — a hackathon portal that respects both sides of the table"
+    />
     <meta
       property="og:description"
       content="Apply in five minutes. Reviewed in thirty seconds. Blind review, a shared rubric, and a queue that spreads coverage evenly."
@@ -24,7 +48,10 @@
     <meta property="og:image" content="https://not-cal-hacks.pages.dev/og.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="A hackathon badge hanging from a lanyard against a dark background." />
+    <meta
+      property="og:image:alt"
+      content="A hackathon badge hanging from a lanyard against a dark background."
+    />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="not-cal-hacks" />

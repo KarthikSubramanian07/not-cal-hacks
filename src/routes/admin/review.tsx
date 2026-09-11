@@ -37,13 +37,15 @@ export function AdminReview() {
       const res = await api.get<QueueResponse>(`/admin/queue?blind=${blind ? '1' : '0'}`)
       setData(res)
       // Reset the form for the incoming application, not the outgoing one.
-      setScores(res.application?.myReview
-        ? {
-            technical: res.application.myReview.technical,
-            passion: res.application.myReview.passion,
-            fit: res.application.myReview.fit,
-          }
-        : EMPTY_SCORES)
+      setScores(
+        res.application?.myReview
+          ? {
+              technical: res.application.myReview.technical,
+              passion: res.application.myReview.passion,
+              fit: res.application.myReview.fit,
+            }
+          : EMPTY_SCORES,
+      )
       setComment(res.application?.myReview?.comment ?? '')
       setFocused('technical')
     } catch {
@@ -138,7 +140,7 @@ export function AdminReview() {
         <EmptyState
           className="mt-8"
           title="Queue clear"
-          body="You have reviewed every application available to you. Either the pile is genuinely empty or your colleagues are slower than you."
+          body="You have reviewed every application available to you. Either the pile is genuinely empty or your colleagues are slower than you. It is one of those."
           action={
             <Button asChild>
               <Link to="/admin">Back to applications</Link>
@@ -157,14 +159,14 @@ export function AdminReview() {
               transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
             >
               <div className="mb-5 flex flex-wrap items-center gap-3">
-                <span className="font-mono text-lg text-ion">#{application.alias}</span>
+                <span className="text-ion font-mono text-lg">#{application.alias}</span>
                 <TypeBadge type={application.type} />
                 <StatusBadge status={application.status} size="sm" />
                 {application.applicantName ? (
-                  <span className="text-[14px] text-fg-muted">{application.applicantName}</span>
+                  <span className="text-fg-muted text-[14px]">{application.applicantName}</span>
                 ) : null}
                 {application.reviews.length > 0 ? (
-                  <span className="font-mono text-[11px] text-fg-dim">
+                  <span className="text-fg-dim font-mono text-[11px]">
                     {application.reviews.length} review
                     {application.reviews.length === 1 ? '' : 's'} already
                   </span>
@@ -179,7 +181,7 @@ export function AdminReview() {
             <h2 className="text-[15px] font-medium">
               {application.myReview ? 'Update your review' : 'Score this application'}
             </h2>
-            <p className="mt-1 text-[12px] text-fg-dim">
+            <p className="text-fg-dim mt-1 text-[12px]">
               Press 1 to 5 to score and move on. Command-Enter files it.
             </p>
 
@@ -194,7 +196,7 @@ export function AdminReview() {
             </div>
 
             <div className="mt-5">
-              <label htmlFor="review-comment" className="text-[13px] text-fg-muted">
+              <label htmlFor="review-comment" className="text-fg-muted text-[13px]">
                 Comment for the other reviewers
               </label>
               <Textarea
@@ -207,24 +209,29 @@ export function AdminReview() {
               />
             </div>
 
-            <Button className="mt-4 w-full" size="lg" loading={saving} onClick={() => void submit()}>
+            <Button
+              className="mt-4 w-full"
+              size="lg"
+              loading={saving}
+              onClick={() => void submit()}
+            >
               {application.myReview ? 'Update and continue' : 'File review and continue'}
             </Button>
 
             {application.reviews.length > 0 ? (
-              <div className="mt-6 border-t border-line pt-5">
+              <div className="border-line mt-6 border-t pt-5">
                 <p className="telemetry mb-3">Other reviewers</p>
                 <ul className="space-y-2.5">
                   {application.reviews.map((review) => (
                     <li key={review.id} className="text-[13px]">
                       <div className="flex items-center justify-between gap-3">
                         <span className="text-fg-muted">{review.reviewerName}</span>
-                        <span className="font-mono tabular-nums text-fg">
+                        <span className="text-fg font-mono tabular-nums">
                           {review.total}/{MAX_TOTAL_SCORE}
                         </span>
                       </div>
                       {review.comment ? (
-                        <p className="mt-1 leading-relaxed text-fg-dim text-pretty">
+                        <p className="text-fg-dim mt-1 leading-relaxed text-pretty">
                           {review.comment}
                         </p>
                       ) : null}
@@ -266,7 +273,7 @@ function CalibrationStrip({
       <Stat label="Left in your queue" value={String(remaining)} tone="text-sodium" />
 
       {drift !== null && Math.abs(drift) >= 1 ? (
-        <p className="ml-auto text-[12px] text-fg-dim">
+        <p className="text-fg-dim ml-auto text-[12px]">
           You are scoring {Math.abs(drift).toFixed(1)} points {drift > 0 ? 'higher' : 'lower'} than
           the team. Not a problem, just worth knowing.
         </p>

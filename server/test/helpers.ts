@@ -20,8 +20,6 @@ export async function call(
   return app.fetch(new Request(`https://test.local${path}`, { ...init, headers }), env)
 }
 
-export const json = <T>(body: unknown): RequestInit => ({ body: JSON.stringify(body) }) as T
-
 /** Extracts the session cookie from a Set-Cookie header. */
 export function sessionCookie(response: Response): string {
   const raw = response.headers.get('Set-Cookie') ?? ''

@@ -34,7 +34,7 @@ export function AdminLayout() {
 
   return (
     <div className="relative z-10 flex min-h-dvh flex-col lg:flex-row">
-      <aside className="shrink-0 border-b border-line bg-ink/70 backdrop-blur-xl lg:sticky lg:top-0 lg:h-dvh lg:w-60 lg:border-r lg:border-b-0">
+      <aside className="border-line bg-ink/70 shrink-0 border-b backdrop-blur-xl lg:sticky lg:top-0 lg:h-dvh lg:w-60 lg:border-r lg:border-b-0">
         <div className="flex items-center justify-between gap-4 p-5 lg:block">
           <div>
             <Wordmark />
@@ -53,10 +53,15 @@ export function AdminLayout() {
           </nav>
         </div>
 
-        <div className="hidden border-t border-line p-5 lg:absolute lg:inset-x-0 lg:bottom-0 lg:block">
-          <p className="truncate text-[13px] text-fg">{user?.fullName}</p>
-          <p className="truncate font-mono text-[11px] text-fg-dim">{user?.email}</p>
-          <Button variant="outline" size="sm" className="mt-3 w-full" onClick={() => void onSignOut()}>
+        <div className="border-line hidden border-t p-5 lg:absolute lg:inset-x-0 lg:bottom-0 lg:block">
+          <p className="text-fg truncate text-[13px]">{user?.fullName}</p>
+          <p className="text-fg-dim truncate font-mono text-[11px]">{user?.email}</p>
+          <Button
+            variant="outline"
+            size="sm"
+            className="mt-3 w-full"
+            onClick={() => void onSignOut()}
+          >
             Sign out
           </Button>
         </div>

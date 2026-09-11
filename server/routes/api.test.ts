@@ -1,6 +1,6 @@
 import { env } from 'cloudflare:test'
 import { beforeEach, describe, expect, it } from 'vitest'
-import { call, promote, sessionCookie, signUp, validHackerAnswers } from '../test/helpers'
+import { call, promote, signUp, validHackerAnswers } from '../test/helpers'
 
 /**
  * These run against a real D1 database with the real migrations applied, and
@@ -214,7 +214,7 @@ describe('applications', () => {
     )
       .bind(application.id)
       .all()
-    expect(events.results.map((e) => e.to_status)).toEqual(['draft', 'submitted'])
+    expect(events.results.map((e) => e.to_status as string)).toEqual(['draft', 'submitted'])
   })
 
   it('locks the form once submitted', async () => {

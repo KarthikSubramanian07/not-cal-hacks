@@ -55,7 +55,7 @@ export function SignupPage() {
           Already have one?{' '}
           <Link
             to="/login"
-            className="text-fg underline decoration-line-strong underline-offset-4 hover:decoration-fg"
+            className="text-fg decoration-line-strong hover:decoration-fg underline underline-offset-4"
           >
             Sign in
           </Link>

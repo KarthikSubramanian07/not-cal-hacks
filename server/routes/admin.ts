@@ -7,7 +7,11 @@ import type {
   Calibration,
   ReviewRow,
 } from '../../shared/api'
-import { APPLICATION_STATUSES, type ApplicationStatus, type ApplicationType } from '../../shared/constants'
+import {
+  APPLICATION_STATUSES,
+  type ApplicationStatus,
+  type ApplicationType,
+} from '../../shared/constants'
 import { applicationFiltersSchema, decisionSchema, reviewInputSchema } from '../../shared/schemas'
 import { canTransition } from '../../shared/transitions'
 import { getDb, newId, schema, type Db } from '../db'
@@ -145,9 +149,10 @@ admin.get('/stats', async (c) => {
     sql`select status, count(*) as n from applications group by status`,
   )
 
-  const byStatus = Object.fromEntries(
-    APPLICATION_STATUSES.map((s) => [s, 0]),
-  ) as Record<ApplicationStatus, number>
+  const byStatus = Object.fromEntries(APPLICATION_STATUSES.map((s) => [s, 0])) as Record<
+    ApplicationStatus,
+    number
+  >
   for (const g of grouped) byStatus[g.status] = g.n
 
   const t = totals[0]
@@ -246,7 +251,17 @@ admin.get('/applications.csv', async (c) => {
     const s = v === null || v === undefined ? '' : String(v)
     return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s
   }
-  const header = ['id', 'name', 'email', 'type', 'school', 'status', 'reviews', 'avg_score', 'submitted_at']
+  const header = [
+    'id',
+    'name',
+    'email',
+    'type',
+    'school',
+    'status',
+    'reviews',
+    'avg_score',
+    'submitted_at',
+  ]
   const body = rows.map((r) =>
     [
       r.id,
@@ -407,7 +422,10 @@ admin.post('/reviews', async (c) => {
         .update(schema.applications)
         .set({ status: 'under_review', updatedAt: now })
         .where(
-          and(eq(schema.applications.id, application.id), eq(schema.applications.status, 'submitted')),
+          and(
+            eq(schema.applications.id, application.id),
+            eq(schema.applications.status, 'submitted'),
+          ),
         ),
       db.insert(schema.statusEvents).values({
         applicationId: application.id,
