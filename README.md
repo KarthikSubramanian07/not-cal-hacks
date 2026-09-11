@@ -322,8 +322,8 @@ The theme is a space-opera homage built from the film-making moves rather than a
 studio's assets. Every word in the opening crawl is original, and no protected name,
 mark or ship appears anywhere in it.
 
-- **An opening crawl** on first visit. Gold text climbing a tilted plane, once per
-  session, skippable from the first frame by button, key, click or scroll.
+- **An opening crawl** on every load of `/`. Gold text climbing a tilted plane,
+  skippable with the button, Escape, or a click on the crawl.
 - **A badge on a lanyard**, simulated with a verlet solver. Two cords hang from two
   anchors to a shared clip; the badge below is a separate angular spring, so it keeps
   swinging after the cord has settled. Grab it and throw it. Gravity is low out here.

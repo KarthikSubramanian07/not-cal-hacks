@@ -5,7 +5,6 @@ import { Lanyard } from '@/components/badge/lanyard'
 import { SiteFooter, SiteNav } from '@/components/site-chrome'
 import { OpeningCrawl } from '@/components/space/opening-crawl'
 import { DuneHorizon } from '@/components/space/dune-horizon'
-import { OrbitCraft } from '@/components/space/orbit-craft'
 import { Button } from '@/components/ui/button'
 import { Magnetic, Spotlight } from '@/components/ui/interactive'
 import { useInView, useReducedMotion } from '@/lib/hooks'
@@ -141,54 +140,56 @@ function Ticker() {
 
 const STEPS = [
   {
+    n: '01',
     label: 'Filed',
     title: 'Fill one form',
-    body: 'Three short sections so nothing reads as a wall of text. Every keystroke saves as a draft, so losing your work is not a thing that can happen here.',
+    body: 'Three short sections. Every keystroke saves as a draft.',
   },
   {
+    n: '02',
     label: 'In orbit',
     title: 'Hand it in',
-    body: 'Submitting locks the form and starts the clock. Your status page shows exactly where it sits, on a timeline that is an audit trail rather than a guess.',
+    body: 'Submit locks it. Status is an audit trail, not a guess.',
   },
   {
+    n: '03',
     label: 'Cleared',
     title: 'Hear back',
-    body: 'A human reads it. If the answer is no, it says so plainly, without a paragraph of consolation nobody asked for.',
+    body: 'A human reads it. If the answer is no, it says so.',
   },
 ]
 
 function HowItWorks() {
   return (
-    <section className="relative z-10 mx-auto max-w-6xl px-5 py-24 sm:px-8 lg:py-32">
-      <div className="mx-auto max-w-2xl text-center">
-        <h2 className="display-lg">What happens after you hit submit</h2>
-        <p className="measure text-fg-muted mx-auto mt-4 text-[15px] leading-relaxed">
-          Three steps, all of them visible to you. No portal that forgets you exist for six weeks.
+    <section className="relative z-10 mx-auto max-w-6xl px-5 py-14 sm:px-8 sm:py-16">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="telemetry">Flight plan</p>
+          <h2 className="mt-2 text-[1.55rem] tracking-[-0.03em] text-balance sm:text-[1.7rem]">
+            Filed. In orbit. Cleared.
+          </h2>
+        </div>
+        <p className="text-fg-muted max-w-sm text-[13.5px] leading-relaxed">
+          Three steps, all visible. No portal that forgets you for six weeks.
         </p>
       </div>
 
-      <div className="mt-14 grid items-center gap-10 lg:grid-cols-[1fr_auto]">
-        <div className="grid gap-4 sm:grid-cols-3">
-          {STEPS.map((step, index) => (
-            <Reveal key={step.title} delay={index * 0.08}>
-              <Spotlight className="panel h-full p-7 transition-transform duration-300 ease-[var(--ease-out-expo)] hover:-translate-y-1">
-                <span className="text-sodium inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.12em] uppercase">
-                  <span className="bg-sodium size-1.5 rounded-full" />
-                  {step.label}
-                </span>
-                <h3 className="mt-5 text-xl">{step.title}</h3>
-                <p className="text-fg-muted mt-3 text-[14px] leading-relaxed text-pretty">
-                  {step.body}
-                </p>
-              </Spotlight>
-            </Reveal>
-          ))}
-        </div>
-
-        <Reveal delay={0.16}>
-          <OrbitCraft className="mx-auto hidden h-[26rem] w-[17rem] lg:block" />
-        </Reveal>
-      </div>
+      <ol className="border-line mt-8 grid border-t sm:grid-cols-3">
+        {STEPS.map((step) => (
+          <li
+            key={step.label}
+            className="border-line py-5 last:border-r-0 sm:border-r sm:px-6 sm:py-6 sm:first:pl-0"
+          >
+            <p className="text-ion font-mono text-[11px] tracking-[0.14em] uppercase">
+              {step.n}
+              <span className="text-fg-dim mx-2">/</span>
+              {step.label}
+            </p>
+            <h3 className="mt-2.5 text-[16px] tracking-[-0.02em]">{step.title}</h3>
+            <p className="text-fg-muted mt-1.5 text-[13.5px] leading-snug">{step.body}</p>
+          </li>
+        ))}
+      </ol>
     </section>
   )
 }

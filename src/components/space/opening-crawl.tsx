@@ -10,13 +10,15 @@ import { triggerHyperspaceJump } from './starfield'
  * and gold text climbing away on a tilted plane. Every word is original and no
  * protected name, mark or ship appears anywhere in it.
  *
- * Three rules keep a thirteen-second intro from being hostile:
- *   1. Once per session, never again on the same visit.
- *   2. Skippable from the first frame, by button, key, click or scroll.
- *   3. Anyone who asked their OS to stop moving things never sees it at all.
+ * It plays once per tab. Skip with the button, Escape, or a click on the crawl.
+ * Wheel and stray keys used to cancel it on the first frame, which made the
+ * intro look like it had been removed. Playwright sets `nch:crawl-skip` so the
+ * suite does not sit through thirteen seconds. Anyone who asked their OS to stop
+ * moving things never sees it.
  */
 
-const SESSION_KEY = 'nch:crawl-seen'
+const SKIP_KEY = 'nch:crawl-skip'
+const SEEN_KEY = 'nch:crawl-seen-v2'
 
 const STANZAS = [
   'It is application season. Across the sector, thousands of builders have thirty-six hours, one folding table, and whatever hardware they can carry on the bus.',
@@ -31,24 +33,24 @@ export function OpeningCrawl({ onFinished }: { onFinished?: () => void }) {
   const [phase, setPhase] = useState<Phase>('intro')
   const [visible, setVisible] = useState(false)
   const finishedRef = useRef(false)
+  const canSkipRef = useRef(false)
 
-  // Decide once, on mount, whether this visit gets the intro at all.
   useEffect(() => {
     if (reducedMotion) return
-    let seen = false
     try {
-      seen = window.sessionStorage.getItem(SESSION_KEY) === '1'
+      if (window.sessionStorage.getItem(SKIP_KEY) === '1') return
+      if (window.sessionStorage.getItem(SEEN_KEY) === '1') return
     } catch {
-      seen = false
+      // Storage blocked. Play it.
     }
-    if (!seen) setVisible(true)
+    setVisible(true)
   }, [reducedMotion])
 
   const finish = useCallback(() => {
     if (finishedRef.current) return
     finishedRef.current = true
     try {
-      window.sessionStorage.setItem(SESSION_KEY, '1')
+      window.sessionStorage.setItem(SEEN_KEY, '1')
     } catch {
       // Private browsing. The intro simply plays again next time.
     }
@@ -59,10 +61,19 @@ export function OpeningCrawl({ onFinished }: { onFinished?: () => void }) {
     onFinished?.()
   }, [onFinished])
 
+  const skip = useCallback(() => {
+    if (!canSkipRef.current) return
+    finish()
+  }, [finish])
+
   // Phase timing. Kept in one place so the sequence is readable as a sequence.
   useEffect(() => {
     if (!visible) return
+    canSkipRef.current = false
     const timers = [
+      window.setTimeout(() => {
+        canSkipRef.current = true
+      }, 700),
       window.setTimeout(() => setPhase('title'), 2200),
       window.setTimeout(() => setPhase('crawl'), 4100),
       window.setTimeout(finish, 17200),
@@ -70,26 +81,24 @@ export function OpeningCrawl({ onFinished }: { onFinished?: () => void }) {
     return () => timers.forEach(window.clearTimeout)
   }, [visible, finish])
 
-  // Any deliberate input means "I have seen this, move on".
+  // Skip is deliberate: the button, Escape, or a click on the crawl itself.
+  // Wheel, Space, and stray keys used to cancel it on the first frame, which
+  // made the intro look like it had been removed.
   useEffect(() => {
     if (!visible) return
-    const skip = () => finish()
-    window.addEventListener('keydown', skip)
-    window.addEventListener('wheel', skip, { passive: true })
-    window.addEventListener('touchstart', skip, { passive: true })
-    return () => {
-      window.removeEventListener('keydown', skip)
-      window.removeEventListener('wheel', skip)
-      window.removeEventListener('touchstart', skip)
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') skip()
     }
-  }, [visible, finish])
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [visible, skip])
 
   if (!visible || phase === 'done') return null
 
   return (
     <div
       className="fixed inset-0 z-[70] cursor-pointer overflow-hidden bg-black"
-      onClick={finish}
+      onClick={skip}
       role="presentation"
     >
       {phase === 'intro' ? (
@@ -146,11 +155,11 @@ export function OpeningCrawl({ onFinished }: { onFinished?: () => void }) {
         type="button"
         onClick={(event) => {
           event.stopPropagation()
-          finish()
+          skip()
         }}
         className="absolute right-5 bottom-5 rounded-full border border-white/25 bg-black/50 px-4 py-2 font-mono text-[11px] tracking-[0.14em] text-white/70 uppercase transition-colors hover:border-white/50 hover:text-white"
       >
-        Skip intro
+        Skip intro · Esc
       </button>
 
       <style>{`
