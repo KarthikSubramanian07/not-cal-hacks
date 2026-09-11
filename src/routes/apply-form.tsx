@@ -363,7 +363,7 @@ function FormFields({
       ) : null}
 
       {has('pronouns') ? (
-        <Field label="Pronouns" hint="Optional. We will use them." error={errors.pronouns}>
+        <Field label="Pronouns" error={errors.pronouns}>
           {(p) => (
             <Input
               {...p}
