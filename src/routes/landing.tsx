@@ -260,7 +260,7 @@ function BlindReview() {
           {QUEUE_ROWS.map((row, index) => (
             <div
               key={row.name}
-              className="border-line/60 relative flex items-center justify-between gap-4 border-b px-5 py-4 last:border-0"
+              className="border-line/60 group relative flex cursor-default items-center justify-between gap-4 border-b px-5 py-4 transition-colors duration-200 last:border-0 hover:bg-white/[0.04]"
             >
               <div className="min-w-0 flex-1">
                 <div className="relative inline-block">
@@ -278,7 +278,14 @@ function BlindReview() {
                 </div>
                 <p className="text-fg-dim mt-1 text-xs">{row.school}</p>
               </div>
-              <span className="text-ion font-mono text-xs">#{row.code}</span>
+              {/* A marker slides in on the left, the way a focused row would. */}
+              <span
+                aria-hidden
+                className="bg-sodium absolute inset-y-0 left-0 w-px origin-top scale-y-0 transition-transform duration-300 ease-[var(--ease-out-expo)] group-hover:scale-y-100"
+              />
+              <span className="text-ion group-hover:text-sodium font-mono text-xs transition-colors duration-200">
+                #{row.code}
+              </span>
               <span className="text-fg font-mono text-sm tabular-nums">{row.score}</span>
             </div>
           ))}
@@ -320,12 +327,14 @@ function ForOrganizers() {
       <div className="mt-14 grid gap-4 sm:grid-cols-2">
         {FEATURES.map((feature, index) => (
           <Reveal key={feature.title} delay={index * 0.06}>
-            <div className="panel h-full p-7">
-              <h3 className="text-xl">{feature.title}</h3>
-              <p className="text-fg-muted mt-3 text-[14px] leading-relaxed text-pretty">
+            <Spotlight className="panel group h-full p-7 transition-transform duration-300 ease-[var(--ease-out-expo)] hover:-translate-y-1">
+              <h3 className="group-hover:text-sodium text-xl transition-colors duration-300">
+                {feature.title}
+              </h3>
+              <p className="text-fg-muted group-hover:text-fg mt-3 text-[14px] leading-relaxed text-pretty transition-colors duration-300">
                 {feature.body}
               </p>
-            </div>
+            </Spotlight>
           </Reveal>
         ))}
       </div>
