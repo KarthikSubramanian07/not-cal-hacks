@@ -1,0 +1,203 @@
+@import 'tailwindcss';
+
+@import '@fontsource-variable/archivo/wdth.css';
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/500.css';
+
+/*
+ * Design tokens: deep-space mission control.
+ *
+ * The theme is not "nebula wallpaper". It is the inside of a tracking station
+ * looking out: a blue-black sky, instrument lighting in sodium amber, and data
+ * in ion cyan. Colour means something everywhere it appears, which is why there
+ * are exactly two accents and one status ramp.
+ *
+ * One typeface (Archivo) carries both display and body using its width axis:
+ * expanded and heavy for headlines, normal for text. A second family would have
+ * been decoration.
+ */
+@theme {
+  /* Sky. Blue-black rather than neutral black, so the stars have somewhere to be. */
+  --color-ink: oklch(0.13 0.024 264);
+  --color-surface: oklch(0.175 0.028 264);
+  --color-surface-2: oklch(0.155 0.026 264);
+
+  --color-line: rgba(255, 255, 255, 0.09);
+  --color-line-strong: rgba(255, 255, 255, 0.17);
+
+  /* Text: three steps. fg-dim still clears 4.5:1 on the sky. */
+  --color-fg: oklch(0.97 0.006 250);
+  --color-fg-muted: oklch(0.78 0.019 250);
+  --color-fg-dim: oklch(0.62 0.026 255);
+
+  /* Instrument lighting. Sodium is the primary action colour. */
+  --color-sodium: oklch(0.79 0.16 62);
+  --color-sodium-bright: oklch(0.86 0.15 68);
+  /* Ion cyan is data, telemetry and live state. Never an action. */
+  --color-ion: oklch(0.82 0.13 203);
+  --color-accent: oklch(0.79 0.16 62);
+
+  /* Status ramp. One hue per application status, nothing reused. */
+  --color-status-draft: oklch(0.62 0.02 255);
+  --color-status-submitted: oklch(0.78 0.13 215);
+  --color-status-review: oklch(0.81 0.15 70);
+  --color-status-accepted: oklch(0.82 0.17 152);
+  --color-status-waitlisted: oklch(0.73 0.15 300);
+  --color-status-rejected: oklch(0.69 0.18 25);
+
+  --font-sans: 'Archivo Variable', -apple-system, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+
+  --radius-card: 14px;
+
+  /* Exponential ease-out everywhere. No bounce, no elastic. */
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Semantic stacking order. No arbitrary 9999. */
+  --z-starfield: 0;
+  --z-sticky: 30;
+  --z-dropdown: 40;
+  --z-modal: 60;
+  --z-toast: 80;
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  * {
+    border-color: var(--color-line);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-ink);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    /* Light type on a dark ground needs more room to breathe. */
+    line-height: 1.6;
+  }
+
+  /*
+   * Headings run wide and heavy. The width axis is what makes this read as
+   * engineered signage rather than another grotesk at -0.04em.
+   */
+  h1,
+  h2,
+  h3 {
+    font-weight: 620;
+    font-stretch: 112%;
+    letter-spacing: -0.028em;
+    line-height: 1.06;
+    text-wrap: balance;
+  }
+
+  ::selection {
+    background: var(--color-sodium);
+    color: oklch(0.13 0.024 264);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ion);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  input,
+  textarea,
+  select,
+  button {
+    font: inherit;
+    color: inherit;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-ink);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.14);
+    border-radius: 99px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.24);
+  }
+}
+
+@layer components {
+  /* Telemetry label. Mono is literal here: these are instrument readouts. */
+  .telemetry {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-fg-dim);
+  }
+
+  /* Instrument panel. Sits above the sky with a faint inner light. */
+  .panel {
+    position: relative;
+    background: color-mix(in oklch, var(--color-surface) 82%, transparent);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset;
+  }
+
+  /* Sodium glow, used only on the primary action. */
+  .glow-sodium {
+    box-shadow:
+      0 0 0 1px color-mix(in oklch, var(--color-sodium) 40%, transparent),
+      0 8px 30px -10px color-mix(in oklch, var(--color-sodium) 70%, transparent);
+  }
+}
+
+@layer utilities {
+  .display-xl {
+    font-size: clamp(2.5rem, 5.6vw, 4.5rem);
+    font-stretch: 116%;
+    letter-spacing: -0.03em;
+    line-height: 1.02;
+  }
+
+  .display-lg {
+    font-size: clamp(1.9rem, 3.4vw, 2.9rem);
+    font-stretch: 112%;
+    letter-spacing: -0.028em;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  /* Caps prose at a readable measure. */
+  .measure {
+    max-width: 68ch;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

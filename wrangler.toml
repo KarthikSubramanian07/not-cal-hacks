@@ -1,0 +1,45 @@
+# Cloudflare Pages configuration.
+#
+# The frontend is a prerendered Vite SPA in `dist/`; the API is a Pages Function
+# (`functions/api/[[route]].ts`) that mounts a Hono app. Both ship in a single
+# deployment, which is why the public URL has no `/api` split-brain.
+name = "not-cal-hacks"
+compatibility_date = "2026-09-01"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = "dist"
+
+# Top-level bindings are what `wrangler pages dev` and the `d1 migrations`
+# commands read locally.
+[[d1_databases]]
+binding = "DB"
+database_name = "not-cal-hacks"
+database_id = "f37f6c7a-3cd1-4578-8316-4ee16f32a33d"
+migrations_dir = "drizzle"
+
+[vars]
+APP_NAME = "not-cal-hacks"
+
+# Production deployments (branch: main).
+[env.production]
+
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "not-cal-hacks"
+database_id = "f37f6c7a-3cd1-4578-8316-4ee16f32a33d"
+migrations_dir = "drizzle"
+
+[env.production.vars]
+APP_NAME = "not-cal-hacks"
+
+# Preview deployments (every other branch, including pull requests). These get a
+# separate database so a preview deploy can never touch production rows.
+[env.preview]
+
+[[env.preview.d1_databases]]
+binding = "DB"
+database_name = "not-cal-hacks-preview"
+database_id = "fbc9ed46-a2ab-4744-93f5-c65414d508de"
+migrations_dir = "drizzle"
+
+[env.preview.vars]
+APP_NAME = "not-cal-hacks (preview)"
