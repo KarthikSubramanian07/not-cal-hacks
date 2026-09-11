@@ -61,7 +61,7 @@ export function App() {
               URL here for free; anything else under /apply goes back to the picker.
             */}
             {APPLICATION_TYPES.map((type) => (
-              <Route key={type} path={`/apply/${type}`} element={<ApplyFormPage />} />
+              <Route key={type} path={`/apply/${type}`} element={<ApplyFormPage type={type} />} />
             ))}
             <Route path="/apply/*" element={<Navigate to="/apply" replace />} />
             <Route path="/status" element={<StatusPage />} />

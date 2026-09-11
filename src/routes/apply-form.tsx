@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 import { toast } from 'sonner'
 import { ArrowLeft, ArrowRight, Check, Loader2 } from 'lucide-react'
 import type { ApplicationSummary } from '@shared/api'
@@ -73,10 +73,8 @@ const SECTIONS: Record<
 
 type SaveState = 'idle' | 'saving' | 'saved' | 'error'
 
-export function ApplyFormPage() {
-  const params = useParams()
+export function ApplyFormPage({ type }: { type: ApplicationType }) {
   const navigate = useNavigate()
-  const type = params.type as ApplicationType
 
   const [application, setApplication] = useState<ApplicationSummary | null>(null)
   const [answers, setAnswers] = useState<DraftAnswers>({})
