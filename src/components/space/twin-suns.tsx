@@ -23,13 +23,13 @@ export function TwinSuns({ className }: { className?: string }) {
         className="absolute inset-x-0 bottom-0 h-full"
         style={{
           background:
-            'radial-gradient(120% 70% at 50% 108%, oklch(0.79 0.16 62 / 0.24) 0%, oklch(0.62 0.15 40 / 0.10) 34%, transparent 68%)',
+            'radial-gradient(120% 70% at 50% 108%, oklch(0.84 0.15 78 / 0.16) 0%, oklch(0.62 0.15 45 / 0.07) 34%, transparent 68%)',
         }}
       />
 
       {/* Larger, higher sun. */}
       <div
-        className={cn('absolute bottom-[-7rem] left-[calc(50%-9rem)] size-[17rem] rounded-full', !reduced && 'animate-[sun-drift_26s_ease-in-out_infinite]')}
+        className={cn('absolute bottom-[-8rem] left-[calc(50%-9rem)] size-[15rem] rounded-full', !reduced && 'animate-[sun-drift_26s_ease-in-out_infinite]')}
         style={{
           background:
             'radial-gradient(circle, oklch(0.93 0.11 78) 0%, oklch(0.82 0.16 62) 42%, oklch(0.66 0.17 48 / 0.35) 66%, transparent 72%)',
@@ -39,7 +39,7 @@ export function TwinSuns({ className }: { className?: string }) {
 
       {/* Smaller companion, cooler and further away. */}
       <div
-        className={cn('absolute bottom-[-4.5rem] left-[calc(50%+5rem)] size-[9rem] rounded-full', !reduced && 'animate-[sun-drift_26s_ease-in-out_infinite_reverse]')}
+        className={cn('absolute bottom-[-5.5rem] left-[calc(50%+5rem)] size-[8rem] rounded-full', !reduced && 'animate-[sun-drift_26s_ease-in-out_infinite_reverse]')}
         style={{
           background:
             'radial-gradient(circle, oklch(0.90 0.10 52) 0%, oklch(0.72 0.17 40) 46%, oklch(0.55 0.16 34 / 0.30) 68%, transparent 74%)',
