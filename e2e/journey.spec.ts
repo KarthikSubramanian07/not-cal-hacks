@@ -13,7 +13,7 @@ const unique = () => `e2e-${Date.now()}-${Math.floor(Math.random() * 100000)}`
 /** The opening crawl plays once per session; tests do not need to watch it. */
 async function skipIntro(page: Page) {
   await page.addInitScript(() => {
-    window.sessionStorage.setItem('nch:crawl-seen', '1')
+    window.sessionStorage.setItem('nch:crawl-skip', '1')
   })
 }
 
