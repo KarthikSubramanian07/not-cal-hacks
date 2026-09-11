@@ -48,14 +48,17 @@ export function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          {/*
+            The picker is public on purpose: a stranger hitting Apply should see
+            the three doors (hacker, judge, organizer) before any password field.
+          */}
+          <Route path="/apply" element={<ApplyPage />} />
 
           <Route element={<RequireAuth />}>
-            <Route path="/apply" element={<ApplyPage />} />
             {/*
               One route per account type, so the form never renders for a type
-              that does not exist. Adding a third account type to
-              APPLICATION_TYPES adds its URL here for free; anything else under
-              /apply goes back to the picker.
+              that does not exist. Adding a type to APPLICATION_TYPES adds its
+              URL here for free; anything else under /apply goes back to the picker.
             */}
             {APPLICATION_TYPES.map((type) => (
               <Route key={type} path={`/apply/${type}`} element={<ApplyFormPage />} />

@@ -14,7 +14,7 @@ shares, and get back to people before the suns come up.
 [![Deploy](https://github.com/KarthikSubramanian07/not-cal-hacks/actions/workflows/deploy.yml/badge.svg)](https://github.com/KarthikSubramanian07/not-cal-hacks/actions/workflows/deploy.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-e8a33d)](LICENSE)
 
-`React 19` · `TypeScript` · `Hono` · `Cloudflare Pages` · `D1` · `Drizzle` · `Zod` · `73 tests`
+`React 19` · `TypeScript` · `Hono` · `Cloudflare Pages` · `D1` · `Drizzle` · `Zod` · `83 tests`
 
 </div>
 
@@ -29,16 +29,17 @@ shares, and get back to people before the suns come up.
 
 Everything the brief asked for, and where to find it. All links are live.
 
-| #   | Requirement                                                 | Where it is                                                                                                                                                                                                               | Status |
-| --- | ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
-| 1   | **Sign-in and application forms backed by a real database** | [`/signup`](https://not-cal-hacks.pages.dev/signup) → [`/apply`](https://not-cal-hacks.pages.dev/apply) · Cloudflare **D1**, schema in [`server/db/schema.ts`](server/db/schema.ts)                                       | ✅     |
-| 2   | **Multiple account types, each with their own application** | **Hacker** → [`/apply/hacker`](https://not-cal-hacks.pages.dev/apply/hacker) · **Mentor** → [`/apply/mentor`](https://not-cal-hacks.pages.dev/apply/mentor) · separate Zod schemas in [`shared/schemas/`](shared/schemas) | ✅     |
-| 3   | **Review and grade applications**                           | [`/admin/review`](https://not-cal-hacks.pages.dev/admin/review) · three-criterion rubric, 1–5, keyboard-driven                                                                                                            | ✅     |
-| 4   | **A page listing all applications and their statuses**      | [`/admin`](https://not-cal-hacks.pages.dev/admin) · filter by type and status, search, sort, inline decisions, CSV export                                                                                                 | ✅     |
-| 5   | **One feature of your choosing**                            | **Blind review queue + calibration.** Server-side redaction, least-reviewed-first ordering, and a strip comparing your average to the team's                                                                              | ✅     |
-| 6   | **Deployed at a public URL**                                | **[not-cal-hacks.pages.dev](https://not-cal-hacks.pages.dev)** · Cloudflare Pages, deploys on every push to `main`                                                                                                        | ✅     |
+| #   | Requirement                                                 | Where it is                                                                                                                                                                                                                                                                          | Status |
+| --- | ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------ |
+| 1   | **Sign-in and application forms backed by a real database** | [`/signup`](https://not-cal-hacks.pages.dev/signup) → [`/apply`](https://not-cal-hacks.pages.dev/apply) · Cloudflare **D1**, schema in [`server/db/schema.ts`](server/db/schema.ts)                                                                                                  | ✅     |
+| 2   | **Multiple account types, each with their own application** | **Hacker** → [`/apply/hacker`](https://not-cal-hacks.pages.dev/apply/hacker) · **Judge** → [`/apply/judge`](https://not-cal-hacks.pages.dev/apply/judge) · picker at [`/apply`](https://not-cal-hacks.pages.dev/apply) · separate Zod schemas in [`shared/schemas/`](shared/schemas) | ✅     |
+| 3   | **Review and grade applications**                           | [`/admin/review`](https://not-cal-hacks.pages.dev/admin/review) · three-criterion rubric, 1–5, keyboard-driven                                                                                                                                                                       | ✅     |
+| 4   | **A page listing all applications and their statuses**      | [`/admin`](https://not-cal-hacks.pages.dev/admin) · filter by type and status, search, sort, inline decisions, CSV export                                                                                                                                                            | ✅     |
+| 5   | **One feature of your choosing**                            | **Blind review queue + calibration.** Server-side redaction, least-reviewed-first ordering, and a strip comparing your average to the team's                                                                                                                                         | ✅     |
+| 6   | **Deployed at a public URL**                                | **[not-cal-hacks.pages.dev](https://not-cal-hacks.pages.dev)** · Cloudflare Pages, deploys on every push to `main`                                                                                                                                                                   | ✅     |
 
 **Sign in as `organizer@notcalhacks.dev` / `demo1234` to see 3, 4 and 5 immediately.**
+Hacker and judge demos are on the same page: pick a door at [`/apply`](https://not-cal-hacks.pages.dev/apply).
 
 ### About requirement 5
 
@@ -57,7 +58,8 @@ Two seeded accounts, both on the live site. Nothing you do to them matters.
 | Role          | Email                       | Password   | What you get                                                                  |
 | ------------- | --------------------------- | ---------- | ----------------------------------------------------------------------------- |
 | **Organizer** | `organizer@notcalhacks.dev` | `demo1234` | 27 applications, a live review queue, calibration against two other reviewers |
-| **Applicant** | `hacker@notcalhacks.dev`    | `demo1234` | One application under review, one untouched draft                             |
+| **Hacker**    | `hacker@notcalhacks.dev`    | `demo1234` | One application under review, one untouched judge draft                       |
+| **Judge**     | `judge@notcalhacks.dev`     | `demo1234` | A submitted judge application already in the queue                            |
 
 Or just sign up. The whole applicant path works for a stranger with no invite.
 
@@ -65,7 +67,7 @@ Or just sign up. The whole applicant path works for a stranger with no invite.
 
 ## What it actually does
 
-**For the person applying.** One account covers both application types. The form is
+**For the person applying.** One account covers hacker and judge. The form is
 three short sections, it autosaves on an 800ms debounce, and it merges rather than
 replaces, so a half-typed essay survives a closed tab. Submitting locks it and starts
 a timeline built from an append-only audit table, which means the status page cannot
@@ -139,7 +141,7 @@ erDiagram
   applications {
     text id PK
     text user_id FK
-    text type "hacker | mentor"
+    text type "hacker | judge"
     text status "draft → submitted → under_review → decision"
     text answers "JSON, validated by Zod"
     int  submitted_at
@@ -163,7 +165,7 @@ erDiagram
 ```
 
 `applications(user_id, type)` is unique, so one person holds at most one hacker
-application and one mentor application. `reviews(application_id, reviewer_id)` is
+application and one judge application. `reviews(application_id, reviewer_id)` is
 unique, so scoring something twice updates your review instead of stacking another
 one, which is why an average means what it appears to mean.
 
@@ -369,7 +371,7 @@ same Worker runtime that ships.
 
 ## Testing
 
-**73 tests**, and the ones that matter are the embarrassing ones.
+**83 tests**, and the ones that matter are the embarrassing ones.
 
 The API suite runs against a **real D1 database with the real migrations applied**,
 calling the real Hono app inside workerd. Nothing is mocked, so a broken CHECK
@@ -377,11 +379,13 @@ constraint or a broken authorization check fails the suite rather than passing a
 a stub.
 
 ```
-server/routes/api.test.ts     47 tests   auth, ownership, roles, blind review,
+server/routes/api.test.ts     43 tests   auth, ownership, roles, blind review,
                                          the queue, decisions, rate limiting
+server/lib/blind.test.ts       9 tests   redaction actually happens on the server
 shared/schemas/schemas.test.ts 19 tests  what a valid application is
 shared/transitions.test.ts      7 tests  what the status machine allows
-e2e/journey.spec.ts             4 specs  the whole loop in a browser
+shared/portal.test.ts           5 tests  the three doors and OAuth next allowlist
+e2e/journey.spec.ts             6 specs  the whole loop in a browser, including the doors
 ```
 
 The Playwright suite drives a real `wrangler pages dev` server, so it runs the same
@@ -411,7 +415,27 @@ Two repository secrets are required: `CLOUDFLARE_API_TOKEN` and
 failing, because this repository is public and forks cannot read secrets.
 
 Pull requests get their own preview deployment against a **separate preview database**,
-so a preview can never touch production rows.
+and that database is migrated and seeded on every preview deploy so `/apply` always has
+the three demo doors.
+
+### Google sign-in
+
+Optional, free, dormant until two Pages secrets exist. Create an OAuth client (Web
+application) in Google Cloud with this redirect URI:
+
+`https://not-cal-hacks.pages.dev/api/auth/google/callback`
+
+Then:
+
+```bash
+npx wrangler pages secret put GOOGLE_CLIENT_ID --project-name=not-cal-hacks
+npx wrangler pages secret put GOOGLE_CLIENT_SECRET --project-name=not-cal-hacks
+npx wrangler pages deploy --branch main
+```
+
+The button appears on `/login` and `/signup` by itself. `?as=hacker`, `?as=judge` and
+`?as=organizer` are forwarded through Google so you land on the matching form or the
+console. Organizer is still not self-serve: a new Google account becomes an applicant.
 
 ---
 
@@ -448,7 +472,6 @@ Honest list, since the repository is public.
 - **No email.** Decisions appear on the status page and nowhere else.
 - **Sessions are not rotated on privilege change.** Promoting someone to organizer
   takes effect on their next request, which is correct, but a rotation would be tidier.
-- **The preview database is seeded by hand**, not on every preview deploy.
 
 ---
 

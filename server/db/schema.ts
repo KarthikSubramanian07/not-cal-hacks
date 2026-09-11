@@ -28,7 +28,7 @@ const scoreRange = (column: unknown) =>
 /**
  * `role` is who you are in the system. `applications.type` is what you are
  * applying as. They are deliberately orthogonal: an organizer can also hold a
- * mentor application, and promoting someone to organizer never touches their
+ * judge application, and promoting someone to organizer never touches their
  * applications.
  *
  * Organizers are promoted out of band (see `scripts/seed.ts`), never by a

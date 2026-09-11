@@ -190,11 +190,11 @@ const PROJECT_ANSWERS = [
   'I took apart a broken label printer and wrote a driver for it so it could print receipts of my commit history. It is useless and it works.',
 ]
 
-const MENTOR_WHY = [
-  'I got unstuck at a hackathon in 2016 by a stranger who spent forty minutes on my segfault. I have wanted to be that stranger for a while now.',
-  'Most of my job is now meetings. I miss sitting next to someone at 2am while they figure out why their build is broken.',
-  'I review a lot of code written by people who learned from tutorials. I would rather catch the habits early, in person, when it is still fun to fix them.',
-  'I run infrastructure for a living and I think students should meet someone who will tell them the truth about what production is like.',
+const JUDGE_WHY = [
+  'I have sat on a judging panel that argued for twenty minutes about a project none of us had actually run. I would like to do this properly, with a rubric, once.',
+  'Most of my job is now meetings. I miss looking at something someone built in a weekend and telling them what is actually good about it.',
+  'I review a lot of code written by people who learned from tutorials. Scoring a hackathon is the honest version of that: the work is in front of you, the clock has already run, and you have to say something useful.',
+  'I run infrastructure for a living and I think students should meet someone who will tell them the truth about what production is like, from the other side of the table.',
 ]
 
 // ------------------------------------------------------------------ SQL bits
@@ -269,10 +269,10 @@ function hackerAnswers(first: string, last: string, index: number) {
   }
 }
 
-function mentorAnswers(first: string, last: string, index: number) {
+function judgeAnswers(first: string, last: string, index: number) {
   return {
     ...commonAnswers(first, last, index),
-    whyNotCalHacks: pick(MENTOR_WHY),
+    whyNotCalHacks: pick(JUDGE_WHY),
     company: pick(COMPANIES),
     role: pick(ROLES),
     expertise: pickMany(
@@ -284,7 +284,7 @@ function mentorAnswers(first: string, last: string, index: number) {
       ['Fri PM', 'Sat AM', 'Sat PM', 'Sun AM'] as const,
       1 + Math.floor(rand() * 3),
     ),
-    mentoredBefore: rand() > 0.4,
+    judgedBefore: rand() > 0.4,
   }
 }
 
@@ -295,7 +295,7 @@ const REVIEW_COMMENTS = [
   'Strong builder, unclear why this event specifically. Still a yes.',
   'First hackathon and clearly nervous. Exactly who the beginner track is for.',
   'Great project, essay reads like it was written in the last four minutes.',
-  'Mentor fit is obvious. Availability covers the overnight gap we always miss.',
+  'Judge fit is obvious. Availability covers the overnight gap we always miss.',
   null,
   'Loved the bus route answer. Someone who notices broken things.',
   'Borderline. Put them in front of a second reader.',
@@ -344,6 +344,15 @@ function build() {
   }
   users.push(demo)
 
+  const demoJudge: SeededUser = {
+    id: nextId('demo'),
+    email: 'judge@notcalhacks.dev',
+    fullName: 'Sam Okonkwo',
+    role: 'applicant',
+    password: 'demo1234',
+  }
+  users.push(demoJudge)
+
   const demoHackerApp: SeededApplication = {
     id: nextId('appd'),
     userId: demo.id,
@@ -361,16 +370,35 @@ function build() {
     createdAt: NOW - 9 * DAY,
     submittedAt: NOW - 8 * DAY,
   }
-  const demoMentorApp: SeededApplication = {
+  const demoHackerJudgeDraft: SeededApplication = {
     id: nextId('appd'),
     userId: demo.id,
-    type: 'mentor',
+    type: 'judge',
     status: 'draft',
     answers: { firstName: 'Alex', lastName: 'Rivera', school: 'UC Berkeley' },
     createdAt: NOW - 2 * DAY,
     submittedAt: null,
   }
-  applications.push(demoHackerApp, demoMentorApp)
+  const demoJudgeApp: SeededApplication = {
+    id: nextId('appd'),
+    userId: demoJudge.id,
+    type: 'judge',
+    status: 'under_review',
+    answers: {
+      ...judgeAnswers('Sam', 'Okonkwo', 2),
+      school: 'Georgia Tech',
+      company: 'Cloudflare',
+      role: 'Staff Engineer',
+      expertise: ['Cloud', 'Web'],
+      yearsExperience: 8,
+      availability: ['Sat AM', 'Sat PM'],
+      judgedBefore: true,
+      whyNotCalHacks: JUDGE_WHY[0] as string,
+    },
+    createdAt: NOW - 7 * DAY,
+    submittedAt: NOW - 6 * DAY,
+  }
+  applications.push(demoHackerApp, demoHackerJudgeDraft, demoJudgeApp)
 
   // --- the 25 seeded applicants --------------------------------------------
   // Distribution is fixed so the dashboard always has a realistic funnel:
@@ -396,15 +424,15 @@ function build() {
     }
     users.push(user)
 
-    // Roughly one in four applicants is a mentor.
-    const type: ApplicationType = i % 4 === 3 ? 'mentor' : 'hacker'
+    // Roughly one in four applicants is a judge.
+    const type: ApplicationType = i % 4 === 3 ? 'judge' : 'hacker'
     const createdAt = NOW - (20 - (i % 18)) * DAY
     applications.push({
       id: nextId('app0'),
       userId: user.id,
       type,
       status,
-      answers: type === 'hacker' ? hackerAnswers(first, last, i) : mentorAnswers(first, last, i),
+      answers: type === 'hacker' ? hackerAnswers(first, last, i) : judgeAnswers(first, last, i),
       createdAt,
       submittedAt: status === 'draft' ? null : createdAt + Math.floor(rand() * 2 * DAY),
     })

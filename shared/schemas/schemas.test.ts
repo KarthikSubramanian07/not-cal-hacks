@@ -4,7 +4,7 @@ import {
   draftAnswersSchemaFor,
   fieldErrors,
   hackerAnswersSchema,
-  mentorAnswersSchema,
+  judgeAnswersSchema,
   signupSchema,
 } from './index'
 
@@ -70,8 +70,8 @@ describe('hacker answers', () => {
   })
 })
 
-describe('mentor answers', () => {
-  const completeMentor = {
+describe('judge answers', () => {
+  const completeJudge = {
     firstName: 'June',
     lastName: 'Whitaker',
     school: 'Georgia Tech',
@@ -81,22 +81,22 @@ describe('mentor answers', () => {
     expertise: ['Cloud'],
     yearsExperience: 9,
     availability: ['Sat AM'],
-    mentoredBefore: true,
+    judgedBefore: true,
     whyNotCalHacks: 'c'.repeat(60),
   }
 
   it('accepts a complete application', () => {
-    expect(mentorAnswersSchema.safeParse(completeMentor).success).toBe(true)
+    expect(judgeAnswersSchema.safeParse(completeJudge).success).toBe(true)
   })
 
   it('requires at least one availability shift', () => {
-    const result = mentorAnswersSchema.safeParse({ ...completeMentor, availability: [] })
+    const result = judgeAnswersSchema.safeParse({ ...completeJudge, availability: [] })
     expect(result.success).toBe(false)
   })
 
   it('does not accept hacker-only fields as a substitute', () => {
-    const { company: _company, ...withoutCompany } = completeMentor
-    const result = mentorAnswersSchema.safeParse({ ...withoutCompany, major: 'EECS' })
+    const { company: _company, ...withoutCompany } = completeJudge
+    const result = judgeAnswersSchema.safeParse({ ...withoutCompany, major: 'EECS' })
     expect(result.success).toBe(false)
   })
 })

@@ -15,11 +15,13 @@ export function AuthShell({
   subtitle,
   children,
   footer,
+  badgeRole = 'Applicant',
 }: {
   title: string
   subtitle: string
   children: React.ReactNode
   footer: React.ReactNode
+  badgeRole?: string
 }) {
   return (
     <div className="relative z-10 grid min-h-dvh lg:grid-cols-[1fr_0.85fr]">
@@ -45,10 +47,10 @@ export function AuthShell({
       <aside className="border-line relative hidden items-center justify-center overflow-hidden border-l lg:flex">
         <DuneHorizon className="top-0 bottom-0" />
         <div className="relative -rotate-[5deg]">
-          <BadgeCard name="Your Name" role="Applicant" code="0000" />
+          <BadgeCard name="Your Name" role={badgeRole} code="0000" />
         </div>
         <p className="text-fg-dim absolute bottom-10 left-1/2 max-w-xs -translate-x-1/2 text-center font-mono text-[11px] leading-relaxed">
-          One account. Up to one application per type. No second form, ever.
+          Three doors. Hacker and judge apply. Organizer reviews.
         </p>
       </aside>
     </div>

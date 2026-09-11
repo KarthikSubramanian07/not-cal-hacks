@@ -6,7 +6,7 @@
  * propagates to the form, the filters, the API and the migration.
  */
 
-export const APPLICATION_TYPES = ['hacker', 'mentor'] as const
+export const APPLICATION_TYPES = ['hacker', 'judge'] as const
 export type ApplicationType = (typeof APPLICATION_TYPES)[number]
 
 export const APPLICATION_STATUSES = [
@@ -88,11 +88,11 @@ export const APPLICATION_TYPE_META: Record<
     blurb:
       'Thirty-six hours, a table, and whatever you can carry. Tell us what you want to make and we will get out of the way.',
   },
-  mentor: {
-    label: 'Mentor',
-    tagline: 'You are here to unblock people',
+  judge: {
+    label: 'Judge',
+    tagline: 'You are here to score the work',
     blurb:
-      'You have debugged this before. Sit with teams, ask the annoying question, and leave when the build is green.',
+      'You have sat on this side of the table. Tell us what you can evaluate, when you can be in the room, and we will hand you a stack.',
   },
 }
 

@@ -28,6 +28,7 @@ const SHORT_LABELS: Record<string, string> = {
   expertise: 'Expertise',
   yearsExperience: 'Years of experience',
   availability: 'Availability',
+  judgedBefore: 'Judged before',
   mentoredBefore: 'Mentored before',
 }
 
