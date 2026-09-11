@@ -9,3 +9,5 @@ export { schema }
 
 /** Short, URL-safe, sortable-enough identifier for rows we create. */
 export const newId = () => crypto.randomUUID()
+
+export { transitionStatus, type StatusTransition } from './transition'

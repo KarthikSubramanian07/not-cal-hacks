@@ -4,7 +4,7 @@ import { z } from 'zod'
 import type { ApplicationSummary, ApplicationWithTimeline, StatusEvent } from '../../shared/api'
 import { APPLICATION_TYPES } from '../../shared/constants'
 import { answersSchemaFor, draftAnswersSchemaFor, fieldErrors } from '../../shared/schemas'
-import { getDb, newId, schema } from '../db'
+import { getDb, newId, schema, transitionStatus, type Db } from '../db'
 import { ApiError } from '../lib/errors'
 import { parseBody } from '../lib/validate'
 import { currentUser, requireUser } from '../middleware/auth'
@@ -23,6 +23,14 @@ const toSummary = (row: typeof schema.applications.$inferSelect): ApplicationSum
   createdAt: row.createdAt,
   updatedAt: row.updatedAt,
 })
+
+/** The one application a user can have of a given type, if it exists yet. */
+const findByType = (db: Db, userId: string, type: (typeof APPLICATION_TYPES)[number]) =>
+  db
+    .select()
+    .from(schema.applications)
+    .where(and(eq(schema.applications.userId, userId), eq(schema.applications.type, type)))
+    .get()
 
 /** Loads an application and refuses it unless the caller owns it. */
 async function ownedApplication(c: Context<AppEnv>, id: string) {
@@ -97,33 +105,42 @@ applications.post('/', async (c) => {
   const { type } = await parseBody(c, z.object({ type: z.enum(APPLICATION_TYPES) }))
   const db = getDb(c.env.DB)
 
-  const existing = await db
-    .select()
-    .from(schema.applications)
-    .where(and(eq(schema.applications.userId, user.id), eq(schema.applications.type, type)))
-    .get()
+  const existing = await findByType(db, user.id, type)
   if (existing) return c.json({ application: toSummary(existing) })
 
   const id = newId()
   const now = Date.now()
-  await db.batch([
-    db.insert(schema.applications).values({
-      id,
-      userId: user.id,
-      type,
-      status: 'draft',
-      answers: {},
-      createdAt: now,
-      updatedAt: now,
-    }),
-    db.insert(schema.statusEvents).values({
-      applicationId: id,
-      fromStatus: null,
-      toStatus: 'draft',
-      actorId: user.id,
-      createdAt: now,
-    }),
-  ])
+  try {
+    await db.batch([
+      db.insert(schema.applications).values({
+        id,
+        userId: user.id,
+        type,
+        status: 'draft',
+        answers: {},
+        createdAt: now,
+        updatedAt: now,
+      }),
+      db.insert(schema.statusEvents).values({
+        applicationId: id,
+        fromStatus: null,
+        toStatus: 'draft',
+        actorId: user.id,
+        createdAt: now,
+      }),
+    ])
+  } catch {
+    // Another tab won the race against applications_user_type_unique. The
+    // handler promises idempotency, so return the row that actually exists
+    // rather than surfacing a constraint violation as a 500.
+    const raced = await db
+      .select()
+      .from(schema.applications)
+      .where(and(eq(schema.applications.userId, user.id), eq(schema.applications.type, type)))
+      .get()
+    if (raced) return c.json({ application: toSummary(raced) })
+    throw ApiError.conflict('Could not start that application. Try again.')
+  }
 
   const created = await db
     .select()
@@ -181,22 +198,19 @@ applications.post('/:id/submit', async (c) => {
   }
 
   const now = Date.now()
-  const db = getDb(c.env.DB)
-  await db.batch([
-    db
-      .update(schema.applications)
-      .set({ status: 'submitted', submittedAt: now, updatedAt: now, answers: parsed.data })
-      .where(and(eq(schema.applications.id, row.id), eq(schema.applications.status, 'draft'))),
-    // Written in the same batch as the status change. D1 runs a batch as one
-    // transaction, so the audit trail cannot drift from the row it describes.
-    db.insert(schema.statusEvents).values({
+
+  // Submitting also freezes the answers the server just validated, so they ride
+  // along in the same transaction as the status change.
+  await c.env.DB.batch(
+    transitionStatus(c.env.DB, {
       applicationId: row.id,
-      fromStatus: 'draft',
-      toStatus: 'submitted',
+      from: 'draft',
+      to: 'submitted',
       actorId: user.id,
-      createdAt: now,
+      at: now,
+      also: { submittedAt: now, answers: parsed.data },
     }),
-  ])
+  )
 
   return c.json({ status: 'submitted', submittedAt: now })
 })
