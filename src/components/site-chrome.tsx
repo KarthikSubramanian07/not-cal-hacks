@@ -88,6 +88,14 @@ export function SiteFooter() {
             >
               GitHub
             </a>
+            <a
+              href="https://buymeacoffee.com/winnerkarthik"
+              className="text-fg-muted hover:text-sodium transition-colors"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Buy me a coffee
+            </a>
             <span className="text-fg-dim">MIT licensed</span>
           </div>
         </div>

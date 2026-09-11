@@ -62,13 +62,18 @@ function Hero() {
 
   return (
     <section className="relative overflow-hidden">
-      <DuneHorizon className="top-0 bottom-0" />
+      {/*
+       * The horizon is a band at the foot of the section, not a wash behind it.
+       * Text never sits on top of a sun, or beside one: the copy stops above
+       * this band and the band is where the light comes from.
+       */}
+      <DuneHorizon className="top-auto bottom-0 h-[9rem] sm:h-[11rem]" />
 
-      <div className="relative mx-auto flex max-w-5xl flex-col items-center px-5 pt-2 pb-20 text-center sm:px-8 lg:pb-28">
+      <div className="relative mx-auto flex max-w-5xl flex-col items-center px-5 pt-2 pb-[11rem] text-center sm:px-8 sm:pb-[13rem]">
         {/* The badge floats: there is not much gravity out here. */}
         <Lanyard name="Your Name" role="Hacker" code="A3F9" className="w-[260px] sm:w-[300px]" />
 
-        <motion.p className="telemetry mb-5" {...rise(0.02)}>
+        <motion.p className="telemetry mt-16 mb-5" {...rise(0.02)}>
           Applications open &middot; Window closes in 12 days
         </motion.p>
 
@@ -255,7 +260,7 @@ function BlindReview() {
           {QUEUE_ROWS.map((row, index) => (
             <div
               key={row.name}
-              className="border-line/60 relative flex items-center justify-between gap-4 border-b px-5 py-4 last:border-0"
+              className="border-line/60 group relative flex cursor-default items-center justify-between gap-4 border-b px-5 py-4 transition-colors duration-200 last:border-0 hover:bg-white/[0.04]"
             >
               <div className="min-w-0 flex-1">
                 <div className="relative inline-block">
@@ -273,7 +278,14 @@ function BlindReview() {
                 </div>
                 <p className="text-fg-dim mt-1 text-xs">{row.school}</p>
               </div>
-              <span className="text-ion font-mono text-xs">#{row.code}</span>
+              {/* A marker slides in on the left, the way a focused row would. */}
+              <span
+                aria-hidden
+                className="bg-sodium absolute inset-y-0 left-0 w-px origin-top scale-y-0 transition-transform duration-300 ease-[var(--ease-out-expo)] group-hover:scale-y-100"
+              />
+              <span className="text-ion group-hover:text-sodium font-mono text-xs transition-colors duration-200">
+                #{row.code}
+              </span>
               <span className="text-fg font-mono text-sm tabular-nums">{row.score}</span>
             </div>
           ))}
@@ -315,12 +327,14 @@ function ForOrganizers() {
       <div className="mt-14 grid gap-4 sm:grid-cols-2">
         {FEATURES.map((feature, index) => (
           <Reveal key={feature.title} delay={index * 0.06}>
-            <div className="panel h-full p-7">
-              <h3 className="text-xl">{feature.title}</h3>
-              <p className="text-fg-muted mt-3 text-[14px] leading-relaxed text-pretty">
+            <Spotlight className="panel group h-full p-7 transition-transform duration-300 ease-[var(--ease-out-expo)] hover:-translate-y-1">
+              <h3 className="group-hover:text-sodium text-xl transition-colors duration-300">
+                {feature.title}
+              </h3>
+              <p className="text-fg-muted group-hover:text-fg mt-3 text-[14px] leading-relaxed text-pretty transition-colors duration-300">
                 {feature.body}
               </p>
-            </div>
+            </Spotlight>
           </Reveal>
         ))}
       </div>
@@ -331,8 +345,8 @@ function ForOrganizers() {
 function ClosingCta() {
   return (
     <section className="border-line relative z-10 overflow-hidden border-t">
-      <DuneHorizon className="top-0 bottom-0 opacity-60" />
-      <div className="relative mx-auto max-w-3xl px-5 py-24 text-center sm:px-8 lg:py-32">
+      <DuneHorizon className="top-auto bottom-0 h-[9rem] opacity-75" />
+      <div className="relative mx-auto max-w-3xl px-5 pt-24 pb-[11rem] text-center sm:px-8 lg:pt-32">
         <h2 className="display-lg">The form takes five minutes</h2>
         <p className="measure text-fg-muted mx-auto mt-5 text-[15px] leading-relaxed text-pretty">
           Longer if you write something good in the last box, which you should.

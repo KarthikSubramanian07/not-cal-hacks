@@ -2,15 +2,16 @@ import { useReducedMotion } from '@/lib/hooks'
 import { cn } from '@/lib/utils'
 
 /**
- * The horizon: twin suns setting behind three ridges of sand.
+ * The horizon: three ridges of sand with heat haze on the ridge line.
  *
- * Adapted from the dune treatment on karthiksubramanian07.github.io. Three
+ * Adapted from the dune treatment on karthiksubramanian07.github.io. The three
  * silhouettes drift sideways at different speeds, which is what sells the
- * distance between them; a band of heat haze shimmers where the sand meets the
- * air; and the suns sit low enough to light the whole scene from below.
+ * distance between them.
  *
- * This is where every warm colour in the product comes from. The rest of the
- * interface can stay cold because this is doing the lighting.
+ * There are no sun discs. They were competing with the copy for attention no
+ * matter where they were placed, so the warmth now comes from the glow behind
+ * the ridges alone, which lights the scene without ever being a thing sitting
+ * next to a sentence.
  */
 export function DuneHorizon({ className }: { className?: string }) {
   const reduced = useReducedMotion()
@@ -25,42 +26,14 @@ export function DuneHorizon({ className }: { className?: string }) {
         className="absolute inset-x-0 bottom-0 h-full"
         style={{
           background:
-            'radial-gradient(105% 85% at 29% 88%, oklch(0.84 0.15 78 / 0.26) 0%, oklch(0.62 0.15 45 / 0.11) 33%, transparent 66%)',
-        }}
-      />
-
-      {/* The larger sun. */}
-      <div
-        className={cn(
-          'absolute bottom-[19%] left-[26%] size-[15rem] -translate-x-1/2 rounded-full sm:bottom-[21%]',
-          !reduced && 'animate-[sun-breathe_24s_ease-in-out_infinite]',
-        )}
-        style={{
-          background:
-            'radial-gradient(circle, oklch(0.95 0.09 84) 0%, oklch(0.86 0.15 74) 40%, oklch(0.68 0.16 52 / 0.34) 64%, transparent 71%)',
-          filter: 'blur(1.5px)',
-          mixBlendMode: 'screen',
-        }}
-      />
-
-      {/* Its smaller, cooler companion. */}
-      <div
-        className={cn(
-          'absolute bottom-[30%] left-[40%] size-[7rem] -translate-x-1/2 rounded-full sm:bottom-[32%]',
-          !reduced && 'animate-[sun-breathe_24s_ease-in-out_infinite_reverse]',
-        )}
-        style={{
-          background:
-            'radial-gradient(circle, oklch(0.92 0.09 58) 0%, oklch(0.75 0.16 44) 44%, oklch(0.56 0.15 36 / 0.30) 66%, transparent 73%)',
-          filter: 'blur(2.5px)',
-          mixBlendMode: 'screen',
+            'radial-gradient(120% 150% at 32% 104%, oklch(0.84 0.15 78 / 0.30) 0%, oklch(0.62 0.15 45 / 0.13) 34%, transparent 70%)',
         }}
       />
 
       {/* Heat haze, sitting on the ridge line. */}
       <div
         className={cn(
-          'absolute inset-x-0 bottom-[16%] h-[7%]',
+          'absolute inset-x-0 bottom-[26%] h-[16%]',
           !reduced && 'animate-[haze_7s_ease-in-out_infinite]',
         )}
         style={{
@@ -73,7 +46,7 @@ export function DuneHorizon({ className }: { className?: string }) {
       {/* Three ridges. Farther ones are paler, blurrier and drift slower. */}
       <Ridge
         className={cn(
-          'bottom-[17%] opacity-55 blur-[0.6px]',
+          'bottom-[16%] opacity-55 blur-[0.6px]',
           !reduced && 'animate-[dune-drift-far_90s_linear_infinite]',
         )}
         fill="oklch(0.30 0.055 48)"
@@ -81,7 +54,7 @@ export function DuneHorizon({ className }: { className?: string }) {
       />
       <Ridge
         className={cn(
-          'bottom-[8%] opacity-80',
+          'bottom-[7%] opacity-80',
           !reduced && 'animate-[dune-drift-mid_62s_linear_infinite]',
         )}
         fill="oklch(0.235 0.05 44)"
@@ -94,10 +67,6 @@ export function DuneHorizon({ className }: { className?: string }) {
       />
 
       <style>{`
-        @keyframes sun-breathe {
-          0%, 100% { transform: translateY(0) scale(1); opacity: 1 }
-          50% { transform: translateY(-10px) scale(1.03); opacity: .92 }
-        }
         @keyframes haze {
           0%, 100% { transform: scaleY(1) translateY(0); opacity: .65 }
           50% { transform: scaleY(1.18) translateY(-4px); opacity: 1 }
@@ -116,7 +85,7 @@ function Ridge({ className, fill, d }: { className?: string; fill: string; d: st
       className={cn('absolute -inset-x-[6%] w-[112%]', className)}
       viewBox="0 0 1440 200"
       preserveAspectRatio="none"
-      style={{ height: '26%' }}
+      style={{ height: '78%' }}
     >
       <path d={d} fill={fill} />
     </svg>
