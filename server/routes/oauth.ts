@@ -120,8 +120,9 @@ oauth.get('/google/callback', async (c) => {
     name?: string
   }
 
-  // An unverified address would let anyone claim an account by that name.
-  if (!profile.email || profile.email_verified === false) {
+  // An unverified address would let anyone claim an account by that name, and a
+  // missing claim is not a verified one.
+  if (!profile.email || profile.email_verified !== true) {
     return c.redirect('/login?error=oauth_unverified')
   }
 
