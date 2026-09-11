@@ -3,3 +3,9 @@
 #
 # Used to HMAC session tokens before they are stored. Rotating it logs everyone out.
 SESSION_SECRET="dev-only-secret-change-me"
+
+# Optional. The Google button on /login appears once both are set.
+# Redirect URI for local: http://localhost:8788/api/auth/google/callback
+GOOGLE_CLIENT_ID=""
+GOOGLE_CLIENT_SECRET=""
+

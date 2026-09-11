@@ -1,5 +1,6 @@
 import { eq } from 'drizzle-orm'
 import { Hono } from 'hono'
+import { sanitizeOAuthNext } from '../../shared/portal'
 import { getDb, newId, schema } from '../db'
 import { ApiError } from '../lib/errors'
 import { hashPassword } from '../lib/password'
@@ -25,6 +26,7 @@ const TOKEN_URL = 'https://oauth2.googleapis.com/token'
 const USERINFO_URL = 'https://openidconnect.googleapis.com/v1/userinfo'
 
 const STATE_COOKIE = 'nch_oauth_state'
+const NEXT_COOKIE = 'nch_oauth_next'
 const STATE_TTL_SECONDS = 600
 
 const oauth = new Hono<AppEnv>()
@@ -36,23 +38,39 @@ const redirectUri = (url: string) => new URL('/api/auth/google/callback', url).t
 
 const isSecure = (url: string) => new URL(url).protocol === 'https:'
 
+const cookieAttrs = (secure: boolean, maxAge: number) =>
+  [
+    'Path=/api/auth',
+    'HttpOnly',
+    'SameSite=Lax',
+    `Max-Age=${maxAge}`,
+    ...(secure ? ['Secure'] : []),
+  ].join('; ')
+
+const readCookie = (header: string, name: string) =>
+  header
+    .split(';')
+    .map((part) => part.trim())
+    .find((part) => part.startsWith(`${name}=`))
+    ?.slice(name.length + 1)
+
 /** Lets the sign-in page decide whether to render the button at all. */
 oauth.get('/providers', (c) => c.json({ google: isConfigured(c.env) }))
 
 oauth.get('/google', (c) => {
   if (!isConfigured(c.env)) throw ApiError.notFound('Google sign-in is not configured.')
 
+  const secure = isSecure(c.req.url)
   const state = newSessionToken()
+  const next = sanitizeOAuthNext(c.req.query('next'))
+
+  c.header('Set-Cookie', `${STATE_COOKIE}=${state}; ${cookieAttrs(secure, STATE_TTL_SECONDS)}`)
   c.header(
     'Set-Cookie',
-    [
-      `${STATE_COOKIE}=${state}`,
-      'Path=/api/auth',
-      'HttpOnly',
-      'SameSite=Lax',
-      `Max-Age=${STATE_TTL_SECONDS}`,
-      ...(isSecure(c.req.url) ? ['Secure'] : []),
-    ].join('; '),
+    `${NEXT_COOKIE}=${encodeURIComponent(next)}; ${cookieAttrs(secure, STATE_TTL_SECONDS)}`,
+    {
+      append: true,
+    },
   )
 
   const params = new URLSearchParams({
@@ -77,17 +95,21 @@ oauth.get('/google/callback', async (c) => {
   const returnedState = url.searchParams.get('state')
 
   const cookie = c.req.header('Cookie') ?? ''
-  const expectedState = cookie
-    .split(';')
-    .map((part) => part.trim())
-    .find((part) => part.startsWith(`${STATE_COOKIE}=`))
-    ?.slice(STATE_COOKIE.length + 1)
-
-  // Clear the state cookie whatever happens next.
-  c.header(
-    'Set-Cookie',
-    `${STATE_COOKIE}=; Path=/api/auth; HttpOnly; SameSite=Lax; Max-Age=0${isSecure(c.req.url) ? '; Secure' : ''}`,
+  const expectedState = readCookie(cookie, STATE_COOKIE)
+  const next = sanitizeOAuthNext(
+    (() => {
+      const raw = readCookie(cookie, NEXT_COOKIE)
+      try {
+        return raw ? decodeURIComponent(raw) : null
+      } catch {
+        return null
+      }
+    })(),
   )
+
+  const secure = isSecure(c.req.url)
+  c.header('Set-Cookie', `${STATE_COOKIE}=; ${cookieAttrs(secure, 0)}`)
+  c.header('Set-Cookie', `${NEXT_COOKIE}=; ${cookieAttrs(secure, 0)}`, { append: true })
 
   if (!code || !returnedState || !expectedState || returnedState !== expectedState) {
     return c.redirect('/login?error=oauth_state')
@@ -157,7 +179,13 @@ oauth.get('/google/callback', async (c) => {
     append: true,
   })
 
-  return c.redirect(user.role === 'organizer' ? '/admin' : '/apply')
+  if (next === '/admin' && user.role !== 'organizer') {
+    return c.redirect('/login?as=organizer&error=not_organizer')
+  }
+  if (user.role === 'organizer' && (next === '/apply' || next === '/status')) {
+    return c.redirect('/admin')
+  }
+  return c.redirect(next)
 })
 
 export default oauth

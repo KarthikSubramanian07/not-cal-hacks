@@ -4,7 +4,7 @@ import { LONG_ANSWER_MAX } from '../constants'
 /**
  * Fields every applicant answers regardless of what they are applying as.
  *
- * The two application types overlap by roughly half their fields, which is the
+ * Hacker and judge overlap by roughly half their fields, which is the
  * reason answers live in a single JSON column rather than one wide nullable
  * table or a table per type. See README "Why one JSON column".
  */

@@ -49,7 +49,7 @@ const SECTIONS: Record<
       fields: ['whyNotCalHacks', 'proudestProject'],
     },
   ],
-  mentor: [
+  judge: [
     {
       id: 'basics',
       title: 'The basics',
@@ -59,8 +59,8 @@ const SECTIONS: Record<
     {
       id: 'specifics',
       title: 'The specifics',
-      blurb: 'What you can unblock and when you are around.',
-      fields: ['company', 'role', 'expertise', 'yearsExperience', 'availability', 'mentoredBefore'],
+      blurb: 'What you can evaluate and when you can be in the room.',
+      fields: ['company', 'role', 'expertise', 'yearsExperience', 'availability', 'judgedBefore'],
     },
     {
       id: 'prose',
@@ -575,14 +575,14 @@ function FormFields({
         </Field>
       ) : null}
 
-      {has('mentoredBefore') ? (
-        <Field label="Mentored before?" error={errors.mentoredBefore}>
+      {has('judgedBefore') ? (
+        <Field label="Judged before?" error={errors.judgedBefore}>
           {(p) => (
             <Toggle
               id={p.id}
-              checked={answers.mentoredBefore === true}
-              onChange={(v) => setField('mentoredBefore', v)}
-              label="Yes, I have mentored at an event before"
+              checked={answers.judgedBefore === true}
+              onChange={(v) => setField('judgedBefore', v)}
+              label="Yes, I have judged at an event before"
             />
           )}
         </Field>
@@ -649,7 +649,7 @@ const LABELS: Record<string, string> = {
   expertise: 'Expertise',
   yearsExperience: 'Years of experience',
   availability: 'Availability',
-  mentoredBefore: 'Mentored before',
+  judgedBefore: 'Judged before',
   whyNotCalHacks: 'Why not Cal Hacks?',
   proudestProject: 'Proudest project',
 }

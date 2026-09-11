@@ -98,22 +98,19 @@ function Hero() {
         >
           <Magnetic>
             <Button asChild size="lg">
-              <Link to="/apply/hacker">
-                Apply as a hacker
+              <Link to="/apply">
+                Apply
                 <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-0.5" />
               </Link>
             </Button>
           </Magnetic>
           <Button asChild size="lg" variant="outline">
-            <Link to="/apply/mentor">Apply as a mentor</Link>
+            <Link to="/login?as=organizer">Organizer sign-in</Link>
           </Button>
         </motion.div>
 
         <motion.p className="text-fg-dim mt-6 text-[13px]" {...rise(0.3)}>
-          Drafts save while you type &middot;{' '}
-          <Link to="/login" className="hover:text-fg-muted underline-offset-4 hover:underline">
-            Organizer sign-in
-          </Link>
+          Three ways in: hacker, judge, or organizer
         </motion.p>
       </div>
     </section>

@@ -40,7 +40,15 @@ test.beforeEach(async ({ page }) => {
 test('the landing page says what this is', async ({ page }) => {
   await page.goto('/')
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Apply in five minutes')
-  await expect(page.getByRole('link', { name: 'Apply as a hacker' })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Apply' }).first()).toBeVisible()
+})
+
+test('the apply page shows three doors before anyone signs in', async ({ page }) => {
+  await page.goto('/apply')
+  await expect(page.getByRole('heading', { name: 'How are you walking in?' })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Sign in as a hacker' })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Sign in as a judge' })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Organizer sign-in' })).toBeVisible()
 })
 
 test('an applicant applies and an organizer decides', async ({ page }) => {
@@ -125,4 +133,14 @@ test('an applicant cannot reach the organizer console', async ({ page }) => {
 test('a signed-out visitor is sent to sign in', async ({ page }) => {
   await page.goto('/status')
   await expect(page).toHaveURL(/\/login/)
+})
+
+test('the organizer door lands in the console', async ({ page }) => {
+  await page.goto('/apply')
+  await page.getByRole('link', { name: 'Organizer sign-in' }).click()
+  await expect(page).toHaveURL(/\/login\?as=organizer/)
+  await page.getByLabel('Email').fill('organizer@notcalhacks.dev')
+  await page.getByLabel('Password').fill('demo1234')
+  await page.getByRole('button', { name: 'Sign in' }).click()
+  await expect(page).toHaveURL(/\/admin/)
 })

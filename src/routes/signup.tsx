@@ -1,8 +1,10 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router'
+import { useEffect, useState } from 'react'
+import { Link, useNavigate, useSearchParams } from 'react-router'
 import { toast } from 'sonner'
 import { signupSchema } from '@shared/schemas'
+import { PORTAL_INTENT_META, parsePortalIntent, pathForIntent } from '@shared/portal'
 import { AuthShell } from '@/components/auth-shell'
+import { GoogleContinue } from '@/components/google-continue'
 import { Button } from '@/components/ui/button'
 import { Field, Input } from '@/components/ui/field'
 import { ApiClientError } from '@/lib/api'
@@ -11,11 +13,17 @@ import { useAuth } from '@/lib/auth'
 export function SignupPage() {
   const { signup } = useAuth()
   const navigate = useNavigate()
+  const [params] = useSearchParams()
+  const intent = parsePortalIntent(params.get('as'))
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [submitting, setSubmitting] = useState(false)
+
+  useEffect(() => {
+    if (intent === 'organizer') void navigate('/login?as=organizer', { replace: true })
+  }, [intent, navigate])
 
   const onSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
@@ -31,9 +39,11 @@ export function SignupPage() {
 
     setSubmitting(true)
     try {
-      await signup(parsed.data)
+      const user = await signup(parsed.data)
       toast.success('Account created.')
-      void navigate('/apply', { replace: true })
+      const destination =
+        intent && intent !== 'organizer' ? pathForIntent(intent, user.role) : '/apply'
+      void navigate(destination, { replace: true })
     } catch (error) {
       if (error instanceof ApiClientError) {
         setErrors(error.fields ?? {})
@@ -46,15 +56,22 @@ export function SignupPage() {
     }
   }
 
+  const applyingAs = intent && intent !== 'organizer' ? PORTAL_INTENT_META[intent] : null
+
   return (
     <AuthShell
-      title="Create an account"
-      subtitle="One account covers both application types. It takes about twenty seconds, and then the actual form takes five minutes."
+      title={applyingAs ? `Apply as a ${applyingAs.label.toLowerCase()}` : 'Create an account'}
+      subtitle={
+        applyingAs
+          ? `One account covers both applications. After this you land on the ${applyingAs.label.toLowerCase()} form.`
+          : 'One account covers hacker and judge. It takes about twenty seconds, and then the actual form takes five minutes.'
+      }
+      badgeRole={applyingAs?.badgeRole ?? 'Applicant'}
       footer={
         <>
           Already have one?{' '}
           <Link
-            to="/login"
+            to={intent && intent !== 'organizer' ? `/login?as=${intent}` : '/login'}
             className="text-fg decoration-line-strong hover:decoration-fg underline underline-offset-4"
           >
             Sign in
@@ -110,6 +127,9 @@ export function SignupPage() {
           Create account
         </Button>
       </form>
+      <GoogleContinue
+        next={intent && intent !== 'organizer' ? pathForIntent(intent, 'applicant') : '/apply'}
+      />
     </AuthShell>
   )
 }

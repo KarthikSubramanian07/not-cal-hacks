@@ -144,7 +144,7 @@ export function AdminDashboard() {
           <Select
             options={[
               { value: 'all', label: 'All types' },
-              ...APPLICATION_TYPES.map((t) => ({ value: t, label: STATUS_LABEL(t) })),
+              ...APPLICATION_TYPES.map((t) => ({ value: t, label: TYPE_FILTER_LABEL[t] })),
             ]}
             value={type}
             onChange={(v) => setType(v as ApplicationType | 'all')}
@@ -286,4 +286,7 @@ export function AdminDashboard() {
   )
 }
 
-const STATUS_LABEL = (type: ApplicationType) => (type === 'hacker' ? 'Hackers' : 'Mentors')
+const TYPE_FILTER_LABEL: Record<ApplicationType, string> = {
+  hacker: 'Hackers',
+  judge: 'Judges',
+}

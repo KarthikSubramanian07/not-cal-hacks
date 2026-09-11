@@ -1,18 +1,18 @@
 import { z } from 'zod'
 import { APPLICATION_TYPES, type ApplicationType } from '../constants'
 import { hackerAnswersSchema } from './hacker'
-import { mentorAnswersSchema } from './mentor'
+import { judgeAnswersSchema } from './judge'
 
 export * from './common'
 export * from './hacker'
-export * from './mentor'
+export * from './judge'
 export * from './auth'
 export * from './review'
 
 /** The strict schema a set of answers must satisfy to be *submitted*. */
 export const ANSWERS_SCHEMAS = {
   hacker: hackerAnswersSchema,
-  mentor: mentorAnswersSchema,
+  judge: judgeAnswersSchema,
 } as const satisfies Record<ApplicationType, z.ZodObject>
 
 export const answersSchemaFor = (type: ApplicationType) => ANSWERS_SCHEMAS[type]

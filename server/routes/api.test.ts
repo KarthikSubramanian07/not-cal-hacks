@@ -149,12 +149,21 @@ describe('applications', () => {
       cookie,
       body: JSON.stringify({ type: 'hacker' }),
     })
-    const mentor = await call('/api/applications', {
+    const judge = await call('/api/applications', {
+      method: 'POST',
+      cookie,
+      body: JSON.stringify({ type: 'judge' }),
+    })
+    expect(judge.status).toBe(201)
+  })
+
+  it('refuses a type the product does not have', async () => {
+    const response = await call('/api/applications', {
       method: 'POST',
       cookie,
       body: JSON.stringify({ type: 'mentor' }),
     })
-    expect(mentor.status).toBe(201)
+    expect(response.status).toBe(400)
   })
 
   it('merges autosaves rather than replacing them', async () => {
