@@ -34,20 +34,7 @@ export function AdminReview() {
 
   const load = useCallback(async () => {
     try {
-      const res = await api.get<QueueResponse>(`/admin/queue?blind=${blind ? '1' : '0'}`)
-      setData(res)
-      // Reset the form for the incoming application, not the outgoing one.
-      setScores(
-        res.application?.myReview
-          ? {
-              technical: res.application.myReview.technical,
-              passion: res.application.myReview.passion,
-              fit: res.application.myReview.fit,
-            }
-          : EMPTY_SCORES,
-      )
-      setComment(res.application?.myReview?.comment ?? '')
-      setFocused('technical')
+      setData(await api.get<QueueResponse>(`/admin/queue?blind=${blind ? '1' : '0'}`))
     } catch {
       toast.error('Could not load the queue.')
     }
@@ -56,6 +43,31 @@ export function AdminReview() {
   useEffect(() => {
     void load()
   }, [load])
+
+  /*
+   * The form belongs to whichever application is on screen, so it is seeded
+   * from that application's id rather than from whoever called `load`. Toggling
+   * blind refetches the same application, the id does not change, and scores
+   * already entered survive. Finishing a review brings back a different one,
+   * and the form starts clean.
+   */
+  const current = data?.application
+  useEffect(() => {
+    setScores(
+      current?.myReview
+        ? {
+            technical: current.myReview.technical,
+            passion: current.myReview.passion,
+            fit: current.myReview.fit,
+          }
+        : EMPTY_SCORES,
+    )
+    setComment(current?.myReview?.comment ?? '')
+    setFocused('technical')
+    // Identity is the trigger. Re-seeding on every field of a redacted/unredacted
+    // refetch would put the scores back where the toggle found them.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [current?.id])
 
   const submit = useCallback(async () => {
     const application = data?.application
