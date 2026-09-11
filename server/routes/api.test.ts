@@ -1,6 +1,15 @@
 import { env } from 'cloudflare:test'
 import { beforeEach, describe, expect, it } from 'vitest'
-import { call, promote, signUp, validHackerAnswers } from '../test/helpers'
+import {
+  call,
+  countEvents,
+  draftApplication,
+  organizer,
+  promote,
+  signUp,
+  submittedApplication,
+  validHackerAnswers,
+} from '../test/helpers'
 
 /**
  * These run against a real D1 database with the real migrations applied, and
@@ -316,35 +325,9 @@ describe('organizer authorization', () => {
 })
 
 describe('review flow', () => {
-  async function submittedApplication() {
-    const applicant = await signUp(uniqueEmail())
-    const created = await call('/api/applications', {
-      method: 'POST',
-      cookie: applicant.cookie,
-      body: JSON.stringify({ type: 'hacker' }),
-    })
-    const { application } = (await created.json()) as { application: { id: string } }
-    await call(`/api/applications/${application.id}`, {
-      method: 'PATCH',
-      cookie: applicant.cookie,
-      body: JSON.stringify({ answers: validHackerAnswers }),
-    })
-    await call(`/api/applications/${application.id}/submit`, {
-      method: 'POST',
-      cookie: applicant.cookie,
-    })
-    return { id: application.id, applicant }
-  }
-
-  async function organizer() {
-    const user = await signUp(uniqueEmail())
-    await promote(user.id)
-    return user
-  }
-
   it('redacts identity on the server when blind mode is on', async () => {
-    const { id } = await submittedApplication()
-    const org = await organizer()
+    const { id } = await submittedApplication(uniqueEmail())
+    const org = await organizer(uniqueEmail())
 
     const response = await call(`/api/admin/applications/${id}`, { cookie: org.cookie })
     const body = (await response.json()) as {
@@ -360,8 +343,8 @@ describe('review flow', () => {
   })
 
   it('reveals identity only when asked', async () => {
-    const { id } = await submittedApplication()
-    const org = await organizer()
+    const { id } = await submittedApplication(uniqueEmail())
+    const org = await organizer(uniqueEmail())
 
     const response = await call(`/api/admin/applications/${id}?blind=0`, { cookie: org.cookie })
     const body = (await response.json()) as { application: { applicantName: string | null } }
@@ -369,8 +352,8 @@ describe('review flow', () => {
   })
 
   it('moves an application to under review on its first review', async () => {
-    const { id } = await submittedApplication()
-    const org = await organizer()
+    const { id } = await submittedApplication(uniqueEmail())
+    const org = await organizer(uniqueEmail())
 
     await call('/api/admin/reviews', {
       method: 'POST',
@@ -385,8 +368,8 @@ describe('review flow', () => {
   })
 
   it('updates a review in place rather than stacking a second one', async () => {
-    const { id } = await submittedApplication()
-    const org = await organizer()
+    const { id } = await submittedApplication(uniqueEmail())
+    const org = await organizer(uniqueEmail())
 
     await call('/api/admin/reviews', {
       method: 'POST',
@@ -407,8 +390,8 @@ describe('review flow', () => {
   })
 
   it('computes the total from the scores, so they cannot disagree', async () => {
-    const { id } = await submittedApplication()
-    const org = await organizer()
+    const { id } = await submittedApplication(uniqueEmail())
+    const org = await organizer(uniqueEmail())
     await call('/api/admin/reviews', {
       method: 'POST',
       cookie: org.cookie,
@@ -421,8 +404,8 @@ describe('review flow', () => {
   })
 
   it('rejects a score outside the rubric', async () => {
-    const { id } = await submittedApplication()
-    const org = await organizer()
+    const { id } = await submittedApplication(uniqueEmail())
+    const org = await organizer(uniqueEmail())
     const response = await call('/api/admin/reviews', {
       method: 'POST',
       cookie: org.cookie,
@@ -432,10 +415,10 @@ describe('review flow', () => {
   })
 
   it('hands out an unreviewed application before a reviewed one', async () => {
-    const first = await submittedApplication()
-    await submittedApplication()
-    const reviewerA = await organizer()
-    const reviewerB = await organizer()
+    const first = await submittedApplication(uniqueEmail())
+    await submittedApplication(uniqueEmail())
+    const reviewerA = await organizer(uniqueEmail())
+    const reviewerB = await organizer(uniqueEmail())
 
     // Give the first application a review so it is no longer the least read.
     await call('/api/admin/reviews', {
@@ -461,7 +444,7 @@ describe('review flow', () => {
   })
 
   it('orders by submission time among equally-reviewed applications', async () => {
-    const reviewer = await organizer()
+    const reviewer = await organizer(uniqueEmail())
     const response = await call('/api/admin/queue', { cookie: reviewer.cookie })
     const body = (await response.json()) as { application: { id: string } | null }
     if (!body.application) return
@@ -489,8 +472,8 @@ describe('review flow', () => {
   })
 
   it('never hands an organizer an application they already reviewed', async () => {
-    const { id } = await submittedApplication()
-    const org = await organizer()
+    const { id } = await submittedApplication(uniqueEmail())
+    const org = await organizer(uniqueEmail())
 
     await call('/api/admin/reviews', {
       method: 'POST',
@@ -504,8 +487,8 @@ describe('review flow', () => {
   })
 
   it('reports calibration for the signed-in reviewer', async () => {
-    const { id } = await submittedApplication()
-    const org = await organizer()
+    const { id } = await submittedApplication(uniqueEmail())
+    const org = await organizer(uniqueEmail())
     await call('/api/admin/reviews', {
       method: 'POST',
       cookie: org.cookie,
@@ -664,5 +647,79 @@ describe('misc', () => {
     const { cookie } = await signUp(uniqueEmail())
     const response = await call('/api/applications', { cookie })
     expect(response.headers.get('Cache-Control')).toContain('no-store')
+  })
+})
+
+describe('concurrency', () => {
+  it('starting the same application twice returns the same row rather than failing', async () => {
+    const applicant = await signUp(uniqueEmail())
+    const [a, b] = await Promise.all([
+      call('/api/applications', {
+        method: 'POST',
+        cookie: applicant.cookie,
+        body: JSON.stringify({ type: 'hacker' }),
+      }),
+      call('/api/applications', {
+        method: 'POST',
+        cookie: applicant.cookie,
+        body: JSON.stringify({ type: 'hacker' }),
+      }),
+    ])
+    expect(a.status).toBeLessThan(400)
+    expect(b.status).toBeLessThan(400)
+    const one = (await a.json()) as { application: { id: string } }
+    const two = (await b.json()) as { application: { id: string } }
+    expect(one.application.id).toBe(two.application.id)
+  })
+
+  it('a losing concurrent decision leaves no second audit row', async () => {
+    const { id } = await submittedApplication(uniqueEmail())
+    const org = await organizer(uniqueEmail())
+
+    // Two organizers accept at the same instant. Only one update can apply, so
+    // only one audit row may exist for that transition.
+    const decide = () =>
+      call(`/api/admin/applications/${id}/status`, {
+        method: 'PATCH',
+        cookie: org.cookie,
+        body: JSON.stringify({ status: 'accepted' }),
+      })
+    await Promise.all([decide(), decide()])
+
+    expect(await countEvents(id, 'accepted')).toBe(1)
+  })
+
+  it('never records a submitted event without the row having been submitted', async () => {
+    const { id, applicant } = await draftApplication(uniqueEmail())
+    await call(`/api/applications/${id}`, {
+      method: 'PATCH',
+      cookie: applicant.cookie,
+      body: JSON.stringify({ answers: validHackerAnswers }),
+    })
+
+    // Two tabs pressing submit together. One transaction wins the status, and
+    // the loser must not leave an audit row for a move it did not make.
+    const submit = () =>
+      call(`/api/applications/${id}/submit`, { method: 'POST', cookie: applicant.cookie })
+    await Promise.all([submit(), submit()])
+
+    expect(await countEvents(id, 'submitted')).toBe(1)
+  })
+})
+
+describe('draft privacy', () => {
+  it('search never reaches into an unsubmitted application', async () => {
+    const { id, applicant } = await draftApplication(uniqueEmail())
+    const secret = `zzsecretschool${crypto.randomUUID().slice(0, 6)}`
+    await call(`/api/applications/${id}`, {
+      method: 'PATCH',
+      cookie: applicant.cookie,
+      body: JSON.stringify({ answers: { school: secret } }),
+    })
+
+    const org = await organizer(uniqueEmail())
+    const response = await call(`/api/admin/applications?q=${secret}`, { cookie: org.cookie })
+    const body = (await response.json()) as { applications: unknown[] }
+    expect(body.applications).toHaveLength(0)
   })
 })
