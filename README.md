@@ -25,6 +25,31 @@ shares, and get back to people before the suns come up.
 
 ---
 
+## Requirements checklist
+
+Everything the brief asked for, and where to find it. All links are live.
+
+| #   | Requirement                                                 | Where it is                                                                                                                                                                                                               | Status |
+| --- | ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| 1   | **Sign-in and application forms backed by a real database** | [`/signup`](https://not-cal-hacks.pages.dev/signup) → [`/apply`](https://not-cal-hacks.pages.dev/apply) · Cloudflare **D1**, schema in [`server/db/schema.ts`](server/db/schema.ts)                                       | ✅     |
+| 2   | **Multiple account types, each with their own application** | **Hacker** → [`/apply/hacker`](https://not-cal-hacks.pages.dev/apply/hacker) · **Mentor** → [`/apply/mentor`](https://not-cal-hacks.pages.dev/apply/mentor) · separate Zod schemas in [`shared/schemas/`](shared/schemas) | ✅     |
+| 3   | **Review and grade applications**                           | [`/admin/review`](https://not-cal-hacks.pages.dev/admin/review) · three-criterion rubric, 1–5, keyboard-driven                                                                                                            | ✅     |
+| 4   | **A page listing all applications and their statuses**      | [`/admin`](https://not-cal-hacks.pages.dev/admin) · filter by type and status, search, sort, inline decisions, CSV export                                                                                                 | ✅     |
+| 5   | **One feature of your choosing**                            | **Blind review queue + calibration.** Server-side redaction, least-reviewed-first ordering, and a strip comparing your average to the team's                                                                              | ✅     |
+| 6   | **Deployed at a public URL**                                | **[not-cal-hacks.pages.dev](https://not-cal-hacks.pages.dev)** · Cloudflare Pages, deploys on every push to `main`                                                                                                        | ✅     |
+
+**Sign in as `organizer@notcalhacks.dev` / `demo1234` to see 3, 4 and 5 immediately.**
+
+### About requirement 5
+
+The brief asked for one feature. There are three, because they only work together:
+
+1. **Blind review.** Identity is stripped _on the server_, so it never reaches the browser unless a reviewer explicitly asks. Reviewers get a stable call sign (`#A3F9`) to argue about instead.
+2. **A queue that spreads coverage.** `Review next` serves the least-reviewed application you have not scored. Left alone, reviewers all open the top of the list and the same twenty applications get five reads each while the tail gets none.
+3. **Calibration.** A quiet strip shows your average beside the team's. Nobody is ranked; most drift corrects itself the moment it becomes visible.
+
+---
+
 ## Try it in thirty seconds
 
 Two seeded accounts, both on the live site. Nothing you do to them matters.
