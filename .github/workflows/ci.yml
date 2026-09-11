@@ -84,17 +84,13 @@ jobs:
       - name: Build and prerender
         run: npm run build
 
-      - name: Fail if the two documents are not what Pages expects
+      - name: Fail if the landing page did not prerender
         run: |
           if ! grep -q "Apply in five minutes" dist/index.html; then
             echo "::error::dist/index.html is missing the prerendered landing markup"
             exit 1
           fi
-          if ! grep -q '<div id="root"></div>' dist/app.html; then
-            echo "::error::dist/app.html should be an empty shell, not a prerendered page"
-            exit 1
-          fi
-          echo "Prerendered landing in index.html, empty shell in app.html."
+          echo "Prerendered landing markup present."
 
       - uses: actions/upload-artifact@v4
         with:

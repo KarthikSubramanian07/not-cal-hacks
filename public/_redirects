@@ -1,11 +1,3 @@
-# Single-page app. Anything that is not a real file and not an API route gets
-# the empty shell (dist/app.html), and the router takes it from there.
-#
-# Deliberately not /index.html: that document has the landing page prerendered
-# into it, so handing it to /login means the browser parses thirty kilobytes of
-# a page it is about to throw away. Real assets, including "/", are matched
-# before this rule, so the prerendered landing still wins at the root.
-#
-# The target is extensionless on purpose. Pages 308s /app.html to /app, and a
-# rewrite whose target redirects is a rewrite that does not happen.
-/*  /app  200
+# Single-page app: anything that is not a real file and not an API route gets
+# the shell, and the router takes it from there.
+/*  /index.html  200
