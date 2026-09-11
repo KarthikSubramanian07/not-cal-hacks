@@ -35,7 +35,16 @@ interface Meteor {
   length: number
 }
 
+/**
+ * Fires a hyperspace jump on the sky. Decoupled on purpose: the form that
+ * submits an application should not have to hold a ref to the background.
+ */
+export const JUMP_EVENT = 'starfield:jump'
+export const triggerHyperspaceJump = () => window.dispatchEvent(new CustomEvent(JUMP_EVENT))
+
 const STAR_COUNT = 190
+/** Total length of the jump envelope, in milliseconds. */
+const JUMP_MS = 1150
 const LAYER_SPEED = [0.0045, 0.011, 0.022]
 const PARALLAX = [5, 13, 26]
 
@@ -65,6 +74,8 @@ export function Starfield({ className }: { className?: string }) {
     let height = 0
     let stars: Star[] = []
     let meteor: Meteor | null = null
+    /** Timestamp the current jump started, or null when idle. */
+    let jumpStart: number | null = null
     let nextMeteorAt = performance.now() + 4000 + Math.random() * 6000
     const pointer = { x: 0, y: 0 }
     const smoothed = { x: 0, y: 0 }
@@ -95,8 +106,47 @@ export function Starfield({ className }: { className?: string }) {
       seed()
     }
 
+    /**
+     * Jump envelope: accelerate hard, hold, then decelerate back to still.
+     * Returns 0 when idle, peaking at 1 mid-jump.
+     */
+    const jumpAmount = (time: number) => {
+      if (jumpStart === null) return 0
+      const t = (time - jumpStart) / JUMP_MS
+      if (t >= 1) {
+        jumpStart = null
+        return 0
+      }
+      // Fast ramp in, slower settle out, so it reads as acceleration.
+      return t < 0.35 ? Math.pow(t / 0.35, 2) : Math.pow(1 - (t - 0.35) / 0.65, 1.6)
+    }
+
     const paint = (time: number) => {
       ctx.clearRect(0, 0, width, height)
+
+      const jump = jumpAmount(time)
+      if (jump > 0.001) {
+        // Stars stretch away from the centre of the screen. Drawing them as
+        // lines rather than moving them keeps the field intact on arrival.
+        const cx = width / 2
+        const cy = height / 2
+        ctx.lineCap = 'round'
+        for (const star of stars) {
+          const dx = star.x - cx
+          const dy = star.y - cy
+          const distance = Math.hypot(dx, dy) || 1
+          const stretch = jump * (60 + star.depth * 120) * (0.35 + distance / Math.max(width, height))
+          ctx.globalAlpha = Math.min(1, star.baseAlpha + jump * 0.5)
+          ctx.strokeStyle = star.color
+          ctx.lineWidth = star.radius * 1.5
+          ctx.beginPath()
+          ctx.moveTo(star.x, star.y)
+          ctx.lineTo(star.x + (dx / distance) * stretch, star.y + (dy / distance) * stretch)
+          ctx.stroke()
+        }
+        ctx.globalAlpha = 1
+        return
+      }
 
       // Pointer parallax is eased rather than tracked directly, so moving the
       // mouse fast does not snap the whole sky sideways.
@@ -211,9 +261,14 @@ export function Starfield({ className }: { className?: string }) {
       }
     }
 
+    const onJump = () => {
+      jumpStart = performance.now()
+    }
+
     const observer = new ResizeObserver(resize)
     observer.observe(canvas)
     window.addEventListener('pointermove', onPointerMove, { passive: true })
+    window.addEventListener(JUMP_EVENT, onJump)
     document.addEventListener('visibilitychange', onVisibility)
 
     return () => {
@@ -221,6 +276,7 @@ export function Starfield({ className }: { className?: string }) {
       cancelAnimationFrame(frame)
       observer.disconnect()
       window.removeEventListener('pointermove', onPointerMove)
+      window.removeEventListener(JUMP_EVENT, onJump)
       document.removeEventListener('visibilitychange', onVisibility)
     }
   }, [reducedMotion])

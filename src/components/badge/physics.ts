@@ -38,8 +38,9 @@ export interface LanyardConfig {
   segments: number
 }
 
-const GRAVITY = 0.75
-const DAMPING = 0.982
+/* Low gravity. The badge drifts rather than hanging, which is the point. */
+const GRAVITY = 0.26
+const DAMPING = 0.9915
 const CONSTRAINT_ITERATIONS = 16
 /** How hard the badge rotates back toward hanging straight down. */
 const ANGULAR_STIFFNESS = 0.055

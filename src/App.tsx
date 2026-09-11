@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react'
 import { Route, Routes } from 'react-router'
 import { Toaster } from 'sonner'
 import { AuthProvider } from '@/lib/auth'
+import { Starfield } from '@/components/space/starfield'
 import { RequireAuth, RequireOrganizer } from '@/components/route-guards'
 import { LandingPage } from '@/routes/landing'
 import { RouteFallback } from '@/components/route-fallback'
@@ -29,6 +30,8 @@ const NotFoundPage = lazy(() => import('@/routes/not-found').then((m) => ({ defa
 export function App() {
   return (
     <AuthProvider>
+      {/* One sky for the whole product, fixed behind every route. */}
+      <Starfield />
       <Suspense fallback={<RouteFallback />}>
         <Routes>
           <Route path="/" element={<LandingPage />} />

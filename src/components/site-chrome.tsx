@@ -19,7 +19,7 @@ export function SiteNav() {
   }
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-ink/70 backdrop-blur-xl">
+    <header className="sticky top-0 z-[30] border-b border-line bg-ink/60 backdrop-blur-xl">
       <nav className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-5 sm:px-8">
         <Wordmark />
 
@@ -56,7 +56,7 @@ export function SiteNav() {
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-line">
+    <footer className="relative z-10 border-t border-line bg-ink/60 backdrop-blur-sm">
       <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-[13px] text-fg-dim">
