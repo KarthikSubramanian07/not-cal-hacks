@@ -16,11 +16,13 @@ const tree = (
 )
 
 /*
- * The landing page is prerendered to static HTML at build time, so at `/` we
- * hydrate the existing markup rather than throwing it away. Every other route
- * renders from scratch, because the served HTML is the landing page shell.
+ * The landing page is prerendered to static HTML at build time. If markup is
+ * already here, it is that render and we hydrate it instead of throwing it
+ * away; every other route is served an empty shell and starts from scratch.
+ * The document itself says which case this is, so there is no path list to
+ * keep in sync with the router.
  */
-if (window.location.pathname === '/' && container.hasChildNodes()) {
+if (container.hasChildNodes()) {
   hydrateRoot(container, tree)
 } else {
   createRoot(container).render(tree)

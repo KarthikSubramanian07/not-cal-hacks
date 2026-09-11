@@ -80,7 +80,14 @@
     </script>
   </head>
   <body>
+    <!--
+      The build turns this into two documents: dist/index.html with the landing
+      page rendered inside #root, and dist/app.html with it left empty. Pages
+      serves the first only for "/", so no route is ever handed markup for a
+      page it is not.
+    -->
     <div id="root"></div>
+
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
