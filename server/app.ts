@@ -22,6 +22,17 @@ app.use('*', async (c, next) => {
   }
 })
 
+/**
+ * Pull request previews ship without a database, so the site can be looked at
+ * but the API cannot touch any rows. Everything except the health check says so
+ * plainly instead of failing inside a handler.
+ */
+app.use('*', async (c, next) => {
+  if (c.env.DB || c.req.path === '/api/health') return next()
+  const error = new ApiError(503, 'server_error', 'This preview has no database.')
+  return c.json(error.toBody(), 503)
+})
+
 app.use('*', loadUser)
 
 app.route('/auth', authRoutes)

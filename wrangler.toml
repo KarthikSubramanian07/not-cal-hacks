@@ -31,15 +31,10 @@ migrations_dir = "drizzle"
 [env.production.vars]
 APP_NAME = "not-cal-hacks"
 
-# Preview deployments (every other branch, including pull requests). These get a
-# separate database so a preview deploy can never touch production rows.
+# Preview deployments (every other branch, including pull requests). These have
+# no database binding at all, so a preview can never touch production rows; the
+# API answers 503 there and the pages still render.
 [env.preview]
-
-[[env.preview.d1_databases]]
-binding = "DB"
-database_name = "not-cal-hacks-preview"
-database_id = "fbc9ed46-a2ab-4744-93f5-c65414d508de"
-migrations_dir = "drizzle"
 
 [env.preview.vars]
 APP_NAME = "not-cal-hacks (preview)"
