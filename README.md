@@ -414,9 +414,9 @@ Two repository secrets are required: `CLOUDFLARE_API_TOKEN` and
 `CLOUDFLARE_ACCOUNT_ID`. Without them the workflow logs a warning and skips rather than
 failing, because this repository is public and forks cannot read secrets.
 
-Pull requests get their own preview deployment against a **separate preview database**,
-and that database is migrated and seeded on every preview deploy so `/apply` always has
-the three demo doors.
+Pull requests get their own preview deployment with **no database**, so a preview can
+never touch production rows. The pages render; the API answers 503 there. Try sign-in and
+`/apply` locally with `npm run db:reset` and `npm run dev`.
 
 ### Google sign-in
 

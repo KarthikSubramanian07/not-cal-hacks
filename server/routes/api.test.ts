@@ -1,5 +1,6 @@
 import { env } from 'cloudflare:test'
 import { beforeEach, describe, expect, it } from 'vitest'
+import app from '../app'
 import {
   call,
   countEvents,
@@ -650,6 +651,16 @@ describe('misc', () => {
     expect(response.status).toBe(404)
     const body = (await response.json()) as { error: { code: string } }
     expect(body.error.code).toBe('not_found')
+  })
+
+  it('answers 503 without touching a handler when there is no database', async () => {
+    const noDb = { ...env, DB: undefined } as unknown as typeof env
+    const health = await app.fetch(new Request('https://test.local/api/health'), noDb)
+    expect(health.status).toBe(200)
+    const response = await app.fetch(new Request('https://test.local/api/auth/me'), noDb)
+    expect(response.status).toBe(503)
+    const body = (await response.json()) as { error: { code: string } }
+    expect(body.error.code).toBe('server_error')
   })
 
   it('never lets a shared cache store a per-user response', async () => {
