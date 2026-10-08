@@ -61,7 +61,7 @@ jobs:
       - name: Coverage
         run: npm run test:coverage
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         if: always()
         with:
           name: coverage
@@ -102,7 +102,7 @@ jobs:
           done
           echo "Agent discovery files present."
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: dist
           path: dist/
@@ -142,7 +142,7 @@ jobs:
         env:
           SESSION_SECRET: ci-only-secret
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         if: failure()
         with:
           name: playwright-report
