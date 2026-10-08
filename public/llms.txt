@@ -1,0 +1,51 @@
+# not-cal-hacks
+
+> Hackathon application portal. A hackathon application portal for both sides of the table. Applicants apply once and track status; organizers review blind against a shared rubric and decide fast.
+
+When to use this:
+
+- An organizer needs a hackathon application portal with blind review, a shared rubric, and a trustworthy applicant status timeline.
+- An agent should integrate with not-cal-hacks through the public REST catalog, OpenAPI document, MCP server, or CLI instead of scraping the UI.
+- A developer needs sandbox demo accounts, auth docs, or vocabulary (application types, statuses, tracks, rubric) for not-cal-hacks.
+- Do not use this for payments, general ticketing, or as a source of affiliation claims about other hackathon brands.
+
+## Instructions for agents
+
+- Prefer `https://not-cal-hacks.pages.dev/openapi.json` as the API contract.
+- Use keyless `GET /api/v1/*` for product meta and vocabulary.
+- Use `https://not-cal-hacks.pages.dev/mcp` for Streamable HTTP tool calls.
+- Authenticated application data requires a session cookie; see `https://not-cal-hacks.pages.dev/auth.md`.
+- Never invent organizer decisions or applicant PII.
+
+## Docs
+
+- [Developer portal](https://not-cal-hacks.pages.dev/developers): quickstart, sandbox, OpenAPI, MCP, CLI
+- [API documentation](https://not-cal-hacks.pages.dev/docs): auth, endpoints, examples
+- [OpenAPI specification](https://not-cal-hacks.pages.dev/openapi.json): machine-readable operations
+- [Authentication walkthrough](https://not-cal-hacks.pages.dev/auth.md): how agents obtain credentials
+- [Agent instructions](https://not-cal-hacks.pages.dev/agents.md): when-to-use and calling conventions
+- [Full index](https://not-cal-hacks.pages.dev/llms-full.txt): longer agent-oriented dump
+
+## Product pages
+
+- [Home](https://not-cal-hacks.pages.dev/): hackathon application portal overview
+- [About](https://not-cal-hacks.pages.dev/about): what the product is
+- [Contact](https://not-cal-hacks.pages.dev/contact): human and agent contact channels
+- [Privacy](https://not-cal-hacks.pages.dev/privacy): data handling
+- [Pricing](https://not-cal-hacks.pages.dev/pricing): free / MIT
+
+## Machine discovery
+
+- [MCP endpoint](https://not-cal-hacks.pages.dev/mcp): Streamable HTTP
+- [MCP server card](https://not-cal-hacks.pages.dev/.well-known/mcp/server-card.json)
+- [ARD catalog](https://not-cal-hacks.pages.dev/.well-known/ard.json)
+- [API catalog](https://not-cal-hacks.pages.dev/.well-known/api-catalog)
+- [Sitemap](https://not-cal-hacks.pages.dev/sitemap.xml)
+- [CLI on npm](https://www.npmjs.com/package/not-cal-hacks)
+
+## Optional
+
+- [Source repository](https://github.com/KarthikSubramanian07/not-cal-hacks)
+- [Docs-scoped llms.txt](https://not-cal-hacks.pages.dev/docs/llms.txt)
+- [API-scoped llms.txt](https://not-cal-hacks.pages.dev/api/llms.txt)
+- [Developers-scoped llms.txt](https://not-cal-hacks.pages.dev/developers/llms.txt)

@@ -1,0 +1,16 @@
+{
+  "resource": "https://not-cal-hacks.pages.dev",
+  "authorization_servers": [
+    "https://not-cal-hacks.pages.dev"
+  ],
+  "bearer_methods_supported": [
+    "cookie",
+    "header"
+  ],
+  "scopes_supported": [
+    "applicant",
+    "organizer"
+  ],
+  "resource_documentation": "https://not-cal-hacks.pages.dev/auth.md",
+  "resource_name": "not-cal-hacks"
+}

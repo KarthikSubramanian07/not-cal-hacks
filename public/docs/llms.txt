@@ -1,0 +1,7 @@
+# not-cal-hacks docs
+
+> API documentation index for agents.
+
+- [API docs](https://not-cal-hacks.pages.dev/docs)
+- [OpenAPI](https://not-cal-hacks.pages.dev/openapi.json)
+- [Auth](https://not-cal-hacks.pages.dev/auth.md)

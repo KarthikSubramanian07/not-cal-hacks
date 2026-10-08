@@ -3,8 +3,21 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Legally distinct hackathon portal built purely on caffeine and hope.",
+  "description": "Hackathon application portal with blind review, public OpenAPI, MCP, and CLI.",
   "license": "MIT",
+  "homepage": "https://not-cal-hacks.pages.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KarthikSubramanian07/not-cal-hacks.git"
+  },
+  "keywords": [
+    "hackathon",
+    "application-portal",
+    "blind-review",
+    "openapi",
+    "mcp",
+    "cloudflare-pages"
+  ],
   "engines": {
     "node": ">=20"
   },
@@ -12,7 +25,8 @@
     "dev": "run-p -l dev:web dev:api",
     "dev:web": "vite",
     "dev:api": "wrangler pages dev --port 8788",
-    "build": "run-s build:client build:prerender",
+    "sync:agent": "tsx --tsconfig tsconfig.worker.json scripts/sync-agent-assets.ts",
+    "build": "run-s sync:agent build:client build:prerender",
     "build:client": "vite build",
     "build:prerender": "tsx --tsconfig tsconfig.app.json scripts/prerender.tsx",
     "preview": "run-s build && wrangler pages dev --port 8788",

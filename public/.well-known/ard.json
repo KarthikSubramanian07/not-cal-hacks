@@ -1,0 +1,67 @@
+{
+  "specVersion": "1.0",
+  "host": {
+    "displayName": "not-cal-hacks",
+    "identifier": "did:web:not-cal-hacks.pages.dev",
+    "documentationUrl": "https://not-cal-hacks.pages.dev/docs"
+  },
+  "entries": [
+    {
+      "identifier": "urn:air:not-cal-hacks.pages.dev:mcp:portal",
+      "displayName": "not-cal-hacks MCP server",
+      "type": "application/mcp-server-card+json",
+      "url": "https://not-cal-hacks.pages.dev/.well-known/mcp/server-card.json",
+      "description": "A hackathon application portal for both sides of the table. Applicants apply once and track status; organizers review blind against a shared rubric and decide fast.",
+      "tags": [
+        "hackathon",
+        "application-portal",
+        "blind-review",
+        "mcp"
+      ],
+      "capabilities": [
+        "get_product_meta",
+        "list_application_types",
+        "list_application_statuses",
+        "list_tracks",
+        "get_review_rubric",
+        "search_docs",
+        "get_openapi_summary"
+      ],
+      "representativeQueries": [
+        "hackathon application portal with blind review",
+        "not-cal-hacks OpenAPI",
+        "list application types for not-cal-hacks"
+      ],
+      "trustManifest": {
+        "identity": "did:web:not-cal-hacks.pages.dev",
+        "identityType": "did"
+      }
+    },
+    {
+      "identifier": "urn:air:not-cal-hacks.pages.dev:api:v1",
+      "displayName": "not-cal-hacks public API",
+      "type": "application/vnd.oai.openapi+json",
+      "url": "https://not-cal-hacks.pages.dev/openapi.json",
+      "description": "Public REST catalog and documented session APIs for the hackathon portal.",
+      "tags": [
+        "rest",
+        "openapi",
+        "hackathon"
+      ],
+      "capabilities": [
+        "getHealth",
+        "getProductMeta",
+        "listApplicationTypes",
+        "getRubric"
+      ],
+      "representativeQueries": [
+        "not-cal-hacks API",
+        "hackathon application types API"
+      ],
+      "trustManifest": {
+        "identity": "did:web:not-cal-hacks.pages.dev",
+        "identityType": "did"
+      }
+    }
+  ]
+}

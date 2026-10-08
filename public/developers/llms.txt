@@ -1,0 +1,7 @@
+# not-cal-hacks developers
+
+> Developer portal index.
+
+- [Portal](https://not-cal-hacks.pages.dev/developers)
+- [MCP](https://not-cal-hacks.pages.dev/mcp)
+- [CLI](https://www.npmjs.com/package/not-cal-hacks)

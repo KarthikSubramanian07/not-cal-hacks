@@ -1,0 +1,7 @@
+# not-cal-hacks API
+
+> Public REST catalog.
+
+- [API root](https://not-cal-hacks.pages.dev/api/v1)
+- [Meta](https://not-cal-hacks.pages.dev/api/v1/meta)
+- [OpenAPI](https://not-cal-hacks.pages.dev/openapi.json)

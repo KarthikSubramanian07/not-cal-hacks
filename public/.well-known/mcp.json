@@ -1,0 +1,27 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/v1/server-card.schema.json",
+  "name": "dev.not-cal-hacks/mcp",
+  "title": "not-cal-hacks",
+  "version": "1.0.0",
+  "description": "A hackathon application portal for both sides of the table. Applicants apply once and track status; organizers review blind against a shared rubric and decide fast. Exposes catalog tools over Streamable HTTP.",
+  "websiteUrl": "https://not-cal-hacks.pages.dev/developers",
+  "icons": [
+    {
+      "src": "https://not-cal-hacks.pages.dev/favicon.svg"
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://not-cal-hacks.pages.dev/mcp",
+      "supportedProtocolVersions": [
+        "2025-11-25",
+        "2025-06-18",
+        "2025-03-26"
+      ]
+    }
+  ],
+  "url": "https://not-cal-hacks.pages.dev/mcp",
+  "transport": "streamable-http",
+  "kind": "product"
+}
