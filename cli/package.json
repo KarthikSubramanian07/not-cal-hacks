@@ -1,9 +1,11 @@
 {
   "name": "not-cal-hacks",
   "version": "1.0.0",
-  "description": "CLI for the not-cal-hacks hackathon application portal — health, meta, vocabulary, and OpenAPI.",
+  "description": "CLI for the not-cal-hacks hackathon application portal - health, meta, vocabulary, and OpenAPI.",
   "type": "module",
-  "bin": "./bin/not-cal-hacks.js",
+  "bin": {
+    "not-cal-hacks": "bin/cli.js"
+  },
   "files": [
     "bin",
     "README.md"
