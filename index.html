@@ -26,21 +26,20 @@
       }
     </style>
 
-    <title>not-cal-hacks</title>
+    <title>not-cal-hacks — Hackathon application portal</title>
     <meta
       name="description"
-      content="A hackathon application portal for both sides of the table. Applicants apply once and watch their status; organizers review blind, score against a shared rubric, and decide fast."
+      content="not-cal-hacks is a hackathon application portal for both sides of the table. Applicants apply once and watch their status; organizers review blind, score against a shared rubric, and decide fast."
     />
     <link rel="canonical" href="https://not-cal-hacks.pages.dev/" />
+    <link rel="alternate" type="text/markdown" href="https://not-cal-hacks.pages.dev/index.md" />
+    <link rel="llms-txt" href="https://not-cal-hacks.pages.dev/llms.txt" />
     <meta name="robots" content="index, follow, max-image-preview:large" />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="not-cal-hacks" />
     <meta property="og:url" content="https://not-cal-hacks.pages.dev/" />
-    <meta
-      property="og:title"
-      content="not-cal-hacks — a hackathon portal that respects both sides of the table"
-    />
+    <meta property="og:title" content="not-cal-hacks — Hackathon application portal" />
     <meta
       property="og:description"
       content="Apply in five minutes. Reviewed in thirty seconds. Blind review, a shared rubric, and a queue that spreads coverage evenly."
@@ -54,7 +53,7 @@
     />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="not-cal-hacks" />
+    <meta name="twitter:title" content="not-cal-hacks — Hackathon application portal" />
     <meta
       name="twitter:description"
       content="Apply in five minutes. Reviewed in thirty seconds. Legally distinct from any hackathon you may be thinking of."
@@ -68,14 +67,72 @@
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "WebApplication",
+        "@type": ["WebApplication", "SoftwareApplication"],
         "name": "not-cal-hacks",
+        "alternateName": "not-cal-hacks Hackathon Application Portal",
         "applicationCategory": "BusinessApplication",
         "operatingSystem": "Any",
         "url": "https://not-cal-hacks.pages.dev/",
         "description": "A hackathon application portal. Applicants apply once and track their status; organizers review applications blind against a shared rubric.",
         "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-        "author": { "@type": "Person", "name": "Karthik Subramanian" }
+        "publisher": {
+          "@type": "Organization",
+          "name": "not-cal-hacks",
+          "url": "https://not-cal-hacks.pages.dev/",
+          "sameAs": ["https://github.com/KarthikSubramanian07/not-cal-hacks"]
+        },
+        "author": {
+          "@type": "Organization",
+          "name": "not-cal-hacks",
+          "url": "https://not-cal-hacks.pages.dev/"
+        }
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "not-cal-hacks",
+        "url": "https://not-cal-hacks.pages.dev/",
+        "description": "Hackathon application portal with blind review and a shared rubric.",
+        "sameAs": ["https://github.com/KarthikSubramanian07/not-cal-hacks"],
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "developer support",
+          "url": "https://not-cal-hacks.pages.dev/contact"
+        }
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is not-cal-hacks?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "not-cal-hacks is a hackathon application portal. Applicants file once and track status; organizers review blind against a shared rubric."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is there a public API?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Keyless catalog endpoints live under /api/v1, with OpenAPI at /openapi.json, MCP at /mcp, and a CLI via npx not-cal-hacks."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How much does not-cal-hacks cost?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Zero. Applicants, organizers, the public API, MCP, and CLI are free. The software is MIT licensed."
+            }
+          }
+        ]
       }
     </script>
   </head>

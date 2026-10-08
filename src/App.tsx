@@ -35,6 +35,14 @@ const AdminApplication = lazy(() =>
 const NotFoundPage = lazy(() =>
   import('@/routes/not-found').then((m) => ({ default: m.NotFoundPage })),
 )
+const AboutPage = lazy(() => import('@/routes/about').then((m) => ({ default: m.AboutPage })))
+const ContactPage = lazy(() => import('@/routes/contact').then((m) => ({ default: m.ContactPage })))
+const PrivacyPage = lazy(() => import('@/routes/privacy').then((m) => ({ default: m.PrivacyPage })))
+const DocsPage = lazy(() => import('@/routes/docs').then((m) => ({ default: m.DocsPage })))
+const DevelopersPage = lazy(() =>
+  import('@/routes/developers').then((m) => ({ default: m.DevelopersPage })),
+)
+const PricingPage = lazy(() => import('@/routes/pricing').then((m) => ({ default: m.PricingPage })))
 
 export function App() {
   return (
@@ -48,6 +56,12 @@ export function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/docs" element={<DocsPage />} />
+          <Route path="/developers" element={<DevelopersPage />} />
+          <Route path="/pricing" element={<PricingPage />} />
           {/*
             The picker is public on purpose: a stranger hitting Apply should see
             the three doors (hacker, judge, organizer) before any password field.

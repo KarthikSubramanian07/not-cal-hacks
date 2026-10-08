@@ -74,12 +74,24 @@ export function SiteFooter() {
             <Link to="/apply" className="text-fg-muted hover:text-fg transition-colors">
               Apply
             </Link>
-            <Link to="/status" className="text-fg-muted hover:text-fg transition-colors">
-              Status
+            <Link to="/docs" className="text-fg-muted hover:text-fg transition-colors">
+              API docs
             </Link>
-            <Link to="/login" className="text-fg-muted hover:text-fg transition-colors">
-              Sign in
+            <Link to="/developers" className="text-fg-muted hover:text-fg transition-colors">
+              Developers
             </Link>
+            <Link to="/about" className="text-fg-muted hover:text-fg transition-colors">
+              About
+            </Link>
+            <Link to="/contact" className="text-fg-muted hover:text-fg transition-colors">
+              Contact
+            </Link>
+            <Link to="/privacy" className="text-fg-muted hover:text-fg transition-colors">
+              Privacy
+            </Link>
+            <a href="/openapi.json" className="text-fg-muted hover:text-fg transition-colors">
+              OpenAPI
+            </a>
             <a
               href="https://github.com/KarthikSubramanian07/not-cal-hacks"
               className="text-fg-muted hover:text-fg transition-colors"
@@ -87,14 +99,6 @@ export function SiteFooter() {
               rel="noreferrer"
             >
               GitHub
-            </a>
-            <a
-              href="https://buymeacoffee.com/winnerkarthik"
-              className="text-fg-muted hover:text-sodium transition-colors"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Buy me a coffee
             </a>
             <span className="text-fg-dim">MIT licensed</span>
           </div>
