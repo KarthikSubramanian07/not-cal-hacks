@@ -50,4 +50,12 @@ export default tseslint.config(
     files: ['scripts/**/*.ts', 'e2e/**/*.ts', '**/*.test.{ts,tsx}'],
     rules: { 'no-console': 'off' },
   },
+  {
+    files: ['cli/**/*.{js,mjs,cjs}'],
+    languageOptions: {
+      ecmaVersion: 2023,
+      globals: { ...globals.node },
+    },
+    rules: { 'no-console': 'off' },
+  },
 )

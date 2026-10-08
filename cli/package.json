@@ -1,0 +1,37 @@
+{
+  "name": "not-cal-hacks",
+  "version": "1.0.0",
+  "description": "CLI for the not-cal-hacks hackathon application portal — health, meta, vocabulary, and OpenAPI.",
+  "type": "module",
+  "bin": {
+    "not-cal-hacks": "./bin/not-cal-hacks.js"
+  },
+  "files": [
+    "bin",
+    "README.md"
+  ],
+  "keywords": [
+    "not-cal-hacks",
+    "hackathon",
+    "application-portal",
+    "cli",
+    "openapi",
+    "mcp"
+  ],
+  "homepage": "https://not-cal-hacks.pages.dev/developers",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KarthikSubramanian07/not-cal-hacks.git",
+    "directory": "cli"
+  },
+  "bugs": {
+    "url": "https://github.com/KarthikSubramanian07/not-cal-hacks/issues"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

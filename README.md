@@ -105,14 +105,17 @@ flowchart LR
     SPA["React 19 SPA<br/>prerendered landing"]
   end
   subgraph "Cloudflare Pages (one deployment)"
-    A["Static assets<br/>dist/"]
+    M["Edge middleware<br/>404 + Markdown negotiation"]
+    A["Static assets<br/>dist/ + discovery files"]
     F["Pages Function<br/>functions/api/[[route]].ts"]
     H["Hono app<br/>server/app.ts"]
   end
   DB[("D1<br/>SQLite at the edge")]
 
-  SPA -->|"GET /"| A
-  SPA -->|"/api/*"| F --> H
+  SPA -->|"pages"| M
+  M -->|"known SPA routes"| A
+  M -->|"/api/*"| F --> H
+  M -->|"/mcp"| MCP["MCP Streamable HTTP"]
   H -->|"Drizzle"| DB
 
   Z["shared/schemas<br/>Zod"] -.->|"same schema"| SPA
@@ -121,6 +124,24 @@ flowchart LR
 
 The frontend and the API ship as **one deployment**. There is no second origin, no
 CORS configuration, and no way for the two halves to drift to different versions.
+
+### Agent surface
+
+Machine-readable entry points for agents and tooling:
+
+| Surface            | URL                                                             |
+| ------------------ | --------------------------------------------------------------- |
+| Agent index        | [`/llms.txt`](https://not-cal-hacks.pages.dev/llms.txt)         |
+| OpenAPI            | [`/openapi.json`](https://not-cal-hacks.pages.dev/openapi.json) |
+| Public catalog API | [`/api/v1`](https://not-cal-hacks.pages.dev/api/v1)             |
+| Developer portal   | [`/developers`](https://not-cal-hacks.pages.dev/developers)     |
+| API docs           | [`/docs`](https://not-cal-hacks.pages.dev/docs)                 |
+| MCP                | [`/mcp`](https://not-cal-hacks.pages.dev/mcp)                   |
+| CLI                | `npx not-cal-hacks`                                             |
+
+Unknown paths return a real HTTP 404 (with a Markdown body when `Accept: text/markdown`).
+The homepage negotiates Markdown on the same URL. Sync discovery files with
+`npm run sync:agent` (also runs as part of `npm run build`).
 
 ### The data model
 
