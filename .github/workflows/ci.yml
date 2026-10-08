@@ -92,6 +92,16 @@ jobs:
           fi
           echo "Prerendered landing markup present."
 
+      - name: Fail if agent discovery files are missing
+        run: |
+          for f in llms.txt openapi.json index.md auth.md .well-known/ard.json .well-known/api-catalog 404.html; do
+            if [ ! -f "dist/$f" ]; then
+              echo "::error::dist/$f missing — run npm run sync:agent"
+              exit 1
+            fi
+          done
+          echo "Agent discovery files present."
+
       - uses: actions/upload-artifact@v4
         with:
           name: dist

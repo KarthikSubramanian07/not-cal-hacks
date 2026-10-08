@@ -1,0 +1,39 @@
+{
+  "name": "not-cal-hacks",
+  "description": "A hackathon application portal for both sides of the table. Applicants apply once and track status; organizers review blind against a shared rubric and decide fast.",
+  "url": "https://not-cal-hacks.pages.dev/",
+  "version": "1.0.0",
+  "protocolVersion": "0.2.9",
+  "preferredTransport": "JSONRPC",
+  "skills": [
+    {
+      "id": "hackathon-portal-catalog",
+      "name": "Hackathon application portal catalog",
+      "description": "Expose application types, tracks, statuses, and the review rubric for not-cal-hacks.",
+      "tags": [
+        "hackathon",
+        "applications",
+        "rubric"
+      ],
+      "examples": [
+        "List application types",
+        "Show the review rubric"
+      ]
+    }
+  ],
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false
+  },
+  "defaultInputModes": [
+    "text/plain"
+  ],
+  "defaultOutputModes": [
+    "application/json",
+    "text/markdown"
+  ],
+  "provider": {
+    "organization": "not-cal-hacks",
+    "url": "https://not-cal-hacks.pages.dev"
+  }
+}

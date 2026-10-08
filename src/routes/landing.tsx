@@ -77,18 +77,18 @@ function Hero() {
         </motion.p>
 
         <motion.h1 className="display-xl max-w-4xl" {...rise(0.06)}>
-          Apply in five minutes.
+          not-cal-hacks
           <br />
-          <span className="text-fg-muted">Reviewed in thirty seconds.</span>
+          <span className="text-fg-muted">Hackathon application portal</span>
         </motion.h1>
 
         <motion.p
           className="measure text-fg-muted mt-6 text-[17px] leading-relaxed text-pretty"
           {...rise(0.14)}
         >
-          A hackathon application portal that respects both sides of the table. Fill one form and
-          watch it move. Organizers read it blind, score it against a rubric everyone shares, and
-          get back to you before the suns come up.
+          Apply in five minutes. Reviewed in thirty seconds. Fill one form and watch it move.
+          Organizers read it blind, score it against a rubric everyone shares, and get back to you
+          before the suns come up.
         </motion.p>
 
         <motion.div
@@ -106,10 +106,20 @@ function Hero() {
           <Button asChild size="lg" variant="outline">
             <Link to="/login?as=organizer">Organizer sign-in</Link>
           </Button>
+          <Button asChild size="lg" variant="ghost">
+            <Link to="/developers">Developer portal</Link>
+          </Button>
         </motion.div>
 
         <motion.p className="text-fg-dim mt-6 text-[13px]" {...rise(0.3)}>
-          Three ways in: hacker, judge, or organizer
+          Three ways in: hacker, judge, or organizer ·{' '}
+          <Link to="/docs" className="hover:text-fg transition-colors">
+            API docs
+          </Link>
+          {' · '}
+          <a href="/openapi.json" className="hover:text-fg transition-colors">
+            OpenAPI
+          </a>
         </motion.p>
       </div>
     </section>

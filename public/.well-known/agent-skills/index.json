@@ -1,0 +1,12 @@
+{
+  "$schema": "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
+  "skills": [
+    {
+      "name": "not-cal-hacks",
+      "type": "skill-md",
+      "description": "Integrate with the not-cal-hacks hackathon application portal via OpenAPI, MCP, or CLI.",
+      "url": "/.well-known/agent-skills/not-cal-hacks/SKILL.md",
+      "digest": "sha256:74e07a9d60f81c173b0403382d3c5fb8bc31180efca376905c655058da4c8881"
+    }
+  ]
+}

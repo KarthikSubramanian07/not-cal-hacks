@@ -23,6 +23,18 @@ export default defineConfig({
         target: 'http://127.0.0.1:8788',
         changeOrigin: false,
       },
+      '/mcp': {
+        target: 'http://127.0.0.1:8788',
+        changeOrigin: false,
+      },
+      '/openapi.json': {
+        target: 'http://127.0.0.1:8788',
+        changeOrigin: false,
+      },
+      '/.well-known': {
+        target: 'http://127.0.0.1:8788',
+        changeOrigin: false,
+      },
     },
   },
   build: {

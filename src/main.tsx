@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot, hydrateRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router'
 import { App } from './App'
+import { registerWebMcpTools } from './lib/webmcp'
 import './styles/index.css'
 
 const container = document.getElementById('root')
@@ -25,3 +26,5 @@ if (window.location.pathname === '/' && container.hasChildNodes()) {
 } else {
   createRoot(container).render(tree)
 }
+
+registerWebMcpTools()

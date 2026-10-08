@@ -1,13 +1,63 @@
 User-agent: *
-Allow: /$
+Allow: /
+Allow: /docs
+Allow: /developers
+Allow: /about
+Allow: /contact
+Allow: /privacy
+Allow: /pricing
+Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /openapi.json
+Allow: /auth.md
+Allow: /agents.md
+Allow: /api/health
+Allow: /api/v1
+Allow: /api/v1/
+Allow: /mcp
+Allow: /.well-known/
 
-# Every other route is the application itself: it sits behind a session, holds
-# personal data, and returns the same shell to a crawler regardless.
 Disallow: /admin
 Disallow: /status
-Disallow: /apply
+Disallow: /apply/
 Disallow: /login
 Disallow: /signup
-Disallow: /api
+Disallow: /api/auth
+Disallow: /api/applications
+Disallow: /api/admin
 
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: ora-agent
+Allow: /
+
+User-agent: DeepSeekBot
+Allow: /
+
+# Content Signals: search=yes, ai-train=yes
 Sitemap: https://not-cal-hacks.pages.dev/sitemap.xml
