@@ -43,6 +43,10 @@ export default tseslint.config(
     plugins: { 'react-hooks': reactHooks, 'react-refresh': reactRefresh },
     rules: {
       ...reactHooks.configs.recommended.rules,
+      // New in react-hooks 7. It flags the fetch-on-mount effects used across
+      // the admin and apply routes; surface it without failing CI until those
+      // move to a data loader.
+      'react-hooks/set-state-in-effect': 'warn',
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
     },
   },
