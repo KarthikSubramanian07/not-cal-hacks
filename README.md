@@ -386,6 +386,7 @@ same Worker runtime that ships.
 | `npm run typecheck` | Three projects: browser, Worker, Node       |
 | `npm run build`     | Vite build, then prerender the landing page |
 | `npm run db:reset`  | Wipe local state, migrate, reseed           |
+| `npm run db:check`  | Fail if the schema drifted from `drizzle/`  |
 | `npm run deploy`    | Build and ship to Cloudflare Pages          |
 
 ---

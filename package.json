@@ -42,6 +42,7 @@
     "test:coverage": "vitest run --project unit --coverage",
     "test:e2e": "playwright test",
     "db:generate": "drizzle-kit generate",
+    "db:check": "tsx scripts/check-migrations.ts",
     "db:migrate:local": "wrangler d1 migrations apply not-cal-hacks --local",
     "db:migrate:remote": "wrangler d1 migrations apply not-cal-hacks --remote",
     "db:seed": "tsx scripts/seed.ts",

@@ -37,6 +37,12 @@ jobs:
       - name: Check formatting
         run: npm run format:check
 
+      # Runs drizzle-kit generate against a scratch copy of drizzle/ and fails
+      # if it would write a migration, so the schema and the committed
+      # snapshots can never drift apart unnoticed.
+      - name: Check the schema matches the migrations
+        run: npm run db:check
+
   test:
     name: Tests
     runs-on: ubuntu-latest
