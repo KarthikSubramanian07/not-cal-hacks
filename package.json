@@ -110,6 +110,7 @@
     "zod": "$zod",
     "@esbuild-kit/core-utils": {
       "esbuild": ">=0.25.0 <0.26"
-    }
+    },
+    "minimatch": "^11.0.1"
   }
 }
