@@ -1,6 +1,6 @@
 import { fileURLToPath, URL } from 'node:url'
 import path from 'node:path'
-import { cloudflareTest, readD1Migrations } from '@cloudflare/vitest-pool-workers'
+import { cloudflareTest, readD1Migrations } from '@cloudflare/vitest-plugin'
 import { defineProject } from 'vitest/config'
 
 const r = (p: string) => fileURLToPath(new URL(p, import.meta.url))
