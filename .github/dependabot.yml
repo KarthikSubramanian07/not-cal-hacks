@@ -13,14 +13,16 @@ updates:
         patterns: ['wrangler', '@cloudflare/*']
       tooling:
         patterns:
-          ['vite', 'vitest', '@vitejs/*', 'typescript', 'eslint*', 'typescript-eslint', 'prettier*']
-    ignore:
-      # @cloudflare/vitest-pool-workers (0.23.0) only supports vitest ^4.1, and
-      # the API tests run inside it. Drop this once it accepts vitest 5.
-      - dependency-name: 'vitest'
-        update-types: ['version-update:semver-major']
-      - dependency-name: '@vitest/*'
-        update-types: ['version-update:semver-major']
+          [
+            'vite',
+            'vitest',
+            '@vitest/*',
+            '@vitejs/*',
+            'typescript',
+            'eslint*',
+            'typescript-eslint',
+            'prettier*',
+          ]
 
   - package-ecosystem: github-actions
     directory: /
