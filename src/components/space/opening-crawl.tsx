@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useReducedMotion } from '@/lib/hooks'
 import { triggerHyperspaceJump } from './starfield'
 
@@ -40,11 +40,15 @@ type Phase = 'intro' | 'title' | 'crawl' | 'done'
 export function OpeningCrawl({ onFinished }: { onFinished?: () => void }) {
   const reducedMotion = useReducedMotion()
   const [phase, setPhase] = useState<Phase>('intro')
-  const [visible, setVisible] = useState(crawlShouldPlay)
+  // Starts hidden on every render, because the build-time prerender cannot know
+  // whether this visitor should see the crawl. Deciding in the first render
+  // made the hydrated tree differ from the prerendered HTML. A layout effect
+  // decides before the browser paints, so client-side visits do not flash.
+  const [visible, setVisible] = useState(false)
   const finishedRef = useRef(false)
   const canSkipRef = useRef(false)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (reducedMotion) {
       setVisible(false)
       return
