@@ -46,12 +46,17 @@ test.beforeEach(async ({ page }) => {
 })
 
 test('the landing page says what this is', async ({ page }) => {
+  // The landing page is prerendered; a hydration mismatch shows up here.
+  const errors: string[] = []
+  page.on('pageerror', (error) => errors.push(error.message))
   await page.goto('/')
   await expect(page.getByRole('heading', { level: 1 })).toContainText(
     'Hackathon application portal',
   )
   await expect(page.getByText('Apply in five minutes.')).toBeVisible()
   await expect(page.getByRole('link', { name: 'Apply' }).first()).toBeVisible()
+  await page.waitForLoadState('networkidle')
+  expect(errors).toEqual([])
 })
 
 test('the apply page shows three doors before anyone signs in', async ({ page }) => {

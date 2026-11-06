@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react'
 
 /**
  * Tracks the OS "reduce motion" preference and keeps tracking it, so toggling
@@ -130,4 +130,20 @@ export function useHotkey(
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [combo.key, combo.meta, combo.shift, enabled])
+}
+
+const noSubscription = () => () => {}
+
+/**
+ * False while React hydrates prerendered HTML (and on the server), true once
+ * the page is live. A component that shows client-only state, such as the
+ * session, can render its prerendered form until this turns true, so React
+ * adopts the markup instead of discarding it.
+ */
+export function useHydrated(): boolean {
+  return useSyncExternalStore(
+    noSubscription,
+    () => true,
+    () => false,
+  )
 }
