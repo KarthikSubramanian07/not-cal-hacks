@@ -134,6 +134,10 @@ jobs:
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 
+      # wrangler pages dev reads bindings from .dev.vars, not the job's env.
+      - name: Give the local server a session secret
+        run: echo 'SESSION_SECRET="ci-only-secret"' > .dev.vars
+
       - name: Prepare a local database
         run: |
           npx wrangler d1 migrations apply not-cal-hacks --local
@@ -145,8 +149,6 @@ jobs:
 
       - name: Run the suite against wrangler
         run: npm run test:e2e
-        env:
-          SESSION_SECRET: ci-only-secret
 
       - uses: actions/upload-artifact@v7
         if: failure()
