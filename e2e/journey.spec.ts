@@ -26,6 +26,14 @@ async function signUp(page: Page, email: string) {
   await expect(page).toHaveURL(/\/apply/)
 }
 
+/** Wait for the server to drop the session, or the next page still sees it. */
+async function signOut(page: Page) {
+  await Promise.all([
+    page.waitForResponse((r) => r.url().endsWith('/api/auth/logout') && r.ok()),
+    page.getByRole('button', { name: 'Sign out' }).click(),
+  ])
+}
+
 async function signIn(page: Page, email: string, password: string) {
   await page.goto('/login')
   await page.getByLabel('Email').fill(email)
@@ -39,7 +47,10 @@ test.beforeEach(async ({ page }) => {
 
 test('the landing page says what this is', async ({ page }) => {
   await page.goto('/')
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('Apply in five minutes')
+  await expect(page.getByRole('heading', { level: 1 })).toContainText(
+    'Hackathon application portal',
+  )
+  await expect(page.getByText('Apply in five minutes.')).toBeVisible()
   await expect(page.getByRole('link', { name: 'Apply' }).first()).toBeVisible()
 })
 
@@ -89,7 +100,7 @@ test('an applicant applies and an organizer decides', async ({ page }) => {
   await expect(page.getByText('Submitted').first()).toBeVisible()
 
   // --- organizer -----------------------------------------------------------
-  await page.getByRole('button', { name: 'Sign out' }).click()
+  await signOut(page)
   await signIn(page, 'organizer@notcalhacks.dev', 'demo1234')
   await expect(page).toHaveURL(/\/admin/)
 
@@ -113,10 +124,10 @@ test('an applicant applies and an organizer decides', async ({ page }) => {
   await expect(row.getByText('Accepted')).toBeVisible()
 
   // --- the applicant sees it ----------------------------------------------
-  await page.getByRole('button', { name: 'Sign out' }).click()
+  await signOut(page)
   await signIn(page, email, 'hunter2hunter2')
   await page.goto('/status')
-  await expect(page.getByText('You are in')).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'You are in' })).toBeVisible()
 })
 
 test('an applicant cannot reach the organizer console', async ({ page }) => {
