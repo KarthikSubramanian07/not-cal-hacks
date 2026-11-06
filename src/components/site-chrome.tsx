@@ -1,11 +1,13 @@
 import { Link } from 'react-router'
 import { useAuth } from '@/lib/auth'
+import { useHydrated } from '@/lib/hooks'
 import { useSignOut } from '@/lib/use-sign-out'
 import { Button } from '@/components/ui/button'
 import { Wordmark } from '@/components/wordmark'
 
 export function SiteNav() {
   const { user, loading } = useAuth()
+  const hydrated = useHydrated()
   const onSignOut = useSignOut()
 
   return (
@@ -14,7 +16,7 @@ export function SiteNav() {
         <Wordmark />
 
         <div className="flex items-center gap-2">
-          {loading ? null : user ? (
+          {loading || !hydrated ? null : user ? (
             <>
               {user.role === 'organizer' ? (
                 <Button asChild variant="ghost" size="sm">

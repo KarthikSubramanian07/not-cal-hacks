@@ -9,8 +9,7 @@
 import { readFileSync, writeFileSync } from 'node:fs'
 import { renderToString } from 'react-dom/server'
 import { StaticRouter } from 'react-router'
-import { LandingPage } from '../src/routes/landing'
-import { AuthProvider } from '../src/lib/auth'
+import { App } from '../src/App'
 
 const DIST = 'dist/index.html'
 
@@ -18,11 +17,11 @@ function main() {
   const template = readFileSync(DIST, 'utf8')
 
   const html = renderToString(
+    // The same tree the client hydrates (see src/main.tsx), so React can adopt
+    // this markup instead of throwing it away. No session exists on a static
+    // render, so it is the signed-out landing.
     <StaticRouter location="/">
-      {/* No session on a static render: the shell is the signed-out landing. */}
-      <AuthProvider initialUser={null}>
-        <LandingPage />
-      </AuthProvider>
+      <App />
     </StaticRouter>,
   )
 
