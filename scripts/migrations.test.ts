@@ -51,8 +51,11 @@ describe('drizzle migration history', () => {
 
   it('records the current enum checks in the newest snapshot', () => {
     const latest = readSnapshot(journal.entries.at(-1)!.idx)
-    const check = (table: string, name: string) =>
-      listedValues(latest.tables[table].checkConstraints[name].value)
+    const check = (table: string, name: string) => {
+      const constraint = latest.tables[table]?.checkConstraints[name]
+      if (!constraint) throw new Error(`the newest snapshot has no ${name} on ${table}`)
+      return listedValues(constraint.value)
+    }
 
     expect(check('applications', 'applications_type_check')).toEqual([...APPLICATION_TYPES])
     expect(check('applications', 'applications_status_check')).toEqual([...APPLICATION_STATUSES])
