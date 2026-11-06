@@ -1,22 +1,12 @@
-import { Link, useNavigate } from 'react-router'
-import { toast } from 'sonner'
+import { Link } from 'react-router'
 import { useAuth } from '@/lib/auth'
+import { useSignOut } from '@/lib/use-sign-out'
 import { Button } from '@/components/ui/button'
 import { Wordmark } from '@/components/wordmark'
 
 export function SiteNav() {
-  const { user, loading, logout } = useAuth()
-  const navigate = useNavigate()
-
-  const onSignOut = async () => {
-    try {
-      await logout()
-      toast.success('Signed out.')
-      void navigate('/')
-    } catch {
-      toast.error('Could not sign you out. Try again.')
-    }
-  }
+  const { user, loading } = useAuth()
+  const onSignOut = useSignOut()
 
   return (
     <header className="border-line bg-ink/60 sticky top-0 z-[30] border-b backdrop-blur-xl">

@@ -1,9 +1,9 @@
-import { NavLink, Outlet, useNavigate } from 'react-router'
-import { toast } from 'sonner'
+import { NavLink, Outlet } from 'react-router'
 import { LayoutGrid, Rows3 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Wordmark } from '@/components/wordmark'
 import { useAuth } from '@/lib/auth'
+import { useSignOut } from '@/lib/use-sign-out'
 import { cn } from '@/lib/utils'
 
 /**
@@ -14,17 +14,8 @@ import { cn } from '@/lib/utils'
  * there is more going on than there is.
  */
 export function AdminLayout() {
-  const { user, logout } = useAuth()
-  const navigate = useNavigate()
-
-  const onSignOut = async () => {
-    try {
-      await logout()
-      void navigate('/')
-    } catch {
-      toast.error('Could not sign you out.')
-    }
-  }
+  const { user } = useAuth()
+  const onSignOut = useSignOut()
 
   const link = ({ isActive }: { isActive: boolean }) =>
     cn(
