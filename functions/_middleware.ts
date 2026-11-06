@@ -88,6 +88,9 @@ async function serveSpa(
   appendVaryAccept(headers)
   headers.set('Link', discoveryLinkHeader(url))
   headers.set('Cache-Control', 'public, max-age=0, must-revalidate')
+  // The browser's conditional headers are forwarded, so the asset can answer
+  // 304. Pass that through; relabelling it 200 would hand over an empty page.
+  if (asset.status === 304) return new Response(null, { status: 304, headers })
   return new Response(asset.body, { status: 200, headers })
 }
 
