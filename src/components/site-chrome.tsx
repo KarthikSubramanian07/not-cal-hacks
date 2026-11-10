@@ -12,7 +12,10 @@ export function SiteNav() {
 
   return (
     <header className="border-line bg-ink/60 sticky top-0 z-[30] border-b backdrop-blur-xl">
-      <nav className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-5 sm:px-8">
+      <nav
+        className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-5 sm:px-8"
+        aria-label="Primary"
+      >
         <Wordmark />
 
         <div className="flex items-center gap-2">

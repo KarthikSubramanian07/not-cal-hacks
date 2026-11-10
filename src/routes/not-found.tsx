@@ -1,12 +1,14 @@
 import { Link } from 'react-router'
+import { DocumentTitle } from '@/components/document-title'
 import { SiteFooter, SiteNav } from '@/components/site-chrome'
 import { Button } from '@/components/ui/button'
 
 export function NotFoundPage() {
   return (
     <div className="relative z-10 flex min-h-dvh flex-col">
+      <DocumentTitle title="Page not found — not-cal-hacks" />
       <SiteNav />
-      <main className="flex flex-1 items-center justify-center px-5 py-24">
+      <main id="main-content" className="flex flex-1 items-center justify-center px-5 py-24">
         <div className="max-w-md text-center">
           <p className="telemetry">Error 404</p>
           <h1 className="display-lg mt-4">Nothing filed here</h1>

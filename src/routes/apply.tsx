@@ -10,6 +10,7 @@ import {
   pathForIntent,
   type PortalIntent,
 } from '@shared/portal'
+import { DocumentTitle } from '@/components/document-title'
 import { SiteFooter, SiteNav } from '@/components/site-chrome'
 import { StatusBadge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -59,9 +60,10 @@ export function ApplyPage() {
 
   return (
     <div className="relative z-10 flex min-h-dvh flex-col">
+      <DocumentTitle title="Apply — not-cal-hacks" />
       <SiteNav />
 
-      <main className="mx-auto w-full max-w-6xl flex-1 px-5 py-16 sm:px-8">
+      <main id="main-content" className="mx-auto w-full max-w-6xl flex-1 px-5 py-16 sm:px-8">
         <p className="telemetry">Three doors</p>
         <h1 className="display-lg mt-4">How are you walking in?</h1>
         <p className="text-fg-muted mt-4 max-w-2xl text-[15px] leading-relaxed">

@@ -1,5 +1,6 @@
 import { Link } from 'react-router'
 import { BadgeCard } from '@/components/badge/badge-card'
+import { DocumentTitle } from '@/components/document-title'
 import { DuneHorizon } from '@/components/space/dune-horizon'
 import { Wordmark } from '@/components/wordmark'
 
@@ -25,17 +26,18 @@ export function AuthShell({
 }) {
   return (
     <div className="relative z-10 grid min-h-dvh lg:grid-cols-[1fr_0.85fr]">
+      <DocumentTitle title={`${title} — not-cal-hacks`} />
       <div className="flex flex-col px-5 py-8 sm:px-10">
         <Wordmark />
 
-        <div className="flex flex-1 items-center py-12">
+        <main id="main-content" className="flex flex-1 items-center py-12">
           <div className="mx-auto w-full max-w-sm">
             <h1 className="text-[34px] tracking-[-0.04em]">{title}</h1>
             <p className="text-fg-muted mt-3 text-[15px] leading-relaxed">{subtitle}</p>
             <div className="mt-9">{children}</div>
             <div className="text-fg-muted mt-7 text-sm">{footer}</div>
           </div>
-        </div>
+        </main>
 
         <p className="text-fg-dim font-mono text-[11px]">
           <Link to="/" className="hover:text-fg-muted transition-colors">
@@ -44,7 +46,10 @@ export function AuthShell({
         </p>
       </div>
 
-      <aside className="border-line relative hidden items-center justify-center overflow-hidden border-l lg:flex">
+      <aside
+        className="border-line relative hidden items-center justify-center overflow-hidden border-l lg:flex"
+        aria-hidden
+      >
         <DuneHorizon className="top-0 bottom-0" />
         <div className="relative -rotate-[5deg]">
           <BadgeCard name="Your Name" role={badgeRole} code="0000" />

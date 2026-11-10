@@ -1,12 +1,14 @@
 import { Link } from 'react-router'
+import { DocumentTitle } from '@/components/document-title'
 import { SiteFooter, SiteNav } from '@/components/site-chrome'
 import { Button } from '@/components/ui/button'
 
 export function DocsPage() {
   return (
     <div className="relative z-10 flex min-h-dvh flex-col">
+      <DocumentTitle title="API docs — not-cal-hacks" />
       <SiteNav />
-      <main className="mx-auto w-full max-w-3xl flex-1 px-5 py-14 sm:px-8">
+      <main id="main-content" className="mx-auto w-full max-w-3xl flex-1 px-5 py-14 sm:px-8">
         <p className="telemetry">API documentation</p>
         <h1 className="display-lg mt-3">not-cal-hacks API docs</h1>
         <p className="measure text-fg-muted mt-4 text-[15px] leading-relaxed">
