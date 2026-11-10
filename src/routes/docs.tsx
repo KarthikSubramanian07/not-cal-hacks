@@ -14,7 +14,7 @@ export function DocsPage() {
         <p className="measure text-fg-muted mt-4 text-[15px] leading-relaxed">
           Authentication, public endpoints, and examples for the hackathon application portal.
           Machine-readable contract at{' '}
-          <a className="text-fg underline-offset-2 hover:underline" href="/openapi.json">
+          <a className="text-fg underline underline-offset-2" href="/openapi.json">
             /openapi.json
           </a>
           .
@@ -27,7 +27,7 @@ export function DocsPage() {
             <code className="text-fg">/api/health</code> need no credentials. Applicant and
             organizer endpoints use an HTTP-only session cookie from signup, login, or Google OAuth.
             Full walkthrough:{' '}
-            <a className="text-fg underline-offset-2 hover:underline" href="/auth.md">
+            <a className="text-fg underline underline-offset-2" href="/auth.md">
               /auth.md
             </a>
             .
@@ -36,7 +36,11 @@ export function DocsPage() {
 
         <section className="mt-10 space-y-3">
           <h2 className="display-sm">Public endpoints</h2>
-          <pre className="border-line bg-surface overflow-x-auto rounded-xl border p-4 font-mono text-[12px] leading-relaxed">
+          <pre
+            tabIndex={0}
+            aria-label="Public API endpoints"
+            className="border-line bg-surface overflow-x-auto rounded-xl border p-4 font-mono text-[12px] leading-relaxed"
+          >
             {`GET /api/health
 GET /api/v1
 GET /api/v1/meta
@@ -50,7 +54,11 @@ GET /openapi.json`}
 
         <section className="mt-10 space-y-3">
           <h2 className="display-sm">Example</h2>
-          <pre className="border-line bg-surface overflow-x-auto rounded-xl border p-4 font-mono text-[12px] leading-relaxed">
+          <pre
+            tabIndex={0}
+            aria-label="Example API and CLI commands"
+            className="border-line bg-surface overflow-x-auto rounded-xl border p-4 font-mono text-[12px] leading-relaxed"
+          >
             {`curl -sS https://not-cal-hacks.pages.dev/api/v1/meta
 curl -sS https://not-cal-hacks.pages.dev/openapi.json
 npx not-cal-hacks meta`}
@@ -61,12 +69,12 @@ npx not-cal-hacks meta`}
           <h2 className="display-sm">MCP and CLI</h2>
           <p className="text-fg-muted text-[15px] leading-relaxed">
             Streamable HTTP MCP lives at{' '}
-            <a className="text-fg underline-offset-2 hover:underline" href="/mcp">
+            <a className="text-fg underline underline-offset-2" href="/mcp">
               /mcp
             </a>
             . The official CLI is <code className="text-fg">npx not-cal-hacks</code>. Sandbox demo
             accounts are on the{' '}
-            <Link className="text-fg underline-offset-2 hover:underline" to="/developers">
+            <Link className="text-fg underline underline-offset-2" to="/developers">
               developer portal
             </Link>
             .

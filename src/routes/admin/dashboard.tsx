@@ -289,7 +289,7 @@ export function AdminDashboard() {
                               {decision === 'accepted'
                                 ? 'Accept'
                                 : decision === 'waitlisted'
-                                  ? 'Wait'
+                                  ? 'Waitlist'
                                   : 'Reject'}
                             </button>
                           ))}
