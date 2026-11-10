@@ -225,7 +225,11 @@ export function ApplyFormPage({ type }: { type: ApplicationType }) {
               style={{ width: `${progress}%` }}
             />
           </div>
-          <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2" role="tablist" aria-label="Form sections">
+          <div
+            className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2"
+            role="tablist"
+            aria-label="Form sections"
+          >
             {[...sections.map((s) => s.title), 'Review'].map((title, index) => (
               <button
                 key={title}

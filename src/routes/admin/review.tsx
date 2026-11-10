@@ -139,7 +139,11 @@ export function AdminReview() {
               : 'border-line-strong text-fg-muted hover:text-fg',
           )}
         >
-          {blind ? <EyeOff className="size-3.5" aria-hidden /> : <Eye className="size-3.5" aria-hidden />}
+          {blind ? (
+            <EyeOff className="size-3.5" aria-hidden />
+          ) : (
+            <Eye className="size-3.5" aria-hidden />
+          )}
           {blind ? 'Blind on' : 'Identity shown'}
         </button>
       </div>
