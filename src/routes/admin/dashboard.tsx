@@ -11,6 +11,7 @@ import {
   type ApplicationStatus,
   type ApplicationType,
 } from '@shared/constants'
+import { DocumentTitle } from '@/components/document-title'
 import { StatusBadge, TypeBadge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Select } from '@/components/ui/choice'
@@ -90,6 +91,7 @@ export function AdminDashboard() {
 
   return (
     <div className="px-5 py-10 sm:px-8">
+      <DocumentTitle title="Applications — not-cal-hacks" />
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="telemetry">Pool</p>
@@ -97,7 +99,7 @@ export function AdminDashboard() {
         </div>
         <Button asChild variant="outline" size="sm">
           <a href={`/api/admin/applications.csv?${params}`}>
-            <Download className="size-4" />
+            <Download className="size-4" aria-hidden />
             Export CSV
           </a>
         </Button>
@@ -129,10 +131,15 @@ export function AdminDashboard() {
 
       <div className="mt-8 flex flex-wrap items-center gap-3">
         <div className="relative min-w-56 flex-1">
-          <Search className="text-fg-dim absolute top-1/2 left-3.5 size-4 -translate-y-1/2" />
+          <Search
+            className="text-fg-dim absolute top-1/2 left-3.5 size-4 -translate-y-1/2"
+            aria-hidden
+          />
           <Input
             className="h-10 pl-10"
+            type="search"
             placeholder="Search name, email or school"
+            aria-label="Search applications by name, email or school"
             value={search}
             onChange={(e) => {
               setSearch(e.target.value)
@@ -142,6 +149,7 @@ export function AdminDashboard() {
         </div>
         <div className="w-40">
           <Select
+            aria-label="Filter by application type"
             options={[
               { value: 'all', label: 'All types' },
               ...APPLICATION_TYPES.map((t) => ({ value: t, label: TYPE_FILTER_LABEL[t] })),
@@ -152,6 +160,7 @@ export function AdminDashboard() {
         </div>
         <div className="w-44">
           <Select
+            aria-label="Filter by status"
             options={[
               { value: 'all', label: 'All statuses' },
               ...APPLICATION_STATUSES.map((s) => ({ value: s, label: STATUS_META[s].label })),
@@ -161,7 +170,12 @@ export function AdminDashboard() {
           />
         </div>
         <div className="w-44">
-          <Select options={SORTS} value={sort} onChange={(v) => setSort(v as Sort)} />
+          <Select
+            aria-label="Sort applications"
+            options={SORTS}
+            value={sort}
+            onChange={(v) => setSort(v as Sort)}
+          />
         </div>
       </div>
 
@@ -258,8 +272,15 @@ export function AdminDashboard() {
                               type="button"
                               onClick={() => void onDecide(row, decision)}
                               disabled={row.status === decision}
+                              aria-label={`${
+                                decision === 'accepted'
+                                  ? 'Accept'
+                                  : decision === 'waitlisted'
+                                    ? 'Waitlist'
+                                    : 'Reject'
+                              } ${row.applicantName}`}
                               className={cn(
-                                'rounded-full border px-2.5 py-1 font-mono text-[10px] tracking-[0.08em] uppercase transition-colors',
+                                'min-h-9 rounded-full border px-2.5 py-1.5 font-mono text-[10px] tracking-[0.08em] uppercase transition-colors',
                                 row.status === decision
                                   ? 'border-line-strong text-fg bg-white/[0.08]'
                                   : 'border-line text-fg-dim hover:border-line-strong hover:text-fg',

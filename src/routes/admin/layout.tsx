@@ -32,13 +32,13 @@ export function AdminLayout() {
             <p className="telemetry mt-2 hidden lg:block">Review console</p>
           </div>
 
-          <nav className="flex gap-1 lg:mt-7 lg:flex-col">
+          <nav className="flex gap-1 lg:mt-7 lg:flex-col" aria-label="Console">
             <NavLink to="/admin" end className={link}>
-              <LayoutGrid className="size-4" />
+              <LayoutGrid className="size-4" aria-hidden />
               Applications
             </NavLink>
             <NavLink to="/admin/review" className={link}>
-              <Rows3 className="size-4" />
+              <Rows3 className="size-4" aria-hidden />
               Review queue
             </NavLink>
           </nav>
@@ -58,7 +58,7 @@ export function AdminLayout() {
         </div>
       </aside>
 
-      <main className="min-w-0 flex-1">
+      <main id="main-content" className="min-w-0 flex-1">
         <Outlet />
       </main>
     </div>
