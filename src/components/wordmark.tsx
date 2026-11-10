@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils'
 export function Wordmark({ className, to = '/' }: { className?: string; to?: string | null }) {
   const content = (
     <span className={cn('inline-flex items-center gap-2', className)}>
-      <Logo className="size-[22px] shrink-0" />
+      <Logo className="size-[22px] shrink-0" decorative />
       <span className="text-fg text-[15px] font-medium tracking-[-0.02em]">not-cal-hacks</span>
     </span>
   )

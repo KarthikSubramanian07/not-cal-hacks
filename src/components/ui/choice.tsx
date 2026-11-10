@@ -103,6 +103,7 @@ export function Select({
   onChange,
   placeholder = 'Select',
   id,
+  'aria-label': ariaLabel,
   'aria-invalid': ariaInvalid,
   'aria-describedby': ariaDescribedBy,
 }: {
@@ -111,20 +112,27 @@ export function Select({
   onChange: (next: string) => void
   placeholder?: string
   id?: string
+  'aria-label'?: string
   'aria-invalid'?: boolean
   'aria-describedby'?: string
 }) {
+  const selectedLabel = options.find((option) => option.value === value)?.label
+  // Prefer an explicit name; fall back to the visible value or placeholder so a
+  // closed trigger never ships without an accessible name (WCAG 4.1.2).
+  const name = ariaLabel ?? selectedLabel ?? placeholder
+
   return (
-    <RadixSelect.Root value={value ?? ''} onValueChange={onChange}>
+    <RadixSelect.Root value={value} onValueChange={onChange}>
       <RadixSelect.Trigger
         id={id}
+        aria-label={name}
         aria-invalid={ariaInvalid}
         aria-describedby={ariaDescribedBy}
-        className="border-line bg-surface-2 text-fg hover:border-line-strong aria-[invalid=true]:border-status-rejected/70 data-[placeholder]:text-fg-dim/70 flex h-12 w-full items-center justify-between rounded-xl border px-4 text-left transition-colors focus:border-white/35 focus:ring-2 focus:ring-white/15 focus:outline-none"
+        className="border-line bg-surface-2 text-fg hover:border-line-strong aria-[invalid=true]:border-status-rejected/70 data-[placeholder]:text-fg-muted flex h-12 w-full items-center justify-between rounded-xl border px-4 text-left transition-colors focus:border-white/35 focus:ring-2 focus:ring-white/15 focus:outline-none"
       >
         <RadixSelect.Value placeholder={placeholder} />
         <RadixSelect.Icon>
-          <ChevronDown className="text-fg-dim size-4" />
+          <ChevronDown className="text-fg-dim size-4" aria-hidden />
         </RadixSelect.Icon>
       </RadixSelect.Trigger>
 
@@ -143,7 +151,7 @@ export function Select({
               >
                 <RadixSelect.ItemText>{option.label}</RadixSelect.ItemText>
                 <RadixSelect.ItemIndicator>
-                  <Check className="text-fg size-4" />
+                  <Check className="text-fg size-4" aria-hidden />
                 </RadixSelect.ItemIndicator>
               </RadixSelect.Item>
             ))}

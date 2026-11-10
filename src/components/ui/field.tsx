@@ -2,7 +2,7 @@ import { forwardRef, useId } from 'react'
 import { cn } from '@/lib/utils'
 
 const controlBase =
-  'w-full rounded-xl border border-line bg-surface-2 px-4 text-fg placeholder:text-fg-dim/70 transition-colors duration-150 hover:border-line-strong focus:border-white/35 focus:outline-none focus:ring-2 focus:ring-white/15 disabled:opacity-50 aria-[invalid=true]:border-status-rejected/70'
+  'w-full rounded-xl border border-line bg-surface-2 px-4 text-fg placeholder:text-fg-muted transition-colors duration-150 hover:border-line-strong focus:border-white/35 focus:outline-none focus:ring-2 focus:ring-white/15 disabled:opacity-50 aria-[invalid=true]:border-status-rejected/70'
 
 export const Input = forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
   function Input({ className, ...props }, ref) {
