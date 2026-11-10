@@ -6,9 +6,22 @@
  * and it is a sun going down behind a horizon, which is the world it lives in.
  * Two shapes, one idea, still legible at sixteen pixels.
  */
-export function Logo({ className }: { className?: string }) {
+export function Logo({
+  className,
+  decorative = false,
+}: {
+  className?: string
+  /** When true, hide from the accessibility tree (e.g. next to visible wordmark text). */
+  decorative?: boolean
+}) {
   return (
-    <svg viewBox="0 0 32 32" className={className} role="img" aria-label="not-cal-hacks">
+    <svg
+      viewBox="0 0 32 32"
+      className={className}
+      role={decorative ? 'presentation' : 'img'}
+      aria-hidden={decorative || undefined}
+      aria-label={decorative ? undefined : 'not-cal-hacks'}
+    >
       <rect width="32" height="32" rx="8" fill="#121319" />
       <circle cx="16" cy="16" r="9" fill="#f0b357" />
       {/* The strike is cut out of the disc, not drawn over it. */}

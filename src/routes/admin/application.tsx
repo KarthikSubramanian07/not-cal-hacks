@@ -12,6 +12,7 @@ import {
 } from '@shared/constants'
 import { ApplicationView } from '@/components/admin/application-view'
 import { EMPTY_SCORES, Rubric, type Scores } from '@/components/admin/rubric'
+import { DocumentTitle } from '@/components/document-title'
 import { StatusBadge, TypeBadge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/field'
@@ -99,6 +100,7 @@ export function AdminApplication() {
   if (notFound) {
     return (
       <div className="px-5 py-16 text-center sm:px-8">
+        <DocumentTitle title="Application not found — not-cal-hacks" />
         <h1 className="text-2xl">No such application</h1>
         <Button asChild className="mt-6">
           <Link to="/admin">Back to applications</Link>
@@ -109,11 +111,12 @@ export function AdminApplication() {
 
   return (
     <div className="px-5 py-10 sm:px-8">
+      <DocumentTitle title="Application detail — not-cal-hacks" />
       <Link
         to="/admin"
         className="text-fg-muted hover:text-fg inline-flex items-center gap-2 text-[13px] transition-colors"
       >
-        <ArrowLeft className="size-4" />
+        <ArrowLeft className="size-4" aria-hidden />
         All applications
       </Link>
 

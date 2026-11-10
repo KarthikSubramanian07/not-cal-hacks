@@ -6,9 +6,18 @@
  */
 export function RouteFallback() {
   return (
-    <div className="flex min-h-dvh items-center justify-center">
+    <div
+      className="flex min-h-dvh items-center justify-center"
+      role="status"
+      aria-live="polite"
+      aria-busy="true"
+    >
       <div className="animate-[fadeIn_200ms_ease-out_180ms_both] text-center">
-        <div className="border-line-strong border-t-fg mx-auto size-5 animate-spin rounded-full border-2" />
+        <div
+          className="border-line-strong border-t-fg mx-auto size-5 animate-spin rounded-full border-2"
+          aria-hidden
+        />
+        <span className="sr-only">Loading</span>
         <style>{`@keyframes fadeIn{from{opacity:0}to{opacity:1}}`}</style>
       </div>
     </div>

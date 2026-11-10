@@ -1,12 +1,14 @@
 import { Link } from 'react-router'
+import { DocumentTitle } from '@/components/document-title'
 import { SiteFooter, SiteNav } from '@/components/site-chrome'
 import { Button } from '@/components/ui/button'
 
 export function DevelopersPage() {
   return (
     <div className="relative z-10 flex min-h-dvh flex-col">
+      <DocumentTitle title="Developers — not-cal-hacks" />
       <SiteNav />
-      <main className="mx-auto w-full max-w-3xl flex-1 px-5 py-14 sm:px-8">
+      <main id="main-content" className="mx-auto w-full max-w-3xl flex-1 px-5 py-14 sm:px-8">
         <p className="telemetry">Developer portal</p>
         <h1 className="display-lg mt-3">Build on not-cal-hacks</h1>
         <p className="measure text-fg-muted mt-4 text-[15px] leading-relaxed">
@@ -38,7 +40,11 @@ export function DevelopersPage() {
             The production deployment ships seeded demo accounts. They are the sandbox — nothing you
             do to them is durable across reseeds. Public catalog endpoints need no API key.
           </p>
-          <div className="border-line bg-surface overflow-x-auto rounded-xl border">
+          <div
+            tabIndex={0}
+            aria-label="Sandbox demo accounts"
+            className="border-line bg-surface overflow-x-auto rounded-xl border"
+          >
             <table className="w-full text-left text-[13px]">
               <thead className="text-fg-dim border-line border-b">
                 <tr>
@@ -72,27 +78,27 @@ export function DevelopersPage() {
           <h2 className="display-sm">Surfaces</h2>
           <ul className="text-fg-muted list-disc space-y-1.5 pl-5 text-[15px] leading-relaxed">
             <li>
-              <Link className="text-fg underline-offset-2 hover:underline" to="/docs">
+              <Link className="text-fg underline underline-offset-2" to="/docs">
                 API documentation
               </Link>
             </li>
             <li>
-              <a className="text-fg underline-offset-2 hover:underline" href="/openapi.json">
+              <a className="text-fg underline underline-offset-2" href="/openapi.json">
                 OpenAPI specification
               </a>
             </li>
             <li>
-              <a className="text-fg underline-offset-2 hover:underline" href="/mcp">
+              <a className="text-fg underline underline-offset-2" href="/mcp">
                 MCP Streamable HTTP
               </a>
             </li>
             <li>
-              <a className="text-fg underline-offset-2 hover:underline" href="/llms.txt">
+              <a className="text-fg underline underline-offset-2" href="/llms.txt">
                 Agent index (llms.txt)
               </a>
             </li>
             <li>
-              <a className="text-fg underline-offset-2 hover:underline" href="/auth.md">
+              <a className="text-fg underline underline-offset-2" href="/auth.md">
                 Auth walkthrough
               </a>
             </li>

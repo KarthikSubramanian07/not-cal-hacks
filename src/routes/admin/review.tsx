@@ -7,6 +7,7 @@ import type { Calibration, QueueResponse } from '@shared/api'
 import { MAX_TOTAL_SCORE, RUBRIC_CRITERIA, type RubricCriterion } from '@shared/constants'
 import { ApplicationView } from '@/components/admin/application-view'
 import { EMPTY_SCORES, Rubric, type Scores } from '@/components/admin/rubric'
+import { DocumentTitle } from '@/components/document-title'
 import { StatusBadge, TypeBadge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/field'
@@ -120,6 +121,7 @@ export function AdminReview() {
 
   return (
     <div className="px-5 py-10 sm:px-8">
+      <DocumentTitle title="Review queue — not-cal-hacks" />
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="telemetry">Queue</p>
@@ -129,14 +131,19 @@ export function AdminReview() {
         <button
           type="button"
           onClick={() => setBlind(!blind)}
+          aria-pressed={blind}
           className={cn(
-            'inline-flex items-center gap-2 rounded-full border px-3.5 py-2 font-mono text-[11px] tracking-[0.08em] uppercase transition-colors',
+            'inline-flex min-h-11 items-center gap-2 rounded-full border px-3.5 py-2 font-mono text-[11px] tracking-[0.08em] uppercase transition-colors',
             blind
               ? 'border-status-accepted/40 text-status-accepted'
               : 'border-line-strong text-fg-muted hover:text-fg',
           )}
         >
-          {blind ? <EyeOff className="size-3.5" /> : <Eye className="size-3.5" />}
+          {blind ? (
+            <EyeOff className="size-3.5" aria-hidden />
+          ) : (
+            <Eye className="size-3.5" aria-hidden />
+          )}
           {blind ? 'Blind on' : 'Identity shown'}
         </button>
       </div>

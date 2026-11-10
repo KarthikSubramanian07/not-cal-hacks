@@ -9,6 +9,7 @@ import { JumpKey } from '@/components/space/jump-key'
 import { RequireAuth, RequireOrganizer } from '@/components/route-guards'
 import { LandingPage } from '@/routes/landing'
 import { RouteFallback } from '@/components/route-fallback'
+import { SkipLink } from '@/components/skip-link'
 
 // The applicant journey is the common path and ships in the main bundle.
 const LoginPage = lazy(() => import('@/routes/login').then((m) => ({ default: m.LoginPage })))
@@ -47,6 +48,7 @@ const PricingPage = lazy(() => import('@/routes/pricing').then((m) => ({ default
 export function App() {
   return (
     <AuthProvider>
+      <SkipLink />
       {/* One sky for the whole product, fixed behind every route. */}
       <Starfield />
       <Grain />

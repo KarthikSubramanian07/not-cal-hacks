@@ -14,6 +14,7 @@ import {
   type ApplicationType,
 } from '@shared/constants'
 import { answersSchemaFor, fieldErrors, type DraftAnswers } from '@shared/schemas'
+import { DocumentTitle } from '@/components/document-title'
 import { SiteNav } from '@/components/site-chrome'
 import { StatusBadge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -178,8 +179,9 @@ export function ApplyFormPage({ type }: { type: ApplicationType }) {
   if (loadFailed) {
     return (
       <div className="relative z-10 min-h-dvh">
+        <DocumentTitle title={`${meta.label} application — not-cal-hacks`} />
         <SiteNav />
-        <main className="mx-auto max-w-xl px-5 py-24 text-center">
+        <main id="main-content" className="mx-auto max-w-xl px-5 py-24 text-center">
           <h1 className="text-2xl">Could not open that application</h1>
           <p className="text-fg-muted mt-3 text-sm">
             The server did not respond. Refreshing usually sorts it.
@@ -194,9 +196,10 @@ export function ApplyFormPage({ type }: { type: ApplicationType }) {
 
   return (
     <div className="relative z-10 min-h-dvh">
+      <DocumentTitle title={`${meta.label} application — not-cal-hacks`} />
       <SiteNav />
 
-      <main className="mx-auto w-full max-w-2xl px-5 py-12 sm:px-8">
+      <main id="main-content" className="mx-auto w-full max-w-2xl px-5 py-12 sm:px-8">
         <div className="flex items-center justify-between gap-4">
           <div>
             <p className="telemetry">{meta.label} application</p>
@@ -209,20 +212,33 @@ export function ApplyFormPage({ type }: { type: ApplicationType }) {
 
         {/* Progress rail doubles as section navigation once a section is reached. */}
         <div className="mt-8">
-          <div className="bg-line h-px w-full">
+          <div
+            className="bg-line h-px w-full"
+            role="progressbar"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={progress}
+            aria-label="Application progress"
+          >
             <div
               className="bg-fg h-px transition-[width] duration-500 ease-[var(--ease-out-quint)]"
               style={{ width: `${progress}%` }}
             />
           </div>
-          <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2">
+          <div
+            className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2"
+            role="tablist"
+            aria-label="Form sections"
+          >
             {[...sections.map((s) => s.title), 'Review'].map((title, index) => (
               <button
                 key={title}
                 type="button"
+                role="tab"
+                aria-selected={index === sectionIndex}
                 onClick={() => setSectionIndex(index)}
                 className={cn(
-                  'font-mono text-[11px] tracking-[0.1em] uppercase transition-colors',
+                  'min-h-9 font-mono text-[11px] tracking-[0.1em] uppercase transition-colors',
                   index === sectionIndex ? 'text-fg' : 'text-fg-dim hover:text-fg-muted',
                 )}
               >
@@ -296,23 +312,23 @@ export function ApplyFormPage({ type }: { type: ApplicationType }) {
 
 function SaveIndicator({ state, readOnly }: { state: SaveState; readOnly: boolean }) {
   if (readOnly) return null
+  const message =
+    state === 'saving'
+      ? 'Saving'
+      : state === 'saved'
+        ? 'Saved'
+        : state === 'error'
+          ? 'Not saved'
+          : 'Autosave on'
   return (
-    <span className="text-fg-dim ml-auto inline-flex items-center gap-1.5 font-mono text-[11px]">
-      {state === 'saving' ? (
-        <>
-          <Loader2 className="size-3 animate-spin" />
-          Saving
-        </>
-      ) : state === 'saved' ? (
-        <>
-          <Check className="text-status-accepted size-3" />
-          Saved
-        </>
-      ) : state === 'error' ? (
-        <span className="text-status-rejected">Not saved</span>
-      ) : (
-        'Autosave on'
-      )}
+    <span
+      className="text-fg-dim ml-auto inline-flex items-center gap-1.5 font-mono text-[11px]"
+      role="status"
+      aria-live="polite"
+    >
+      {state === 'saving' ? <Loader2 className="size-3 animate-spin" aria-hidden /> : null}
+      {state === 'saved' ? <Check className="text-status-accepted size-3" aria-hidden /> : null}
+      <span className={state === 'error' ? 'text-status-rejected' : undefined}>{message}</span>
     </span>
   )
 }

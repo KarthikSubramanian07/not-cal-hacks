@@ -4,6 +4,7 @@ import { motion } from 'motion/react'
 import type { ApplicationWithTimeline, StatusEvent } from '@shared/api'
 import { APPLICATION_TYPE_META, STATUS_META, type ApplicationStatus } from '@shared/constants'
 import { BadgeCard } from '@/components/badge/badge-card'
+import { DocumentTitle } from '@/components/document-title'
 import { SiteFooter, SiteNav } from '@/components/site-chrome'
 import { StatusBadge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -50,9 +51,10 @@ export function StatusPage() {
 
   return (
     <div className="relative z-10 flex min-h-dvh flex-col">
+      <DocumentTitle title="Application status — not-cal-hacks" />
       <SiteNav />
 
-      <main className="mx-auto w-full max-w-3xl flex-1 px-5 py-14 sm:px-8">
+      <main id="main-content" className="mx-auto w-full max-w-3xl flex-1 px-5 py-14 sm:px-8">
         <p className="telemetry">Tracking</p>
         <h1 className="display-lg mt-3">Where things stand</h1>
         <p className="measure text-fg-muted mt-4 text-[15px] leading-relaxed">

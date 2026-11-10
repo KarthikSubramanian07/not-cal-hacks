@@ -28,7 +28,8 @@
   /* Text: three steps. fg-dim still clears 4.5:1 on the sky. */
   --color-fg: oklch(0.97 0.006 250);
   --color-fg-muted: oklch(0.78 0.019 250);
-  --color-fg-dim: oklch(0.62 0.026 255);
+  /* Kept above 4.5:1 on ink; placeholders use full muted, not a faded dim. */
+  --color-fg-dim: oklch(0.66 0.024 255);
 
   /* Instrument lighting. Sodium is the primary action colour. */
   --color-sodium: oklch(0.84 0.15 78);
@@ -74,6 +75,7 @@
   html {
     -webkit-text-size-adjust: 100%;
     scroll-behavior: smooth;
+    overflow-x: hidden;
   }
 
   body {

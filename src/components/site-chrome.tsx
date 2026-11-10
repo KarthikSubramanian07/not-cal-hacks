@@ -12,7 +12,10 @@ export function SiteNav() {
 
   return (
     <header className="border-line bg-ink/60 sticky top-0 z-[30] border-b backdrop-blur-xl">
-      <nav className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-5 sm:px-8">
+      <nav
+        className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-5 sm:px-8"
+        aria-label="Primary"
+      >
         <Wordmark />
 
         <div className="flex items-center gap-2">
@@ -56,37 +59,58 @@ export function SiteFooter() {
               Not affiliated with, endorsed by, or legally distinguishable from any similarly named
               hackathon.
             </p>
-            <p className="text-fg-dim/70 font-mono text-[11px]">
+            <p className="text-fg-dim font-mono text-[11px]">
               Press <kbd className="border-line text-fg-muted rounded border px-1">J</kbd> to jump
               to lightspeed. It does nothing. Do it anyway.
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[13px]">
-            <Link to="/apply" className="text-fg-muted hover:text-fg transition-colors">
+            <Link
+              to="/apply"
+              className="text-fg-muted hover:text-fg inline-flex min-h-6 items-center transition-colors"
+            >
               Apply
             </Link>
-            <Link to="/docs" className="text-fg-muted hover:text-fg transition-colors">
+            <Link
+              to="/docs"
+              className="text-fg-muted hover:text-fg inline-flex min-h-6 items-center transition-colors"
+            >
               API docs
             </Link>
-            <Link to="/developers" className="text-fg-muted hover:text-fg transition-colors">
+            <Link
+              to="/developers"
+              className="text-fg-muted hover:text-fg inline-flex min-h-6 items-center transition-colors"
+            >
               Developers
             </Link>
-            <Link to="/about" className="text-fg-muted hover:text-fg transition-colors">
+            <Link
+              to="/about"
+              className="text-fg-muted hover:text-fg inline-flex min-h-6 items-center transition-colors"
+            >
               About
             </Link>
-            <Link to="/contact" className="text-fg-muted hover:text-fg transition-colors">
+            <Link
+              to="/contact"
+              className="text-fg-muted hover:text-fg inline-flex min-h-6 items-center transition-colors"
+            >
               Contact
             </Link>
-            <Link to="/privacy" className="text-fg-muted hover:text-fg transition-colors">
+            <Link
+              to="/privacy"
+              className="text-fg-muted hover:text-fg inline-flex min-h-6 items-center transition-colors"
+            >
               Privacy
             </Link>
-            <a href="/openapi.json" className="text-fg-muted hover:text-fg transition-colors">
+            <a
+              href="/openapi.json"
+              className="text-fg-muted hover:text-fg inline-flex min-h-6 items-center transition-colors"
+            >
               OpenAPI
             </a>
             <a
               href="https://github.com/KarthikSubramanian07/not-cal-hacks"
-              className="text-fg-muted hover:text-fg transition-colors"
+              className="text-fg-muted hover:text-fg inline-flex min-h-6 items-center transition-colors"
               target="_blank"
               rel="noreferrer"
             >

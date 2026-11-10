@@ -46,7 +46,8 @@ export function OpeningCrawl({ onFinished }: { onFinished?: () => void }) {
   // decides before the browser paints, so client-side visits do not flash.
   const [visible, setVisible] = useState(false)
   const finishedRef = useRef(false)
-  const canSkipRef = useRef(false)
+  const skipRef = useRef<HTMLButtonElement | null>(null)
+  const previousFocusRef = useRef<HTMLElement | null>(null)
 
   useLayoutEffect(() => {
     if (reducedMotion) {
@@ -63,27 +64,31 @@ export function OpeningCrawl({ onFinished }: { onFinished?: () => void }) {
     setVisible(false)
     // Arrive out of hyperspace rather than simply cutting to the page.
     triggerHyperspaceJump()
+    const previous = previousFocusRef.current
+    if (previous && document.contains(previous)) previous.focus()
     onFinished?.()
   }, [onFinished])
 
+  // Escape and the skip control dismiss immediately. A short delay before skip
+  // used to look polished and trapped keyboard users for the first 700ms.
   const skip = useCallback(() => {
-    if (!canSkipRef.current) return
     finish()
   }, [finish])
 
   // Phase timing. Kept in one place so the sequence is readable as a sequence.
   useEffect(() => {
     if (!visible) return
-    canSkipRef.current = false
+    previousFocusRef.current = document.activeElement as HTMLElement | null
+    const focusTimer = window.setTimeout(() => skipRef.current?.focus(), 0)
     const timers = [
-      window.setTimeout(() => {
-        canSkipRef.current = true
-      }, 700),
       window.setTimeout(() => setPhase('title'), 2200),
       window.setTimeout(() => setPhase('crawl'), 4100),
       window.setTimeout(finish, 17200),
     ]
-    return () => timers.forEach(window.clearTimeout)
+    return () => {
+      window.clearTimeout(focusTimer)
+      timers.forEach(window.clearTimeout)
+    }
   }, [visible, finish])
 
   // Skip is deliberate: the button, Escape, or a click on the crawl itself.
@@ -92,7 +97,10 @@ export function OpeningCrawl({ onFinished }: { onFinished?: () => void }) {
   useEffect(() => {
     if (!visible) return
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') skip()
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        skip()
+      }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -104,7 +112,9 @@ export function OpeningCrawl({ onFinished }: { onFinished?: () => void }) {
     <div
       className="fixed inset-0 z-[70] cursor-pointer overflow-hidden bg-black"
       onClick={skip}
-      role="presentation"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Opening introduction"
     >
       {phase === 'intro' ? (
         <p className="absolute top-1/2 left-1/2 w-full max-w-2xl -translate-x-1/2 -translate-y-1/2 [animation:crawl-fade_2.2s_ease-out_forwards] px-6 text-center text-[clamp(1rem,2.6vw,1.6rem)] leading-relaxed text-[#5ec8ff] opacity-0">
@@ -157,12 +167,13 @@ export function OpeningCrawl({ onFinished }: { onFinished?: () => void }) {
       ) : null}
 
       <button
+        ref={skipRef}
         type="button"
         onClick={(event) => {
           event.stopPropagation()
           skip()
         }}
-        className="absolute right-5 bottom-5 rounded-full border border-white/25 bg-black/50 px-4 py-2 font-mono text-[11px] tracking-[0.14em] text-white/70 uppercase transition-colors hover:border-white/50 hover:text-white"
+        className="absolute right-5 bottom-5 min-h-11 rounded-full border border-white/25 bg-black/50 px-4 py-2 font-mono text-[11px] tracking-[0.14em] text-white/70 uppercase transition-colors hover:border-white/50 hover:text-white"
       >
         Skip intro · Esc
       </button>

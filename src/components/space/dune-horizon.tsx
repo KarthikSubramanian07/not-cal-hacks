@@ -82,7 +82,7 @@ export function DuneHorizon({ className }: { className?: string }) {
 function Ridge({ className, fill, d }: { className?: string; fill: string; d: string }) {
   return (
     <svg
-      className={cn('absolute -inset-x-[6%] w-[112%]', className)}
+      className={cn('absolute inset-x-0 w-full', className)}
       viewBox="0 0 1440 200"
       preserveAspectRatio="none"
       style={{ height: '78%' }}
@@ -105,7 +105,7 @@ export function Grain() {
     <div
       aria-hidden
       className={cn(
-        'pointer-events-none fixed -inset-[10%] z-[55]',
+        'pointer-events-none fixed inset-0 z-[55] overflow-hidden',
         !reduced && 'animate-[grain_1.4s_steps(6)_infinite]',
       )}
       style={{
@@ -118,12 +118,12 @@ export function Grain() {
     >
       <style>{`
         @keyframes grain {
-          0%   { transform: translate(0,0) }
-          20%  { transform: translate(-3%, 2%) }
-          40%  { transform: translate(2%, -3%) }
-          60%  { transform: translate(-2%, -2%) }
-          80%  { transform: translate(3%, 2%) }
-          100% { transform: translate(0,0) }
+          0%   { background-position: 0 0 }
+          20%  { background-position: -6px 4px }
+          40%  { background-position: 4px -6px }
+          60%  { background-position: -4px -4px }
+          80%  { background-position: 6px 4px }
+          100% { background-position: 0 0 }
         }
       `}</style>
     </div>
