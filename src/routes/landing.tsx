@@ -1,7 +1,9 @@
+import { useState } from 'react'
 import { Link } from 'react-router'
 import { motion } from 'motion/react'
 import { ArrowRight, Check, EyeOff } from 'lucide-react'
 import { Lanyard } from '@/components/badge/lanyard'
+import { DocumentTitle } from '@/components/document-title'
 import { SiteFooter, SiteNav } from '@/components/site-chrome'
 import { OpeningCrawl } from '@/components/space/opening-crawl'
 import { DuneHorizon } from '@/components/space/dune-horizon'
@@ -35,9 +37,10 @@ const DISCLAIMERS = [
 export function LandingPage() {
   return (
     <div className="relative z-10 min-h-dvh">
+      <DocumentTitle title="not-cal-hacks — Hackathon application portal" />
       <OpeningCrawl />
       <SiteNav />
-      <main>
+      <main id="main-content">
         <Hero />
         <Ticker />
         <HowItWorks />
@@ -128,11 +131,16 @@ function Hero() {
 
 function Ticker() {
   const reduced = useReducedMotion()
+  const [paused, setPaused] = useState(false)
   const items = [...DISCLAIMERS, ...DISCLAIMERS]
+  const moving = !reduced && !paused
 
   return (
     <div className="border-line bg-ink/70 relative z-10 overflow-hidden border-y py-3 backdrop-blur-sm">
-      <div className={cn('flex w-max gap-8', !reduced && 'animate-[ticker_46s_linear_infinite]')}>
+      <div
+        className={cn('flex w-max gap-8', moving && 'animate-[ticker_46s_linear_infinite]')}
+        aria-hidden={moving || undefined}
+      >
         {items.map((text, index) => (
           <span
             key={index}
@@ -143,6 +151,16 @@ function Ticker() {
           </span>
         ))}
       </div>
+      {!reduced ? (
+        <button
+          type="button"
+          className="border-line bg-ink/80 text-fg-muted hover:text-fg absolute top-1/2 right-3 z-10 min-h-9 -translate-y-1/2 rounded-full border px-3 font-mono text-[10px] tracking-[0.12em] uppercase backdrop-blur-sm"
+          aria-pressed={paused}
+          onClick={() => setPaused((value) => !value)}
+        >
+          {paused ? 'Play ticker' : 'Pause ticker'}
+        </button>
+      ) : null}
       <style>{`@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}`}</style>
     </div>
   )
@@ -231,7 +249,7 @@ function BlindReview() {
               'One toggle reveals identity when a decision genuinely needs it',
             ].map((item) => (
               <li key={item} className="text-fg-muted flex items-start gap-3 text-[14px]">
-                <Check className="text-status-accepted mt-1 size-4 shrink-0" />
+                <Check className="text-status-accepted mt-1 size-4 shrink-0" aria-hidden />
                 {item}
               </li>
             ))}
@@ -260,7 +278,7 @@ function BlindReview() {
               Review queue
             </span>
             <span className="border-line text-status-accepted inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[10px]">
-              <EyeOff className="size-3" />
+              <EyeOff className="size-3" aria-hidden />
               BLIND ON
             </span>
           </div>
