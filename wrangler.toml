@@ -8,14 +8,8 @@ compatibility_date = "2026-08-22"
 compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = "dist"
 
-# Top-level bindings are what `wrangler pages dev` and the `d1 migrations`
-# commands read locally.
-[[d1_databases]]
-binding = "DB"
-database_name = "not-cal-hacks"
-database_id = "f37f6c7a-3cd1-4578-8316-4ee16f32a33d"
-migrations_dir = "drizzle"
-
+# Top-level bindings are what `wrangler pages dev` reads locally.
+#
 # The application database is a SQLite-backed Durable Object. Pages cannot host
 # the class, so it lives in the companion Worker in `worker/` and is bound here
 # by script name.
@@ -29,12 +23,6 @@ APP_NAME = "not-cal-hacks"
 
 # Production deployments (branch: main).
 [env.production]
-
-[[env.production.d1_databases]]
-binding = "DB"
-database_name = "not-cal-hacks"
-database_id = "f37f6c7a-3cd1-4578-8316-4ee16f32a33d"
-migrations_dir = "drizzle"
 
 [[env.production.durable_objects.bindings]]
 name = "DATABASE"
