@@ -39,7 +39,8 @@ jobs:
 
       # Runs drizzle-kit generate against a scratch copy of drizzle/ and fails
       # if it would write a migration, so the schema and the committed
-      # snapshots can never drift apart unnoticed.
+      # snapshots can never drift apart unnoticed. Also fails if the migrations
+      # compiled into the database Worker are not the ones in drizzle/.
       - name: Check the schema matches the migrations
         run: npm run db:check
 
@@ -59,7 +60,7 @@ jobs:
       - name: Unit tests
         run: npm run test:unit
 
-      # Runs the real Hono app against a real D1 database with the real
+      # Runs the real Hono app against the real database object with the real
       # migrations applied, inside workerd.
       - name: API tests
         run: npm run test:api
@@ -138,11 +139,9 @@ jobs:
       - name: Give the local server a session secret
         run: echo 'SESSION_SECRET="ci-only-secret"' > .dev.vars
 
-      - name: Prepare a local database
-        run: |
-          npx wrangler d1 migrations apply not-cal-hacks --local
-          npm run db:seed
-          npx wrangler d1 execute not-cal-hacks --local --file=./seed.generated.sql
+      # The database object creates its own schema; this only loads the rows.
+      - name: Seed a local database
+        run: npm run db:seed:local
 
       - name: Build
         run: npm run build

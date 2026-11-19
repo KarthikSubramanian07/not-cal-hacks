@@ -55,6 +55,16 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
+      # The database lives in a Durable Object hosted by this Worker. It ships
+      # first: the Pages binding needs the class to exist, and the object
+      # applies any new schema migration as soon as the new code starts.
+      - name: Deploy the database Worker
+        if: steps.creds.outputs.ready == 'true'
+        run: npx wrangler deploy -c worker/wrangler.toml
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
       - name: Deploy
         if: steps.creds.outputs.ready == 'true'
         run: npx wrangler pages deploy --branch main
