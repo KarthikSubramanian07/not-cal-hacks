@@ -4,6 +4,7 @@ import app from '../app'
 import {
   call,
   countEvents,
+  db,
   draftApplication,
   organizer,
   promote,
@@ -13,8 +14,8 @@ import {
 } from '../test/helpers'
 
 /**
- * These run against a real D1 database with the real migrations applied, and
- * they call the real Hono app. Nothing here is mocked, so a broken constraint
+ * These run against the real database object with the real migrations applied,
+ * and they call the real Hono app. Nothing here is mocked, so a broken constraint
  * or a broken authorization check fails the suite rather than passing a stub.
  */
 
@@ -48,7 +49,7 @@ describe('auth', () => {
         role: 'organizer',
       }),
     })
-    const row = await env.DB.prepare('select role from users where email = ?').bind(email).first()
+    const row = await db.prepare('select role from users where email = ?').bind(email).first()
     expect(row?.role).toBe('applicant')
   })
 
@@ -109,7 +110,8 @@ describe('auth', () => {
   it('stores a hash of the session token, never the token itself', async () => {
     const { cookie } = await signUp(uniqueEmail())
     const token = cookie.split('=')[1] ?? ''
-    const row = await env.DB.prepare('select token_hash from sessions where token_hash = ?')
+    const row = await db
+      .prepare('select token_hash from sessions where token_hash = ?')
       .bind(token)
       .first()
     expect(row).toBeNull()
@@ -228,9 +230,8 @@ describe('applications', () => {
     })
     expect(submitted.status).toBe(200)
 
-    const events = await env.DB.prepare(
-      'select to_status from status_events where application_id = ? order by id',
-    )
+    const events = await db
+      .prepare('select to_status from status_events where application_id = ? order by id')
       .bind(application.id)
       .all()
     expect(events.results.map((e) => e.to_status as string)).toEqual(['draft', 'submitted'])
@@ -371,9 +372,7 @@ describe('review flow', () => {
       body: JSON.stringify({ applicationId: id, technical: 4, passion: 4, fit: 4 }),
     })
 
-    const row = await env.DB.prepare('select status from applications where id = ?')
-      .bind(id)
-      .first()
+    const row = await db.prepare('select status from applications where id = ?').bind(id).first()
     expect(row?.status).toBe('under_review')
   })
 
@@ -392,7 +391,8 @@ describe('review flow', () => {
       body: JSON.stringify({ applicationId: id, technical: 5, passion: 5, fit: 5 }),
     })
 
-    const rows = await env.DB.prepare('select total from reviews where application_id = ?')
+    const rows = await db
+      .prepare('select total from reviews where application_id = ?')
       .bind(id)
       .all()
     expect(rows.results).toHaveLength(1)
@@ -407,7 +407,8 @@ describe('review flow', () => {
       cookie: org.cookie,
       body: JSON.stringify({ applicationId: id, technical: 1, passion: 2, fit: 3 }),
     })
-    const row = await env.DB.prepare('select total from reviews where application_id = ?')
+    const row = await db
+      .prepare('select total from reviews where application_id = ?')
       .bind(id)
       .first()
     expect(row?.total).toBe(6)
@@ -445,9 +446,8 @@ describe('review flow', () => {
     // reviewer is never handed something that already has a review. Asserting
     // a specific id would only hold in an empty pool.
     expect(body.application?.id).not.toBe(first.id)
-    const chosen = await env.DB.prepare(
-      'select count(*) as n from reviews where application_id = ?',
-    )
+    const chosen = await db
+      .prepare('select count(*) as n from reviews where application_id = ?')
       .bind(body.application?.id)
       .first<{ n: number }>()
     expect(chosen?.n).toBe(0)
@@ -459,23 +459,25 @@ describe('review flow', () => {
     const body = (await response.json()) as { application: { id: string } | null }
     if (!body.application) return
 
-    const chosen = await env.DB.prepare(
-      `select a.submitted_at,
+    const chosen = await db
+      .prepare(
+        `select a.submitted_at,
               (select count(*) from reviews r where r.application_id = a.id) as reviews
          from applications a where a.id = ?`,
-    )
+      )
       .bind(body.application.id)
       .first<{ submitted_at: number; reviews: number }>()
 
     // Nothing reviewable may be both less reviewed and, at the same count,
     // older than what the queue handed out.
-    const better = await env.DB.prepare(
-      `select count(*) as n from applications a
+    const better = await db
+      .prepare(
+        `select count(*) as n from applications a
         where a.status in ('submitted','under_review')
           and ( (select count(*) from reviews r where r.application_id = a.id) < ?
              or ((select count(*) from reviews r where r.application_id = a.id) = ?
                  and a.submitted_at < ?) )`,
-    )
+      )
       .bind(chosen?.reviews ?? 0, chosen?.reviews ?? 0, chosen?.submitted_at ?? 0)
       .first<{ n: number }>()
     expect(better?.n).toBe(0)

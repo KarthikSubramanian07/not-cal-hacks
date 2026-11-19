@@ -14,7 +14,7 @@ shares, and get back to people before the suns come up.
 [![Deploy](https://github.com/KarthikSubramanian07/not-cal-hacks/actions/workflows/deploy.yml/badge.svg)](https://github.com/KarthikSubramanian07/not-cal-hacks/actions/workflows/deploy.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-e8a33d)](LICENSE)
 
-`React 19` · `TypeScript` · `Hono` · `Cloudflare Pages` · `D1` · `Drizzle` · `Zod` · `83 tests`
+`React 19` · `TypeScript` · `Hono` · `Cloudflare Pages` · `Durable Objects` · `Drizzle` · `Zod` · `83 tests`
 
 </div>
 
@@ -31,7 +31,7 @@ Everything the brief asked for, and where to find it. All links are live.
 
 | #   | Requirement                                                 | Where it is                                                                                                                                                                                                                                                                          | Status |
 | --- | ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------ |
-| 1   | **Sign-in and application forms backed by a real database** | [`/signup`](https://not-cal-hacks.pages.dev/signup) → [`/apply`](https://not-cal-hacks.pages.dev/apply) · Cloudflare **D1**, schema in [`server/db/schema.ts`](server/db/schema.ts)                                                                                                  | ✅     |
+| 1   | **Sign-in and application forms backed by a real database** | [`/signup`](https://not-cal-hacks.pages.dev/signup) → [`/apply`](https://not-cal-hacks.pages.dev/apply) · SQLite in a Cloudflare **Durable Object**, schema in [`server/db/schema.ts`](server/db/schema.ts)                                                                          | ✅     |
 | 2   | **Multiple account types, each with their own application** | **Hacker** → [`/apply/hacker`](https://not-cal-hacks.pages.dev/apply/hacker) · **Judge** → [`/apply/judge`](https://not-cal-hacks.pages.dev/apply/judge) · picker at [`/apply`](https://not-cal-hacks.pages.dev/apply) · separate Zod schemas in [`shared/schemas/`](shared/schemas) | ✅     |
 | 3   | **Review and grade applications**                           | [`/admin/review`](https://not-cal-hacks.pages.dev/admin/review) · three-criterion rubric, 1–5, keyboard-driven                                                                                                                                                                       | ✅     |
 | 4   | **A page listing all applications and their statuses**      | [`/admin`](https://not-cal-hacks.pages.dev/admin) · filter by type and status, search, sort, inline decisions, CSV export                                                                                                                                                            | ✅     |
@@ -110,13 +110,15 @@ flowchart LR
     F["Pages Function<br/>functions/api/[[route]].ts"]
     H["Hono app<br/>server/app.ts"]
   end
-  DB[("D1<br/>SQLite at the edge")]
+  subgraph "Companion Worker (worker/)"
+    DB[("AppDatabase<br/>SQLite Durable Object")]
+  end
 
   SPA -->|"pages"| M
   M -->|"known SPA routes"| A
   M -->|"/api/*"| F --> H
   M -->|"/mcp"| MCP["MCP Streamable HTTP"]
-  H -->|"Drizzle"| DB
+  H -->|"Drizzle over RPC"| DB
 
   Z["shared/schemas<br/>Zod"] -.->|"same schema"| SPA
   Z -.->|"same schema"| H
@@ -218,7 +220,7 @@ testable on its own and the server refuses anything it does not allow.
 ## Decisions worth arguing about
 
 <details>
-<summary><b>Cloudflare D1 instead of Supabase</b></summary>
+<summary><b>SQLite on Cloudflare instead of Supabase</b></summary>
 
 <br>
 
@@ -226,13 +228,40 @@ The brief said Supabase. The deploy target here is Cloudflare Pages, and putting
 database on the same platform means the whole thing is one deployment with one set of
 credentials and no cross-origin anything.
 
-The honest cost: **D1 has no row-level security.** In a Postgres deployment, RLS is a
+The honest cost: **SQLite has no row-level security.** In a Postgres deployment, RLS is a
 second wall behind the application, so an authorization bug in a handler still fails
 closed. Here there is no second wall, which makes the application _the_ wall. So
 authorization is one shared middleware plus an explicit ownership check at every point
 of use, and the test suite spends most of its time trying to get around it: one
 applicant reading another's application, an applicant hitting every admin route, an
 applicant editing a submitted form, an organizer reading an unsubmitted draft.
+
+</details>
+
+<details>
+<summary><b>The database is one Durable Object</b></summary>
+
+<br>
+
+The data lives in the SQLite storage of a single Durable Object,
+[`AppDatabase`](worker/database.ts). It started on D1 and moved: the dataset is a few
+hundred rows that every request wants a consistent view of, which is exactly the shape a
+single object is good at, and it does not occupy a database slot on the account.
+
+Pages cannot host a Durable Object class, so a small companion Worker in
+[`worker/`](worker) does, and the Pages project binds to the class by script name. Every
+query is one RPC to the object.
+
+No query changed in the move. [`server/db/durable.ts`](server/db/durable.ts) is an
+adapter with the same surface the D1 client has (`prepare`, `bind`, `first`, `all`,
+`run`, `raw`, `batch`), so Drizzle's D1 driver and the hand-written status transitions
+run on it unmodified. A `batch` travels as one call and runs inside one synchronous
+transaction, so it is atomic the way it was before, and because an object handles one
+event at a time, two racing batches are strictly serial rather than merely isolated.
+
+The object migrates itself. The same `drizzle/*.sql` files are compiled into the Worker
+(`npm run db:sync`) and applied in order on start-up, each in a transaction with the row
+that records it, so there is no separate migration step to forget during a deploy.
 
 </details>
 
@@ -299,7 +328,7 @@ thing by a 4.
 
 An in-memory counter is worse than nothing on Workers: isolates are created and
 destroyed per colo, so an attacker gets a fresh allowance with every cold start.
-Storing the counter in D1 costs one write per auth attempt and makes the limit
+Storing the counter in the database costs one write per auth attempt and makes the limit
 actually mean something. Two tests prove it still fires.
 
 </details>
@@ -366,28 +395,31 @@ static paint rather than a frozen animation, and the badge hangs still.
 npm install
 cp .dev.vars.example .dev.vars      # SESSION_SECRET for local dev
 
-npm run db:migrate:local            # apply migrations to a local D1
-npm run db:seed:local               # 29 users, 27 applications, 19 reviews
+npm run build                       # wrangler serves the built site from dist/
+npm run db:seed:local               # 30 users, 28 applications, 20 reviews
 
 npm run dev                         # Vite on :5173, wrangler on :8788
 ```
 
 `npm run dev` runs both servers. Vite owns the UI and hot reload; wrangler owns the API
-and the D1 binding, and Vite proxies `/api` to it. That way local development uses the
-same Worker runtime that ships.
+and the database, and Vite proxies `/api` to it. That way local development uses the
+same Worker runtime that ships. One wrangler session runs both the Pages Functions and
+the companion Worker that hosts the database object, so there is nothing else to start.
+The object creates its own schema the first time it is used.
 
 ### Everything else
 
-| Command             | What it does                                |
-| ------------------- | ------------------------------------------- |
-| `npm test`          | Unit and API suites (73 tests)              |
-| `npm run test:api`  | The Hono app against real D1 inside workerd |
-| `npm run test:e2e`  | Playwright, against `wrangler pages dev`    |
-| `npm run typecheck` | Three projects: browser, Worker, Node       |
-| `npm run build`     | Vite build, then prerender the landing page |
-| `npm run db:reset`  | Wipe local state, migrate, reseed           |
-| `npm run db:check`  | Fail if the schema drifted from `drizzle/`  |
-| `npm run deploy`    | Build and ship to Cloudflare Pages          |
+| Command             | What it does                                    |
+| ------------------- | ----------------------------------------------- |
+| `npm test`          | Unit and API suites (73 tests)                  |
+| `npm run test:api`  | The Hono app and the database object in workerd |
+| `npm run test:e2e`  | Playwright, against `wrangler pages dev`        |
+| `npm run typecheck` | Three projects: browser, Worker, Node           |
+| `npm run build`     | Vite build, then prerender the landing page     |
+| `npm run db:reset`  | Wipe local state and reseed                     |
+| `npm run db:check`  | Fail if the schema drifted from `drizzle/`      |
+| `npm run db:exec`   | Run SQL: `-- --local --command "select 1"`      |
+| `npm run deploy`    | Build, ship the Worker, then ship Pages         |
 
 ---
 
@@ -395,7 +427,7 @@ same Worker runtime that ships.
 
 **83 tests**, and the ones that matter are the embarrassing ones.
 
-The API suite runs against a **real D1 database with the real migrations applied**,
+The API suite runs against the **real database object with the real migrations applied**,
 calling the real Hono app inside workerd. Nothing is mocked, so a broken CHECK
 constraint or a broken authorization check fails the suite rather than passing against
 a stub.
@@ -403,6 +435,8 @@ a stub.
 ```
 server/routes/api.test.ts     43 tests   auth, ownership, roles, blind review,
                                          the queue, decisions, rate limiting
+worker/database.test.ts       22 tests   the database object: D1 call shapes, migrations,
+                                         batches that roll back as one
 server/lib/blind.test.ts       9 tests   redaction actually happens on the server
 shared/schemas/schemas.test.ts 19 tests  what a valid application is
 shared/transitions.test.ts      7 tests  what the status machine allows
@@ -429,8 +463,10 @@ A sample of what is actually asserted:
 
 ## Deploying
 
-Production deploys on every push to `main`. Migrations run **before** the deploy, so the
-schema is never behind the code that expects it, and a health check gates the job.
+Production deploys on every push to `main`. The companion Worker that hosts the database
+ships **before** the Pages project, and the object applies any new migration the moment
+it starts, so the schema is never behind the code that expects it. A health check gates
+the job.
 
 Two repository secrets are required: `CLOUDFLARE_API_TOKEN` and
 `CLOUDFLARE_ACCOUNT_ID`. Without them the workflow logs a warning and skips rather than
@@ -471,7 +507,8 @@ server/
   routes/        auth · applications · admin
   middleware/    the authorization wall
   lib/           password, session, blind redaction, rate limiting
-  db/            Drizzle schema; CHECK constraints generated from shared constants
+  db/            Drizzle schema; CHECK constraints generated from shared constants;
+                 the D1-shaped client for the database object
 functions/api/   the Pages Function that mounts the Hono app
 src/
   routes/        landing · auth · apply · status · admin console
@@ -479,8 +516,9 @@ src/
     space/       starfield, opening crawl, dune horizon
     badge/       the verlet lanyard and the badge it carries
     ui/          the primitives everything else is built from
-drizzle/         generated SQL migrations, replayed in tests
-scripts/         deterministic seed, build-time prerender
+worker/          the companion Worker: the database object and its operator console
+drizzle/         generated SQL migrations, compiled into the Worker
+scripts/         deterministic seed, build-time prerender, SQL runner
 ```
 
 ---

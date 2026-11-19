@@ -10,7 +10,7 @@ export default tseslint.config(
       'dist/**',
       'coverage/**',
       'drizzle/**',
-      '.wrangler/**',
+      '**/.wrangler/**',
       'node_modules/**',
       'playwright-report/**',
       'test-results/**',

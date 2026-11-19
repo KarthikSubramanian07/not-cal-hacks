@@ -39,7 +39,7 @@ export const loadUser = createMiddleware<AppEnv>(async (c, next) => {
 /**
  * Every protected route re-checks authorization here, at the point of use.
  *
- * D1 has no row-level security, so unlike a Postgres deployment there is no
+ * SQLite has no row-level security, so unlike a Postgres deployment there is no
  * second wall behind the application. That makes this the wall, which is why
  * authorization is one shared middleware plus explicit ownership checks in each
  * handler, rather than something each route reimplements.

@@ -4,5 +4,5 @@
     "lib": ["ES2023"],
     "types": ["@cloudflare/workers-types"]
   },
-  "include": ["server", "functions", "shared"]
+  "include": ["server", "functions", "shared", "worker"]
 }

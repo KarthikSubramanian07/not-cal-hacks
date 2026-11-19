@@ -1,0 +1,31 @@
+# The companion Worker that hosts the application database.
+#
+# Pages Functions cannot define a Durable Object class, so the class lives here
+# and the Pages project binds to it by `script_name` (see ../wrangler.toml).
+# Deploy this Worker before the Pages project: the binding needs the class to
+# exist.
+name = "not-cal-hacks-db"
+main = "index.ts"
+compatibility_date = "2026-08-22"
+compatibility_flags = ["nodejs_compat"]
+
+# The only route is the operator console, which answers 404 until an
+# ADMIN_TOKEN secret is set. See worker/index.ts.
+workers_dev = true
+preview_urls = false
+
+[dev]
+port = 8789
+
+[[durable_objects.bindings]]
+name = "DATABASE"
+class_name = "AppDatabase"
+
+# Durable Object class lifecycle, not the SQL schema. The schema is versioned
+# inside the object from the files in ../drizzle.
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["AppDatabase"]
+
+[observability]
+enabled = true

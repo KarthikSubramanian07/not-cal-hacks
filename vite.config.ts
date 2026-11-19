@@ -17,7 +17,7 @@ export default defineConfig({
   server: {
     port: 5173,
     // `npm run dev` runs Vite next to `wrangler pages dev`. Vite owns the UI and
-    // hot reload; wrangler owns the API and the D1 binding.
+    // hot reload; wrangler owns the API and the database binding.
     proxy: {
       '/api': {
         target: 'http://127.0.0.1:8788',

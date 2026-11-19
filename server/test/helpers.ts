@@ -1,8 +1,18 @@
 import { env } from 'cloudflare:test'
 import app from '../app'
+import { withDatabase } from '../db/durable'
 
 /**
- * Calls the real Hono app with the real D1 binding.
+ * The bindings the app sees in production: the raw Durable Object namespace
+ * swapped for the D1-shaped client, exactly as the Pages entry point does it.
+ */
+export const appEnv = withDatabase(env)
+
+/** Direct access to the database, for arranging and asserting on rows. */
+export const db = appEnv.DB
+
+/**
+ * Calls the real Hono app against the real database object.
  *
  * Each call gets its own client IP unless one is supplied, because the auth
  * routes are genuinely rate limited per IP and a shared address would make the
@@ -17,7 +27,7 @@ export async function call(
   if (init.body && !headers.has('Content-Type')) headers.set('Content-Type', 'application/json')
   if (init.cookie) headers.set('Cookie', init.cookie)
   headers.set('CF-Connecting-IP', init.ip ?? crypto.randomUUID())
-  return app.fetch(new Request(`https://test.local${path}`, { ...init, headers }), env)
+  return app.fetch(new Request(`https://test.local${path}`, { ...init, headers }), appEnv)
 }
 
 /** Extracts the session cookie from a Set-Cookie header. */
@@ -39,7 +49,7 @@ export async function signUp(email: string, password = 'hunter2hunter2', fullNam
 
 /** Promotes a user to organizer, the way the seed script does. */
 export async function promote(userId: string) {
-  await env.DB.prepare('update users set role = ? where id = ?').bind('organizer', userId).run()
+  await db.prepare('update users set role = ? where id = ?').bind('organizer', userId).run()
 }
 
 /** A complete, valid set of hacker answers. */
@@ -94,9 +104,8 @@ export async function submittedApplication(email: string) {
 
 /** How many audit rows record a given transition. Concurrency tests live here. */
 export async function countEvents(applicationId: string, toStatus: string) {
-  const row = await env.DB.prepare(
-    'select count(*) as n from status_events where application_id = ? and to_status = ?',
-  )
+  const row = await db
+    .prepare('select count(*) as n from status_events where application_id = ? and to_status = ?')
     .bind(applicationId, toStatus)
     .first<{ n: number }>()
   return row?.n ?? 0

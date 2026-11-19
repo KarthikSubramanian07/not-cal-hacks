@@ -3,7 +3,7 @@ import type { Db } from '../db'
 import { ApiError } from './errors'
 
 /**
- * Fixed-window rate limiting backed by D1.
+ * Fixed-window rate limiting backed by the database.
  *
  * An in-memory counter would be worse than nothing here: Workers isolates are
  * created and destroyed per colo, so an attacker gets a fresh allowance with
