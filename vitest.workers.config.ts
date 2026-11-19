@@ -1,29 +1,23 @@
 import { fileURLToPath, URL } from 'node:url'
-import path from 'node:path'
-import { cloudflareTest, readD1Migrations } from '@cloudflare/vitest-plugin'
+import { cloudflareTest } from '@cloudflare/vitest-plugin'
 import { defineProject } from 'vitest/config'
 
 const r = (p: string) => fileURLToPath(new URL(p, import.meta.url))
 
-// The same migration files that ship to production are replayed into each test
-// worker, so the API suite runs against the real schema rather than a fixture.
-const migrations = await readD1Migrations(
-  path.join(path.dirname(fileURLToPath(import.meta.url)), 'drizzle'),
-)
-
+// The test worker is the real companion Worker from `worker/`, so the suite
+// talks to the real database object, which applies the real migrations to
+// itself on first use. Nothing about the schema is a fixture.
 export default defineProject({
   plugins: [
     cloudflareTest({
       singleWorker: true,
       isolatedStorage: true,
+      wrangler: { configPath: './worker/wrangler.toml' },
       miniflare: {
-        compatibilityDate: '2026-08-22',
-        compatibilityFlags: ['nodejs_compat'],
-        d1Databases: ['DB'],
         bindings: {
           APP_NAME: 'not-cal-hacks (test)',
           SESSION_SECRET: 'test-session-secret-not-used-in-production',
-          TEST_MIGRATIONS: migrations,
+          ADMIN_TOKEN: 'test-admin-token-not-used-in-production',
         },
       },
     }),
@@ -36,7 +30,6 @@ export default defineProject({
   },
   test: {
     name: 'api',
-    include: ['server/**/*.test.ts'],
-    setupFiles: ['./server/test/apply-migrations.ts'],
+    include: ['server/**/*.test.ts', 'worker/**/*.test.ts'],
   },
 })

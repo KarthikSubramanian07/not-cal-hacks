@@ -1,5 +1,5 @@
 /// <reference types="@cloudflare/vitest-plugin/types" />
-import type { D1Migration } from '@cloudflare/vitest-plugin'
+import type { AppDatabase } from '../../worker/database'
 
 /**
  * The pool types `env` as `Cloudflare.Env`, so the bindings the test worker is
@@ -8,11 +8,11 @@ import type { D1Migration } from '@cloudflare/vitest-plugin'
 declare global {
   namespace Cloudflare {
     interface Env {
-      DB: D1Database
+      /** The database object, exactly as the companion Worker declares it. */
+      DATABASE: DurableObjectNamespace<AppDatabase>
       SESSION_SECRET: string
       APP_NAME?: string
-      /** Injected by vitest.workers.config.ts from the real migration files. */
-      TEST_MIGRATIONS: D1Migration[]
+      ADMIN_TOKEN: string
     }
   }
 }

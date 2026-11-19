@@ -3,6 +3,7 @@ import { existsSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { APPLICATION_STATUSES, APPLICATION_TYPES, USER_ROLES } from '../shared/constants'
+import { outputPath, renderMigrations } from './sync-migrations'
 
 const drizzleDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'drizzle')
 
@@ -60,5 +61,12 @@ describe('drizzle migration history', () => {
     expect(check('applications', 'applications_type_check')).toEqual([...APPLICATION_TYPES])
     expect(check('applications', 'applications_status_check')).toEqual([...APPLICATION_STATUSES])
     expect(check('users', 'users_role_check')).toEqual([...USER_ROLES])
+  })
+
+  // The database object applies the migrations compiled into the Worker, not
+  // the files in drizzle/. A migration that was generated but never compiled
+  // in would pass every schema check and still never reach the database.
+  it('is compiled into the Worker exactly as committed', () => {
+    expect(readFileSync(outputPath, 'utf8')).toBe(renderMigrations())
   })
 })
