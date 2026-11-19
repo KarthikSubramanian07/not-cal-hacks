@@ -1,6 +1,11 @@
 import type { UserRole } from '../shared/constants'
 
 export interface Env {
+  /**
+   * The database, behind the D1 client API. It is a Durable Object underneath;
+   * `withDatabase` in `db/durable.ts` builds this from the raw binding before
+   * the app sees the request.
+   */
   DB: D1Database
   /** HMAC key for session tokens. Set with `wrangler pages secret put`. */
   SESSION_SECRET: string

@@ -16,6 +16,14 @@ database_name = "not-cal-hacks"
 database_id = "f37f6c7a-3cd1-4578-8316-4ee16f32a33d"
 migrations_dir = "drizzle"
 
+# The application database is a SQLite-backed Durable Object. Pages cannot host
+# the class, so it lives in the companion Worker in `worker/` and is bound here
+# by script name.
+[[durable_objects.bindings]]
+name = "DATABASE"
+class_name = "AppDatabase"
+script_name = "not-cal-hacks-db"
+
 [vars]
 APP_NAME = "not-cal-hacks"
 
@@ -27,6 +35,11 @@ binding = "DB"
 database_name = "not-cal-hacks"
 database_id = "f37f6c7a-3cd1-4578-8316-4ee16f32a33d"
 migrations_dir = "drizzle"
+
+[[env.production.durable_objects.bindings]]
+name = "DATABASE"
+class_name = "AppDatabase"
+script_name = "not-cal-hacks-db"
 
 [env.production.vars]
 APP_NAME = "not-cal-hacks"
