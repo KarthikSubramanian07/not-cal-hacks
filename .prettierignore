@@ -5,6 +5,7 @@ drizzle/
 node_modules/
 package-lock.json
 seed.generated.sql
+worker/migrations.generated.ts
 playwright-report/
 test-results/
 
