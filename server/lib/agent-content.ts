@@ -145,7 +145,7 @@ Account and application data exist so you can apply, track status, and so organi
 
 ## Sharing
 
-Data is stored in Cloudflare D1 for the deployed project. It is shared with organizers of the event instance you applied to, and with infrastructure operators required to host the site. Public demo accounts on the live site contain synthetic seed data and should not be used for real personal information.
+Data is stored in a SQLite-backed Cloudflare Durable Object for the deployed project. It is shared with organizers of the event instance you applied to, and with infrastructure operators required to host the site. Public demo accounts on the live site contain synthetic seed data and should not be used for real personal information.
 
 ## Retention and deletion
 

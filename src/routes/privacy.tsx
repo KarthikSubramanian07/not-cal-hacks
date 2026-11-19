@@ -22,7 +22,7 @@ export function PrivacyPage() {
         {
           heading: 'Sharing, retention, and agents',
           paragraphs: [
-            'Data is stored in Cloudflare D1 for the deployed project and shared with organizers of the event instance you applied to, plus infrastructure operators required to host the site. Public demo accounts contain synthetic seed data and should not be used for real personal information. You may request deletion through the contact page. Public documentation, OpenAPI, llms.txt, and discovery files contain no applicant personal data. Authenticated API routes require a session; agents must not scrape private application answers from authenticated surfaces into long-term memory.',
+            'Data is stored in a SQLite-backed Cloudflare Durable Object for the deployed project and shared with organizers of the event instance you applied to, plus infrastructure operators required to host the site. Public demo accounts contain synthetic seed data and should not be used for real personal information. You may request deletion through the contact page. Public documentation, OpenAPI, llms.txt, and discovery files contain no applicant personal data. Authenticated API routes require a session; agents must not scrape private application answers from authenticated surfaces into long-term memory.',
           ],
         },
       ]}
