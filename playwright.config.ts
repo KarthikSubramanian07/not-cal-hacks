@@ -24,7 +24,7 @@ export default defineConfig({
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   webServer: {
-    command: `npx wrangler pages dev --port ${PORT} --log-level warn`,
+    command: `npx wrangler pages dev -c wrangler.toml -c worker/wrangler.toml --port ${PORT} --log-level warn`,
     url: `${baseURL}/api/health`,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
